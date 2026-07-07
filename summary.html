@@ -12,6 +12,7 @@ MathJax = {
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <link rel="stylesheet" id="themeCSS" href="themes/deepdive.css">
 <link rel="stylesheet" href="themes/overrides.css">
 <style>
@@ -139,6 +140,9 @@ blockquote { border-left: 3px solid var(--teal-edge); padding: 0.4rem 0.9rem;
   color: var(--body); min-width: 34px; text-align: right; flex: none;
 }
 
+/* Apply --font-code variable to all code/pre elements */
+pre, code { font-family: var(--font-code, monospace); }
+
 /* ── Session nav ── */
 .session-nav   { display: flex; align-items: stretch; gap: 0; flex: 1; justify-content: center; }
 .tab-window    { display: flex; align-items: stretch; }
@@ -249,8 +253,9 @@ blockquote { border-left: 3px solid var(--teal-edge); padding: 0.4rem 0.9rem;
           <option value="inter">Inter</option>
         </select>
       </div>
-      <div class="sp-row" style="margin-top:6px">
-        <span class="sp-row-label">Code</span>
+      <hr class="sp-divider">
+      <span class="sp-label">Code font</span>
+      <div class="sp-row">
         <select class="sp-select" id="spCodeFont">
           <option value="theme">Theme default</option>
           <option value="mono">Monospace</option>
@@ -1396,8 +1401,18 @@ blockquote { border-left: 3px solid var(--teal-edge); padding: 0.4rem 0.9rem;
 (function () {
   const btns = document.querySelectorAll('.theme-picker button[data-theme]');
   const css  = document.getElementById('themeCSS');
+  const hljsLink = document.getElementById('hljsCSS');
+  const HLJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/';
+  const HLJS_MAP = {
+    deepdive: 'atom-one-dark',
+    slate:    'nord',
+    forest:   'monokai-sublime',
+    paper:    'monokai',
+    graphite: 'github-dark',
+  };
   function setTheme(t) {
     if (css) css.href = 'themes/' + t + '.css';
+    if (hljsLink) hljsLink.href = HLJS_CDN + (HLJS_MAP[t] || 'github-dark-dimmed') + '.min.css';
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === t)));
     try { localStorage.setItem('gaia-theme', t); } catch(e) {}
   }
@@ -1642,6 +1657,7 @@ document.querySelectorAll('.sidebar a.leaf[href^="#"]').forEach(a => {
       sidebar.classList.remove('is-open');
   });
 })();
+window.addEventListener('load', () => { if (typeof hljs !== 'undefined') hljs.highlightAll(); });
 </script>
 </body>
 </html>

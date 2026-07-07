@@ -189,7 +189,7 @@
   body.zen .topbar,
   body.zen .sidebar,
   body.zen .meta-rail,
-  body.zen .pager { display: none !important; }
+  body.zen .meta-rail { display: none !important; }
   body.zen .layout { grid-template-columns: 1fr; min-height: 100vh; }
   body.zen .main { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 88px 24px 96px; }
   body.zen .article { max-width: 680px; margin: 0 auto; }

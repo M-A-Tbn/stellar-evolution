@@ -285,6 +285,9 @@ MathJax = {
   color: var(--body); min-width: 34px; text-align: right; flex: none;
 }
 
+/* Apply --font-code variable to all code/pre elements */
+pre, code { font-family: var(--font-code, monospace); }
+
 /* ── Session nav ── */
 .session-nav   { display: flex; align-items: stretch; gap: 0; flex: 1; justify-content: center; }
 .tab-window    { display: flex; align-items: stretch; }
@@ -392,8 +395,9 @@ MathJax = {
           <option value="inter">Inter</option>
         </select>
       </div>
-      <div class="sp-row" style="margin-top:6px">
-        <span class="sp-row-label">Code</span>
+      <hr class="sp-divider">
+      <span class="sp-label">Code font</span>
+      <div class="sp-row">
         <select class="sp-select" id="spCodeFont">
           <option value="theme">Theme default</option>
           <option value="mono">Monospace</option>
@@ -546,8 +550,18 @@ MathJax = {
 (function () {
   const btns = document.querySelectorAll('.theme-picker button[data-theme]');
   const css  = document.getElementById('themeCSS');
+  const hljsLink = document.getElementById('hljsCSS');
+  const HLJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/';
+  const HLJS_MAP = {
+    deepdive: 'atom-one-dark',
+    slate:    'nord',
+    forest:   'monokai-sublime',
+    paper:    'monokai',
+    graphite: 'github-dark',
+  };
   function setTheme(t) {
     if (css) css.href = 'themes/' + t + '.css';
+    if (hljsLink) hljsLink.href = HLJS_CDN + (HLJS_MAP[t] || 'github-dark-dimmed') + '.min.css';
     btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === t)));
     try { localStorage.setItem('gaia-theme', t); } catch(e) {}
   }
