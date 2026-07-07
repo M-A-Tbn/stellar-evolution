@@ -1,0 +1,55 @@
+/* Cross-theme tweaks. Loaded after the theme stylesheet. */
+.theme-label { color: var(--mute); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-right: 4px; }
+.theme-picker { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; }
+.theme-picker button { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--line); cursor: pointer; transition: transform .12s, border-color .15s; padding: 0; }
+.theme-picker button:hover { transform: scale(1.12); border-color: var(--bronze-edge); }
+.theme-picker button[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--bg-elev), 0 0 0 3px var(--bronze-edge); }
+.theme-picker button[data-theme="deepdive"] { background: #1E1F22; }
+.theme-picker button[data-theme="slate"]    { background: #6EA5C7; }
+.theme-picker button[data-theme="forest"]   { background: #8FA876; }
+.theme-picker button[data-theme="paper"]    { background: #F4EDDC; }
+.theme-picker button[data-theme="graphite"] { background: #8A8A8A; }
+.theme-picker button[data-theme="quarto"]   { background: #c2a26b; }
+.theme-picker button[data-theme="folio"]    { background: #8a8d6b; }
+.theme-picker button[data-theme="mutegold"] { background: #b39b6b; }
+.theme-picker button[data-theme="my-idea"]  { background: #a37a59; }
+.brand-issue { font-size: 10.5px; line-height: 1.2; color: var(--mute); margin-left: 4px; padding-left: 10px; border-left: 1px solid var(--line); letter-spacing: 0.04em; }
+
+/* ─────────────────────────────────────────────────────────────────
+   Code blocks — shared across themes, colored via tokens
+───────────────────────────────────────────────────────────────── */
+.prose pre {
+  margin: 1.4em 0;
+  padding: 14px 18px;
+  background: var(--bg-code);
+  color: var(--code-ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: var(--font-code);
+  font-size: 13px;
+  line-height: 1.62;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.prose pre::-webkit-scrollbar { height: 8px; }
+.prose pre::-webkit-scrollbar-thumb { background: var(--line-soft); border-radius: 4px; }
+.prose pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  white-space: pre;
+}
+.prose code {
+  font-family: var(--font-code);
+  font-size: 0.88em;
+  padding: 1px 6px;
+  background: var(--bronze-soft);
+  border: 1px solid var(--bronze-edge);
+  border-radius: 4px;
+  color: var(--ink);
+  white-space: nowrap;
+}

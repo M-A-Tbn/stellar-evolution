@@ -1,0 +1,1647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iris — Exam Summary</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']], processEscapes: true },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+  chtml: { scale: 1.0 }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<link rel="stylesheet" id="themeCSS" href="themes/deepdive.css">
+<link rel="stylesheet" href="themes/overrides.css">
+<style>
+/* ── Definition entries ── */
+.def-entry {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 0.4rem 1.4rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: baseline;
+}
+.def-term { font-weight: 600; color: var(--ink); font-size: 0.88rem; }
+.def-body { color: var(--body); font-size: 0.88rem; line-height: 1.6; }
+
+/* ── Exam callout ── */
+.exam-callout {
+  margin: 0.15rem 0 1rem;
+  padding: 0.55rem 1rem;
+  border-left: 3px solid var(--bronze);
+  background: var(--bronze-soft);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.78rem; line-height: 1.55; color: var(--body);
+}
+.exam-callout strong { color: var(--bronze); }
+.exam-callout em     { font-style: normal; opacity: 0.85; }
+
+/* ── Tables (Coverage Map etc.) ── */
+.table-wrap { overflow-x: auto; margin: 1.2rem 0; }
+table { border-collapse: collapse; width: 100%; font-size: 0.84rem; }
+th, td { text-align: left; padding: 0.5rem 0.85rem; border-bottom: 1px solid var(--line); }
+th { font-weight: 600; color: var(--ink); background: var(--bg-elev);
+     font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+tr:hover td { background: var(--bg-soft); }
+
+/* ── General prose ── */
+.prose h2 { margin: 2rem 0 0.6rem; font-size: 1.05rem; color: var(--ink); }
+.prose h3 { margin: 1.4rem 0 0.5rem; font-size: 0.95rem; color: var(--ink);
+            font-weight: 600; border-bottom: 1px solid var(--line-soft); padding-bottom: 0.25rem; }
+.prose h4 { margin: 1rem 0 0.4rem; font-size: 0.88rem; color: var(--mute);
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+p  { margin: 0.5rem 0; font-size: 0.88rem; line-height: 1.65; }
+ul, ol { padding-left: 1.5rem; margin: 0.4rem 0; font-size: 0.88rem; }
+li { margin-bottom: 0.3rem; line-height: 1.6; }
+pre { background: var(--bg-code, #111); color: var(--code-ink, #ddd);
+      padding: 1rem 1.2rem; border-radius: 6px; overflow-x: auto;
+      font-size: 0.82rem; margin: 0.8rem 0; }
+code { font-family: var(--mono, monospace); font-size: 0.85em; }
+.display-math { text-align: center; margin: 0.9rem 0; overflow-x: auto; }
+blockquote { border-left: 3px solid var(--teal-edge); padding: 0.4rem 0.9rem;
+             margin: 0.6rem 0; color: var(--mute); font-size: 0.86rem; }
+
+/* ── Settings (font picker) button ── */
+.settings-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 6px; cursor: pointer;
+  font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--mute);
+  border: 1px solid var(--line); background: transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  white-space: nowrap;
+}
+.settings-btn:hover,
+.settings-btn.is-open { color: var(--ink); border-color: var(--bronze-edge); background: var(--bronze-soft); }
+
+/* ── Settings panel (slides down from topbar) ── */
+.settings-panel {
+  position: fixed;
+  top: var(--topbar-h);
+  right: 12px;
+  width: 256px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 14px 16px 16px;
+  z-index: 500;
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+  transform: translateY(-6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.settings-panel.is-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+.sp-label {
+  display: block;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--mute); margin-bottom: 10px;
+}
+.sp-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 9px;
+}
+.sp-row-label { font-size: 12px; color: var(--body); flex: none; }
+
+.sp-select {
+  flex: 1; min-width: 0;
+  font: inherit; font-size: 12px; color: var(--ink);
+  background: var(--bg-soft); border: 1px solid var(--line);
+  border-radius: 5px; padding: 4px 6px; cursor: pointer;
+  appearance: none;
+}
+.sp-select:focus { outline: none; border-color: var(--bronze-edge); }
+
+.sp-divider { border: none; border-top: 1px solid var(--line-soft); margin: 10px 0 11px; }
+
+.sp-size-row { display: flex; align-items: center; gap: 9px; flex: 1; }
+.sp-slider {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 3px; background: var(--line); border-radius: 2px;
+  outline: none; cursor: pointer;
+}
+.sp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--bronze); border: 2px solid var(--bg-elev); cursor: pointer;
+}
+.sp-slider::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--bronze); border: 2px solid var(--bg-elev); cursor: pointer; border: none;
+}
+.sp-size-val {
+  font-size: 12px; font-family: var(--mono, monospace);
+  color: var(--body); min-width: 34px; text-align: right; flex: none;
+}
+
+/* ── Session nav ── */
+.session-nav   { display: flex; align-items: stretch; gap: 0; flex: 1; justify-content: center; }
+.tab-window    { display: flex; align-items: stretch; }
+/* Push all topbar controls to the far right regardless of theme's flex-basis */
+.topbar-actions { flex: none; margin-left: auto; }
+
+@keyframes tabsExitLeft   { to   { opacity: 0; transform: translateX(-14px); } }
+@keyframes tabsExitRight  { to   { opacity: 0; transform: translateX(14px);  } }
+@keyframes tabsEnterLeft  { from { opacity: 0; transform: translateX(-14px); } }
+@keyframes tabsEnterRight { from { opacity: 0; transform: translateX(14px);  } }
+
+.tab-window.exit-left   { animation: tabsExitLeft   .13s ease forwards; pointer-events: none; }
+.tab-window.exit-right  { animation: tabsExitRight  .13s ease forwards; pointer-events: none; }
+.tab-window.enter-left  { animation: tabsEnterLeft  .15s ease; }
+.tab-window.enter-right { animation: tabsEnterRight .15s ease; }
+
+/* ── Individual tab ── */
+.session-tab {
+  padding: 0 16px; font-size: 13px; font-weight: 500;
+  color: var(--body); text-decoration: none;
+  display: flex; align-items: center;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  white-space: nowrap; cursor: pointer;
+}
+.session-tab:hover    { color: var(--ink); background: rgba(0,0,0,.04); }
+.session-tab.is-active { color: var(--ink); border-bottom-color: var(--bronze); font-weight: 600; }
+
+/* ── Dropdown ── */
+.session-dropdown { position: relative; display: flex; align-items: center; margin-left: 4px; }
+
+.drop-trigger {
+  display: flex; align-items: center; gap: 4px;
+  height: 28px; padding: 0 10px; cursor: pointer;
+  font: inherit; font-size: 12px; color: var(--mute);
+  border: 1px solid var(--line); border-radius: 6px; background: transparent;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.drop-trigger:hover,
+.drop-trigger.is-open { color: var(--ink); border-color: var(--bronze-edge); background: var(--bronze-soft); }
+.drop-trigger svg { transition: transform .15s; flex: none; }
+.drop-trigger.is-open svg { transform: rotate(180deg); }
+
+.drop-list {
+  position: absolute; top: calc(100% + 6px); left: 0;
+  min-width: 200px; max-height: 280px; overflow-y: auto;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  padding: 4px 0; z-index: 300; list-style: none; margin: 0;
+}
+.drop-list[hidden] { display: none; }
+.drop-item-btn {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 8px 14px; font: inherit; font-size: 13px; color: var(--body);
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background .1s, color .1s;
+}
+.drop-item-btn:hover  { background: var(--bg-soft); color: var(--ink); }
+.drop-item-btn.is-active { color: var(--ink); font-weight: 600; }
+.drop-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--bronze); flex: none; opacity: 0; transition: opacity .15s;
+}
+.drop-item-btn.is-active .drop-dot { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3 7.5 L15 10.2 L15 25 L3 22.3 Z" fill="currentColor" fill-opacity="0.95"/>
+  <path d="M29 7.5 L17 10.2 L17 25 L29 22.3 Z" fill="currentColor" fill-opacity="0.7"/>
+  <path d="M16 10 L16 25" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.5"/>
+</svg></span>
+    <span class="brand-name">IRIS</span>
+    <span class="brand-issue">Exam<br>Summary</span>
+  </a>
+  <div class="session-nav" id="sessionNav">
+    <div class="tab-window" id="tabWindow"></div>
+    <div class="session-dropdown" id="sessionDropdown">
+      <button class="drop-trigger" id="dropTrigger"
+              aria-haspopup="listbox" aria-expanded="false">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <ul class="drop-list" id="dropList" hidden role="listbox"></ul>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <button class="settings-btn" id="settingsBtn" title="Font settings">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg> <span>Aa</span>
+    </button>
+    <div class="settings-panel" id="settingsPanel" role="dialog" aria-label="Font settings">
+      <span class="sp-label">Body font</span>
+      <div class="sp-row">
+        <select class="sp-select" id="spBodyFont">
+          <option value="theme">Theme default</option>
+          <option value="system">System UI</option>
+          <option value="georgia">Georgia</option>
+          <option value="palatino">Palatino</option>
+          <option value="inter">Inter</option>
+        </select>
+      </div>
+      <div class="sp-row" style="margin-top:6px">
+        <span class="sp-row-label">Code</span>
+        <select class="sp-select" id="spCodeFont">
+          <option value="theme">Theme default</option>
+          <option value="mono">Monospace</option>
+          <option value="jetbrains">JetBrains Mono</option>
+          <option value="fira">Fira Code</option>
+        </select>
+      </div>
+      <hr class="sp-divider">
+      <span class="sp-label">Font size</span>
+      <div class="sp-row">
+        <div class="sp-size-row">
+          <input type="range" class="sp-slider" id="spFontSize" min="12" max="22" step="1" value="15">
+          <span class="sp-size-val" id="spFontSizeVal">15px</span>
+        </div>
+      </div>
+    </div>
+    <div class="theme-picker" role="group" aria-label="Theme">
+      <span class="theme-label">Theme</span>
+      <button data-theme="deepdive" aria-pressed="true" title="Deepdive"></button>
+      <button data-theme="forest" aria-pressed="false" title="Forest"></button>
+      <button data-theme="graphite" aria-pressed="false" title="Graphite"></button>
+      <button data-theme="paper" aria-pressed="false" title="Paper"></button>
+      <button data-theme="slate" aria-pressed="false" title="Slate"></button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-label" id="sideLabel">IRIS · Summary</div>
+<nav class="nav" data-project="introduction" aria-label="Introduction — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#introduction-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#introduction-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#introduction-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#introduction-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="pre-main-sequence-evolution" aria-label="Pre-Main Sequence Evolution — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pre-main-sequence-evolution-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pre-main-sequence-evolution-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pre-main-sequence-evolution-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pre-main-sequence-evolution-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="main-sequence-evolution" aria-label="Main Sequence Evolution — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#main-sequence-evolution-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#main-sequence-evolution-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#main-sequence-evolution-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#main-sequence-evolution-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="post-ms-rgb-hb-agb" aria-label="Post-MS: RGB, HB &amp; AGB — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#post-ms-rgb-hb-agb-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#post-ms-rgb-hb-agb-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#post-ms-rgb-hb-agb-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#post-ms-rgb-hb-agb-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="pulsating-stars" aria-label="Pulsating Stars — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pulsating-stars-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pulsating-stars-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pulsating-stars-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#pulsating-stars-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="white-dwarfs" aria-label="White Dwarfs — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#white-dwarfs-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#white-dwarfs-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#white-dwarfs-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#white-dwarfs-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="final-stages-high-mass" aria-label="Final Stages of High-Mass Stars — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#final-stages-high-mass-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#final-stages-high-mass-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#final-stages-high-mass-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#final-stages-high-mass-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="binary-systems" aria-label="Binary Systems — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#binary-systems-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#binary-systems-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#binary-systems-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#binary-systems-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="supernovae-neutron-stars" aria-label="Supernovae &amp; Neutron Stars — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#supernovae-neutron-stars-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#supernovae-neutron-stars-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#supernovae-neutron-stars-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#supernovae-neutron-stars-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+<nav class="nav" data-project="black-holes-gravitational-waves" aria-label="Black Holes &amp; Gravitational Waves — Summary" hidden>
+  <div class="cat is-active" data-collapsed="false">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>1. Key Concepts</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#black-holes-gravitational-waves-1-key-concepts">1. Key Concepts</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>2. Key Equations</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#black-holes-gravitational-waves-2-key-equations">2. Key Equations</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>3. Key Algorithms / Procedures</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#black-holes-gravitational-waves-3-key-algorithms-procedures">3. Key Algorithms / Procedures</a>
+    </div>
+  </div>
+  <div class="cat" data-collapsed="true">
+    <button class="cat-row" data-toggle="cat"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg><span>4. Watch Out For</span></button>
+    <div class="cat-body">
+      <a class="leaf" href="#black-holes-gravitational-waves-4-watch-out-for">4. Watch Out For</a>
+    </div>
+  </div>
+</nav>
+  </aside>
+  <div class="main">
+<article class="article" data-project="introduction" hidden>
+  <h1 class="title">Introduction — Summary</h1>
+  <section class="prose">
+<h2 id="introduction-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Stellar evolution (course aim):</strong> identify the physical processes producing structural changes in stars of different mass/composition over time; mechanistic, not descriptive.</li>
+<li><strong>Contraction vs. collapse:</strong> "contraction" = change on the Kelvin–Helmholtz (thermal) timescale; "collapse" = change on the dynamical timescale.</li>
+<li><strong>H-R Diagram:</strong> plot of $\log(L/L_\odot)$ (vertical) vs $\log T_e$ (horizontal, <strong>increasing to the left</strong>); one stellar model = one point; a star's life = an <strong>evolutionary track</strong>.</li>
+<li><strong>Chemical composition</strong> $(X,Y,Z)$: hydrogen, helium, metal mass fractions, $X+Y+Z=1$. Solar: $X=0.70, Y=0.28, Z=0.02$.</li>
+<li><strong>Seven equations of stellar structure:</strong> hydrostatic equilibrium, mass continuity, equation of state, energy source, radiative gradient/Schwarzschild criterion, opacity, thermonuclear energy production — solved vs. $r$ to yield $(L, T_e)$.</li>
+<li><strong>Hydrostatic equilibrium:</strong> gravity balanced by pressure gradient at every layer, star neither collapses nor explodes.</li>
+<li><strong>Mean molecular weight $\mu$:</strong> average particle mass (in units of $m_p$) in ionized gas; depends on $X,Y,Z$.</li>
+<li><strong>Thermoregulation:</strong> negative feedback ($T\uparrow \Rightarrow P\uparrow \Rightarrow$ expansion $\Rightarrow T\downarrow$) that stabilizes normal (perfect) gas burning.</li>
+<li><strong>Electron degeneracy:</strong> low-energy quantum states fully occupied (Pauli exclusion); pressure becomes density-only, destroying thermoregulation. Only electrons degenerate in practice (protons never do).</li>
+<li><strong>Thermonuclear runaway:</strong> ignition in degenerate gas with no thermoregulation → explosive burning (e.g., helium flash).</li>
+<li><strong>Virial Theorem:</strong> $2K+\Omega=0$ for hydrostatic equilibrium; underlies the "negative heat capacity" of self-gravitating gas (energy loss → contraction → heating).</li>
+<li><strong>Kelvin–Helmholtz timescale $t_{KH}$:</strong> time gravitational contraction alone can power a star's luminosity; too short (∼15 Myr for Sun) to explain stellar ages ⇒ fusion is needed.</li>
+<li><strong>Convection:</strong> bulk gas motion; a <strong>mixing</strong> process homogenizing composition; triggered when a displaced adiabatic gas parcel is buoyant relative to surroundings (Schwarzschild criterion).</li>
+<li><strong>Nabla ($\nabla$):</strong> logarithmic temperature gradient $d\log T/d\log P$; $\nabla_\text{ad}=0.4$ for monatomic ideal gas ($\gamma=5/3$).</li>
+<li><strong>Opacity $\kappa$:</strong> resistance of matter to radiation flow (cm$^2$ g$^{-1}$); four processes — bound-bound, bound-free, free-free, electron scattering — dominate in different regions/temperatures.</li>
+<li><strong>Kramers' laws:</strong> analytic opacity approximations, $\kappa_{BF},\kappa_{FF}\propto \rho T^{-3.5}$; $\kappa_E$ = constant floor at high $T$.</li>
+<li><strong>He second-ionization opacity hump</strong> ($T\sim40{,}000$ K): triggers stellar outer convection zones.</li>
+<li><strong>Binding energy $E_B$:</strong> energy to fully disassemble a nucleus; peaks near $A\approx56$ (iron group) ⇒ fusion only releases energy up to iron.</li>
+<li><strong>Coulomb barrier / tunneling:</strong> nuclei must quantum-tunnel through electrostatic repulsion to fuse at stellar (not classical) temperatures.</li>
+<li><strong>PP chains:</strong> dominant H-burning at lower $T$; rate-limited by $p+p\to d+e^++\nu$ ($\beta^+$ inside collision, extremely slow, $t_{1/2}\sim1.4\times10^9$ yr) — sets the Sun's long lifetime.</li>
+<li><strong>CNO cycle:</strong> catalytic H-burning using pre-existing C,N,O; steeper $T$-dependence than PP; dominates in hotter (more massive) cores; concentrates energy generation, driving core convection; N-14 accumulates (slow branch bottleneck).</li>
+<li><strong>Triple-alpha process:</strong> He-burning via unstable Be$^8$ intermediate + Hoyle resonance in C$^{12}$; requires the Hoyle state to make carbon at all.</li>
+<li><strong>Advanced burning (C, Ne, O, Si):</strong> sequential fusion stages in non-degenerate massive-star cores at increasing $T$; Si-burning is photodisintegration-driven, builds iron-group nuclei.</li>
+<li><strong>Alpha elements:</strong> O, Ne, Mg, Si, S, Ar, Ca — built by alpha-capture; [α/Fe] traces core-collapse vs Type Ia SN enrichment history.</li>
+<li><strong>s-process / r-process:</strong> neutron capture beyond iron; s = slow (capture < β⁻ decay rate, valley of stability); r = rapid (multiple captures before decay, produces neutron-rich isotopes, needs explosive neutron flux).</li>
+<li><strong>Photo-disintegration:</strong> endothermic breakup of nuclei by energetic gammas; triggers iron-core collapse in massive stars.</li>
+<li><strong>Neutrino losses (plasma, photoneutrino, pair-annihilation):</strong> bypass radiative diffusion, dramatically shorten advanced burning stages.</li>
+<li><strong>Effective temperature $T_e$:</strong> temperature of the atmosphere layer at optical depth $\tau_v=2/3$ — the "surface temperature" plotted on the H-R diagram.</li>
+<li><strong>Optical depth $\tau_\lambda$:</strong> dimensionless measure of atmosphere opacity along the line of sight; photons emerge from $\tau\approx1$.</li>
+<li><strong>Photosphere:</strong> thin layer ($\tau\approx2/3\to0$) where continuum and absorption lines form.</li>
+<li><strong>Saha equation:</strong> governs ionization equilibrium between successive ionization states as a function of $T$ and $P_e$.</li>
+<li><strong>Boltzmann equation:</strong> governs the fractional population of excited levels within an ionization state as a function of $T$.</li>
+<li><strong>Spectral classification (O–M):</strong> driven by $T$ via ionization/excitation state, from highly ionized (O) to molecular bands (M).</li>
+<li><strong>Equivalent width $W$:</strong> measure of absorption line strength; proportional to the number of "active" absorbing atoms $N_a$.</li>
+<li><strong>Curve of growth:</strong> relation of $\log W$ to $\log N_a$; linear → saturated (flat) → square-root (damping) regimes.</li>
+<li><strong>Square bracket notation [El/H]:</strong> double-normalized (to H, then to solar) logarithmic abundance ratio; [Fe/H] is the standard metallicity proxy.</li>
+<li><strong>Helium Problem:</strong> observed primordial $Y\approx0.24$ in oldest stars far exceeds what stellar nucleosynthesis alone could have produced by now.</li>
+<li><strong>Big Bang Nucleosynthesis (BBN):</strong> early-universe production of most primordial He (and traces of Li/Be) using freely available neutrons before they decay.</li>
+<li><strong>A=5, A=8 bottleneck:</strong> absence of stable nuclei at these mass numbers halts primordial nucleosynthesis at helium; stars bypass it via the triple-alpha process (transient Be$^8$ equilibrium + Hoyle resonance).</li>
+</ul>
+<h2 id="introduction-2-key-equations">2. Key Equations</h2>
+<p class="display-math">$$\frac{dP(r)}{dr} = -\frac{GM(r)}{r^2}\rho(r)$$</p>
+<p>Hydrostatic equilibrium: pressure gradient balances gravity at every radius; always $&lt;0$.</p>
+<p class="display-math">$$\frac{dM(r)}{dr} = 4\pi r^2 \rho(r)$$</p>
+<p>Mass continuity: rate of enclosed-mass growth with radius from the density profile.</p>
+<p class="display-math">$$P = P_\text{rad}+P_\text{gas},\quad P_\text{rad}=\frac{aT^4}{3},\quad P_\text{gas}=\frac{k\rho T}{\mu H}$$</p>
+<p>Equation of state; radiation pressure negligible except in very massive stars.</p>
+<p class="display-math">$$\mu = \frac{1}{2X+\frac34 Y+\frac12 Z}$$</p>
+<p>Mean molecular weight of fully ionized gas from composition (solar $\mu\approx0.617$).</p>
+<p class="display-math">$$\frac{T}{\rho^{2/3}} &lt; 10^5 \ \text{(electrons)}; \quad \frac{T}{\rho^{2/3}}&lt;\frac{2.4\times10^{-22}}{m}\ \text{(general species)}$$</p>
+<p>Electron-degeneracy onset condition; lighter particles degenerate more easily.</p>
+<p class="display-math">$$P=k_1\rho^{5/3}\ (\text{non-rel. degenerate}),\quad P=k_2\rho^{4/3}\ (\text{rel. degenerate})$$</p>
+<p>Degenerate electron pressure — density-only, no thermoregulation.</p>
+<p class="display-math">$$\frac{dL(r)}{dr}=4\pi r^2\rho(r)\,\epsilon$$</p>
+<p>Energy (luminosity) conservation with local generation rate $\epsilon$.</p>
+<p class="display-math">$$2K+\Omega=0;\quad U=\frac{\Omega}{2}&lt;0$$</p>
+<p>Virial theorem; contraction releases energy, half heats the gas, half is radiated.</p>
+<p class="display-math">$$t_{KH}=\frac{1}{2}\frac{GM^2}{LR}$$</p>
+<p>Kelvin–Helmholtz timescale — max duration gravity alone can power luminosity (Sun: ~15 Myr).</p>
+<p class="display-math">$$\left.\frac{dT}{dr}\right|_\text{rad}=-\frac{3\kappa\rho}{4ac}\frac{L(r)}{4\pi r^2 T^3}$$</p>
+<p>Radiative temperature gradient needed to carry flux $L(r)$ by photon diffusion.</p>
+<p class="display-math">$$\nabla\equiv\frac{d\log T}{d\log P};\qquad \nabla_\text{ad}=\frac{\gamma-1}{\gamma}=0.4\ \text{(monatomic gas)}$$</p>
+<p>Schwarzschild criterion in log form: $\nabla_\text{rad}&gt;\nabla_\text{ad}\Rightarrow$ convection.</p>
+<p class="display-math">$$\kappa_{BF}\propto Z(1+X)\rho T^{-3.5};\quad \kappa_{FF}\propto(X+Y)(1+X)\rho T^{-3.5};\quad \kappa_E\propto0.2(1+X)$$</p>
+<p>Kramers opacity laws for bound-free, free-free, electron scattering.</p>
+<p class="display-math">$$E_B(Z,A)=\{Zm_p+(A-Z)m_n-m_\text{nucl}\}c^2$$</p>
+<p>Nuclear binding energy from the mass deficit; per-nucleon curve peaks at $A\approx56$ (iron).</p>
+<p class="display-math">$$4\text{H}^1\to\text{He}^4+2e^++2\nu_e\ (+26.2\ \text{MeV, PP-I})$$</p>
+<p>Net hydrogen-burning reaction via PP chains.</p>
+<p class="display-math">$$\epsilon_{pp}=\epsilon_1\rho X^2T_6^{3.5-6};\quad \epsilon_{CN}=\epsilon_2\rho X X_{CN}T_6^{13-20};\quad \epsilon_{3\alpha}=\epsilon_3\rho^2Y^3T_8^{20-30}$$</p>
+<p>Approximate energy-generation-rate formulae; steep $T$ exponents drive core convection and instability under degeneracy.</p>
+<p class="display-math">$$T^4=\frac{3}{4}T_e^4\left(\tau_v+\frac{2}{3}\right)$$</p>
+<p>Atmosphere temperature–optical-depth relation; defines $T_e$ at $\tau_v=2/3$.</p>
+<p class="display-math">$$\log\frac{N_{j+1}}{N_j}=-0.176-\log P_e+\log\frac{U_{j+1}(T)}{U_j(T)}+2.5\log T-\frac{5040}{T}\chi_i$$</p>
+<p>Saha equation: ionization-state ratio vs. $T$ and $P_e$.</p>
+<p class="display-math">$$\frac{N_{ji}}{N_j}=\frac{g_i}{U_j(T)}10^{-\chi_i(5040/T)}$$</p>
+<p>Boltzmann equation: excited-level population fraction vs. $T$.</p>
+<p class="display-math">$$\frac{\Delta\lambda}{\lambda_0}=\frac{v_r}{c}$$</p>
+<p>Doppler shift → radial velocity from spectral line displacement.</p>
+<p class="display-math">$$W=\int\frac{F_c-F_\lambda}{F_c}\,d\lambda$$</p>
+<p>Equivalent width — integrated absorption-line strength, proportional to active absorber count $N_a$.</p>
+<p class="display-math">$$\left[\frac{El}{\text{H}}\right]=\log\left(\frac{El}{\text{H}}\right)_*-\log\left(\frac{El}{\text{H}}\right)_\odot$$</p>
+<p>Square-bracket abundance notation relative to solar (e.g. [Fe/H] = metallicity proxy).</p>
+<h2 id="introduction-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Building one H-R point from a stellar model:</strong> (1) fix inputs $M$ and $(X,Y,Z)$; (2) solve the seven coupled structure equations plus EOS as functions of $r$; (3) read off output $L$ and $T_e$; (4) plot as one point on the H-R diagram.</li>
+<li><strong>Evolving a track over time:</strong> at each timestep, update composition (nuclear burning changes $X,Y$ locally) → re-solve the seven equations with new composition → obtain new $(L,T_e)$ → repeat to trace the evolutionary track.</li>
+<li><strong>Schwarzschild convection test at a given layer:</strong> (1) compute $\nabla_\text{rad}$ from opacity, flux, $T$, $P$; (2) compute $\nabla_\text{ad}$ (0.4 for ideal monatomic gas); (3) if $\nabla_\text{rad}&gt;\nabla_\text{ad}$, mark the layer convective (mixing occurs); else radiative.</li>
+<li><strong>Determining stellar-core gas regime:</strong> compute $T/\rho^{2/3}$; compare to $10^5$ (electrons) using the log $T$–log $\rho$ diagram to identify radiation-, perfect-gas-, or degeneracy-dominated pressure law, then select the correct EOS term.</li>
+<li><strong>Deriving chemical abundance [El/H] from a spectrum:</strong> (1) measure equivalent width $W$; (2) enter curve of growth to get $\log N_a$; (3) apply Boltzmann correction (excitation) to get $N_j$; (4) apply Saha correction (ionization) to get $N_\text{TOT}$; (5) convert to mass per area; (6) normalize to H and to solar ratio to get [El/H].</li>
+<li><strong>Neutron-capture nucleosynthesis path:</strong> determine if neutron-capture rate exceeds or is exceeded by β⁻ decay rate of the produced isotope → classify as r-process (multiple captures, then decay back to stability) or s-process (single capture, decay before next capture, walks the valley of stability).</li>
+</ol>
+<h2 id="introduction-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>Temperature axis on the H-R diagram increases <strong>leftward</strong> — a constant trap for mislabeling hot/cool sides.</li>
+<li>"Contraction" (KH timescale) vs. "collapse" (dynamical timescale) is a precise vocabulary distinction the exam explicitly tests.</li>
+<li>Only <strong>electrons</strong> degenerate under normal stellar conditions in this course — proton degeneracy boundary lies deep in the relativistic-electron-degenerate region and is never physically reached.</li>
+<li>Degenerate pressure depends on $\rho$ <strong>only</strong>, not $T$ — this is <em>why</em> thermoregulation fails, not just a formula to memorize.</li>
+<li>Ionic (proton/alpha) component of the EOS is <strong>always</strong> a perfect gas, even when electrons are degenerate.</li>
+<li>PP chain's rate-limiting step is a $\beta^+$ decay that is essentially impossible for a free proton but occurs with tiny probability inside a two-proton collision — don't confuse with free-neutron $\beta^-$ decay (fast, ~13 min half-life).</li>
+<li>CNO cycle does <strong>not</strong> create C, N, O — it only catalyzes; net effect over time is N-14 accumulation (slow branch bottleneck), not net CNO production.</li>
+<li>Triple-alpha absolutely depends on the Hoyle resonance in C$^{12}$ — without this fine-tuned nuclear coincidence, carbon (and life) would not form.</li>
+<li>Fusion <strong>cannot</strong> proceed past iron for energy gain; elements beyond Fe come only from neutron capture (s/r-process), never fusion.</li>
+<li>A=5 and A=8 have no stable nuclei — this, not lack of time or temperature, is why BBN stopped at He (with only trace Li/Be), while stars circumvent it via a transient Be$^8$ equilibrium population at higher $T,\rho$.</li>
+<li>Radiation pressure is negligible in most stars/stages but becomes significant in the most massive stars (Eddington limit) — don't assume it is always ignorable.</li>
+<li>The helium hump at $T\sim40{,}000$ K is a deviation from the Kramers $T^{-3.5}$ opacity trend, not part of it — it is caused by He$^+\to$He$^{2+}$ second ionization and can trigger convection zones.</li>
+<li>Convection is triggered by <strong>either</strong> high opacity or high energy flux — two independent physical routes to the same instability, not one mechanism.</li>
+<li>Effective temperature $T_e$ is defined at $\tau_v=2/3$, not at $\tau=0$ or $\tau=1$ — a precise, testable detail.</li>
+<li>Equivalent width $W$ tracks only "active" absorbing atoms $N_a$ (correct ionization + excitation state), not the total elemental abundance — Saha and Boltzmann corrections are both required to get $N_\text{TOT}$.</li>
+<li>The curve of growth has three distinct regimes (linear, flat/saturated, square-root/damping) with different $W$–$N_a$ scaling — using the wrong regime's relation gives wrong abundances.</li>
+<li>Neutrino losses are negligible for the Sun but dominate and <em>drastically accelerate</em> advanced burning stages (silicon burning can finish in days) — a major asymmetry in stellar-lifetime intuition.</li>
+<li>Kelvin–Helmholtz timescale is not obsolete once nuclear burning is understood — it remains the operative timescale during pre-main-sequence contraction and other nuclear-burning gaps.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="pre-main-sequence-evolution" hidden>
+  <h1 class="title">Pre-Main Sequence Evolution — Summary</h1>
+  <section class="prose">
+<h2 id="pre-main-sequence-evolution-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Stellar evolution</strong>: the macroscopic (not nuclear-microscopic) variation of a star's observable properties (L, T_e, R) with time.</li>
+<li><strong>H-R diagram</strong>: plot of L vs. T_e; convention: log T_e axis increases <strong>to the left</strong> (hot on left).</li>
+<li><strong>Evolutionary track</strong>: path of one star (fixed mass) through the H-R diagram over its entire life.</li>
+<li><strong>Isochrone</strong>: curve connecting equal-age points across many different-mass tracks; what an observer sees in a real cluster.</li>
+<li><strong>Dynamical (free-fall) timescale</strong> τ_d: set by gravity alone, pressure negligible; fastest regime.</li>
+<li><strong>Kelvin-Helmholtz (thermodynamic) timescale</strong> τ_KH: virialized contraction, star shines on gravitational energy alone.</li>
+<li><strong>Thermonuclear timescale</strong> τ_nuc: set by fuel supply at observed L; longest regime, defines the main-sequence lifetime.</li>
+<li><strong>Virial Theorem</strong>: for a self-gravitating, quasi-static gas, 2K + Ω = 0; implies negative heat capacity (losing energy heats the gas).</li>
+<li><strong>Jeans mass/criterion</strong>: minimum cloud mass at given (T, ρ) for gravity to overcome thermal pressure and collapse.</li>
+<li><strong>Initial Mass Function (IMF)</strong>: mass spectrum of stars formed from a fragmenting cloud; Salpeter power law for M ≳ 1 M☉.</li>
+<li><strong>Points A, B, C, E</strong>: landmark states of pre-MS collapse — A (initial cloud), B (core reaches HE, envelope still infalling), C (shock-driven luminosity peak), E (whole star first fully in hydrostatic equilibrium).</li>
+<li><strong>Hayashi track</strong>: locus of models (fixed mass, composition) that are simultaneously in hydrostatic equilibrium and fully convective.</li>
+<li><strong>Hayashi Theorem</strong>: no stable hydrostatic model can exist to the right (cooler) of the Hayashi track, at any evolutionary stage.</li>
+<li><strong>Schwarzschild criterion</strong>: convective instability when ∇_rad > ∇_ad.</li>
+<li><strong>Kramers opacity law</strong>: κ ∝ ρ/T^3.5 — opacity falls steeply as core heats, enabling the core to eventually turn radiative.</li>
+<li><strong>Points 1/2/3</strong>: mass-dependent points where a track departs the Hayashi track (high/intermediate/low mass respectively); <strong>Point 2</strong> also marks first partial pp/CNO ignition; <strong>Point 5</strong>: nuclear energy overtakes gravity as the dominant power source.</li>
+<li><strong>Perfect-gas thermostat</strong>: negative feedback — extra nuclear energy expands and cools the core, throttling the reaction rate; basis of MS stability.</li>
+<li><strong>ZAMS</strong>: locus where ³He+³He fully activates, closing the pp chain, L_g/L = 0, full thermal + hydrostatic equilibrium.</li>
+<li><strong>Electron degeneracy branching point</strong>: after He-burning, cores of M < 8 M☉ become degenerate (→ white dwarf); M > 8 M☉ stay non-degenerate (→ core-collapse SN).</li>
+</ul>
+<h2 id="pre-main-sequence-evolution-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>$L = 4\pi R^2\sigma T_e^4$ — Stefan-Boltzmann law; defines constant-radius diagonals on the H-R diagram.</li>
+<li>$T_d = \sqrt{2r^3/GM} = 2600/\sqrt{\bar\rho}\ \text{s}$ (ρ in g/cm³) — free-fall/dynamical timescale; denser → faster collapse.</li>
+<li>$2K+\Omega=0$ (Virial Theorem); $U=K+\Omega=\Omega/2&lt;0$; contraction ($d\Omega&lt;0$) gives $dK=-d\Omega/2&gt;0$ and $dU=d\Omega/2&lt;0$ — half of released gravitational energy heats the star, half is radiated.</li>
+<li>$L=|dU/dt|=\tfrac12|d\Omega/dt|$; integrating gives $t_{KH}=\dfrac{1}{2}\dfrac{GM^2}{LR}$ — time a star can shine on gravitational contraction alone (Sun: ~1.5×10⁷ yr, too short to explain Earth's age → motivates nuclear fusion).</li>
+<li>Collapse condition: $GMH/R \geq kT$ — gravitational binding energy per particle exceeds thermal energy per particle.</li>
+<li>Jeans mass: $M_J \geq 10^{23}\,T^{3/2}\rho^{-1/2}\ \text{g}$ (T in K, ρ in g/cm³) — clouds above $M_J$ collapse; explains why star formation favors cold, dense molecular clouds.</li>
+<li>IMF: $\Psi(M)=kM^{-s}$, Salpeter $s=2.35$ — number of stars formed per unit mass interval.</li>
+<li>$\kappa \propto \rho/T^{3.5}$ (Kramers) — governs both the Hayashi track's existence (high κ at low T forces full convection) and its departure (κ falls as T_c rises).</li>
+<li>$\left.\dfrac{dT}{dr}\right|_\text{rad} = -\dfrac{3\kappa\rho}{4\pi r^2}\dfrac{L(r)}{4acT^3}$ — radiative temperature gradient; steepens with κ, drives the Schwarzschild instability test $\nabla_\text{rad}&gt;\nabla_\text{ad}$.</li>
+<li>$t_\text{PMS} \sim 4\times10^7 (M/M_\odot)^2 (R_\odot/R)(L_\odot/L)\ \text{yr}$ — pre-MS duration; the $M^2$ growth is overwhelmed by the steep rise of $L$ and $R$ with mass, so massive stars finish pre-MS fastest.</li>
+<li>ZAMS mass-luminosity relation $L\propto M^{3-4}$ ⟹ MS lifetime $\tau_\text{MS}\propto M/L \propto M^{-2\text{ to }-3}$ — basis of cluster age-dating via main-sequence turnoff.</li>
+</ul>
+<h2 id="pre-main-sequence-evolution-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Stellar model flow chart</strong>: feed $[M,X,Y,Z]$ into the structure equations (hydrostatic equilibrium, mass continuity, energy generation, energy transport) → unique output $[L,T_e]$; at each timestep check (a) has the core gone degenerate, (b) is any region convectively unstable (Schwarzschild); update composition and repeat with $t=t+\Delta t$ to build an evolutionary track.</li>
+<li><strong>Constructing an isochrone</strong>: take evolutionary tracks for a range of masses formed at $t=0$; mark the point on each track tagged with the same age $t_0$; connect these points.</li>
+<li><strong>Jeans stability test</strong>: given cloud $(T,\rho)$, compute $M_J=10^{23}T^{3/2}\rho^{-1/2}$ g; cloud collapses only if its mass exceeds $M_J$.</li>
+<li><strong>Pre-MS evolutionary sequence</strong> (1 M☉ example): A (large cool cloud) → A–B free-fall, core reaches HE first (~10² yr) → B–C infalling envelope shocks the core, opacity drops, L spikes (~10 days) → C–E hydrostatic equilibrium propagates outward through envelope (~10⁵ yr) → E, fully convective, enters Hayashi track → descend Hayashi track via KH contraction (~10⁵–10⁶ yr) → core heats, κ falls, radiative core nucleates and grows, track bends left (Point 1/2/3 by mass) → partial pp/CNO ignition (Point 2) → nuclear luminosity overtakes gravity (Point 5) → core briefly expands/cools (perfect-gas thermostat) → ³He+³He fully activates → ZAMS ($L_g/L=0$).</li>
+<li><strong>Post-He-burning fate test</strong>: after He→C,O burning, check whether the next KH contraction drives $(\log\rho_c,\log T_c)$ into the degenerate region; if yes and $M&lt;8\,M_\odot$ → white dwarf (staircase halts); if no and $M&gt;8\,M_\odot$ → continue burning stages to Fe core → core-collapse supernova.</li>
+</ol>
+<h2 id="pre-main-sequence-evolution-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>H-R diagram x-axis (log T_e) increases <strong>leftward</strong> — easy to misread tracks as running the wrong direction.</li>
+<li>A cluster's observed H-R diagram is always an <strong>isochrone</strong>, never a set of evolutionary tracks — the two look very different and are often confused.</li>
+<li>$t_{KH}$ is the time to <em>descend to</em> the main sequence, not the main-sequence lifetime — historically mistaken for the Sun's total age before nuclear fusion was discovered.</li>
+<li>Negative heat capacity is counterintuitive: a contracting self-gravitating gas gets <strong>hotter</strong> while <strong>losing</strong> total energy (half radiated, half retained as heat).</li>
+<li>The Jeans mass for typical cold ISM (~100 M☉) is far larger than a single star, so clouds must <strong>fragment</strong>; isolated field stars are cluster escapees, not the "natural" collapse product.</li>
+<li>The Hayashi Theorem is <strong>universal</strong> — it constrains red giants and all hydrostatic structures, not just pre-MS proto-stars.</li>
+<li>Model states relative to the Hayashi track: left = stable/partially convective, on = stable/fully convective, right = <strong>no stable solution exists</strong> (not just "unlikely").</li>
+<li>Departure point (1/2/3) ordering is mass-driven by <em>contraction speed</em> (τ_KH), not luminosity alone — more massive stars depart earlier and higher because they contract and heat faster.</li>
+<li>Point 2's partial pp/CNO reactions are <strong>not</strong> self-sustaining; only full activation of ³He+³He (the actual ZAMS criterion) closes the pp chain.</li>
+<li>Just before ZAMS, $\rho_c$, $T_c$, and even $L_g/L$ <strong>dip</strong> (briefly negative) due to core expansion — an easy point to mis-read as "contraction resuming" when it is actually the thermostat responding to new nuclear input.</li>
+<li>Pre-MS duration scales as $M^2 L^{-1}R^{-1}$: naive reasoning from the $M^2$ term alone gives the wrong trend (longer for massive stars); the dominant effect is that $L$ and $R$ grow faster with mass, making pre-MS <strong>shorter</strong> for massive stars.</li>
+<li>Final internal-structure convective zones at ZAMS split by mass: fully convective ($M\lesssim0.3\,M_\odot$), convective envelope + radiative core (~0.3–1.5 M☉), convective core + radiative envelope ($M\gtrsim1.5\,M_\odot$, driven by CNO's steep $T^{15}$ dependence) — do not assume one universal internal structure.</li>
+<li>The degeneracy branch point at $M=8\,M_\odot$ is the single most important fork in stellar fate (white dwarf vs. core-collapse supernova) — tie it explicitly to whether the post-He-burning core crosses into the degenerate regime.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="main-sequence-evolution" hidden>
+  <h1 class="title">Main Sequence Evolution — Summary</h1>
+  <section class="prose">
+<h2 id="main-sequence-evolution-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>ZAMS</strong>: locus of stars at the instant of core H-ignition; a snapshot across masses, not an evolutionary track. All ZAMS stars are chemically homogeneous.</li>
+<li><strong>Pre-MS / Hayashi track</strong>: pre-ignition convective track that converges onto the ZAMS.</li>
+<li><strong>Brown dwarf</strong>: object with $M&lt;0.08\,M_\odot$; never ignites the pp chain; cools by radiating gravitational energy.</li>
+<li><strong>Eddington luminosity ($L_{ed}$)</strong>: maximum luminosity a star of mass $M$ can sustain while remaining in hydrostatic equilibrium.</li>
+<li><strong>pp chain</strong>: dominant H-burning mode for $M\lesssim1.2\,M_\odot$; moderate temperature sensitivity.</li>
+<li><strong>CNO cycle</strong>: dominant H-burning mode for $M\gtrsim1.2\,M_\odot$; extreme temperature sensitivity; requires catalyst CNO nuclei.</li>
+<li><strong>Convective core / radiative envelope</strong>: structure for $M&gt;1.2\,M_\odot$, caused by centrally concentrated CNO energy release.</li>
+<li><strong>Radiative core / convective envelope</strong>: structure for $0.3&lt;M/M_\odot&lt;1.2$ (e.g. the Sun), caused by high surface opacity and low $\nabla_{ad}$ from partial ionization.</li>
+<li><strong>Fully convective star</strong>: $M&lt;0.3\,M_\odot$; extreme version of the envelope-convection mechanism operating throughout the star.</li>
+<li><strong>Mass-luminosity relation</strong>: broken power law $L\propto M^n$ with $n$ depending on which burning mode/mass regime applies.</li>
+<li><strong>Main sequence (evolutionary phase)</strong>: interval of core H-burning, from Point 1 (ignition) to Point 2 ($X_c&lt;0.05$); TAMS is the locus of all Point-2 positions.</li>
+<li><strong>Mean molecular weight $\mu$</strong>: rises as H converts to He; drives the slow structural evolution during the MS.</li>
+<li><strong>Isothermal He core</strong>: chemically inert, energy-generation-free He core with $dT/dr=0$, formed after Point 3.</li>
+<li><strong>Core mass fraction $q=M_c/M_{tot}$</strong>: diagnostic of how much pressure the core must supply.</li>
+<li><strong>Schönberg–Chandrasekhar (SC) limit</strong>: maximum mass an ideal-gas isothermal core can support against the envelope before contracting (Schönberg & Chandrasekhar, 1942).</li>
+<li><strong>Electron degeneracy</strong>: state where all levels below the Fermi energy are filled; pressure becomes density-dependent only, decoupled from $T$.</li>
+<li><strong>"Hook" feature</strong>: rapid track excursion at MS turnoff caused by a gravitational-contraction phase in high-mass stars with convective cores.</li>
+<li><strong>Kelvin–Helmholtz (thermal) timescale</strong>: governs contraction when no nuclear energy source is available (post-Point-2 for high-mass stars, post-SC-limit for intermediate mass).</li>
+<li><strong>$\log\rho$–$\log T$ diagram</strong>: divides stellar interiors into radiation-dominated, ideal-gas, and (non-)relativistic degenerate regions.</li>
+</ul>
+<h2 id="main-sequence-evolution-2-key-equations">2. Key Equations</h2>
+<p><strong>Eddington luminosity</strong> (max luminosity before radiation pressure disrupts hydrostatic equilibrium):</p>
+<p class="display-math">$$L_{ed} = \frac{4\pi G M c}{\kappa}, \qquad \frac{L_{ed}}{L_\odot}\approx 3.8\times10^4\,\frac{M}{M_\odot}\ \ (\kappa=0.34\ \text{cm}^2\text{g}^{-1},\ X=0.7)$$</p>
+<p><strong>Opacity from electron scattering:</strong> $\kappa = 0.2(1+X)$.</p>
+<p><strong>Nuclear energy generation rates</strong> (govern which chain dominates and whether the core convects):</p>
+<p class="display-math">$$\epsilon_{pp}\propto \rho X^2 T_6^{5}, \qquad \epsilon_{CNO}\propto \rho X Z_{CNO} T_6^{15}$$</p>
+<p><strong>Convection criterion:</strong> $\nabla_{rad}&gt;\nabla_{ad}$, with</p>
+<p class="display-math">$$\left.\frac{dT}{dr}\right|_{rad} = -\frac{3\kappa\rho}{4acT^3}\frac{L_r}{4\pi r^2}$$</p>
+<p>Large, concentrated $L_r$ (CNO case) drives $\nabla_{rad}&gt;\nabla_{ad}$ in the core.</p>
+<p><strong>Kramers opacity (relevant to convective envelopes):</strong> $\kappa\propto T^{-3.5}$; $\nabla_{ad}=1-1/\gamma\to0$ in partial-ionization zones.</p>
+<p><strong>MS lifetime scaling</strong> (from $t_{MS}\propto M/L$, $L\propto M^4$):</p>
+<p class="display-math">$$t_{MS}\cong 10^{10}\,M^{-3}\ \text{yr}$$</p>
+<p><strong>Mean molecular weight</strong> (fully ionized gas):</p>
+<p class="display-math">$$\mu = \frac{1}{2X+\tfrac34 Y+\tfrac12 Z}, \qquad P=\frac{k\rho T}{\mu H}$$</p>
+<p><strong>SC limit</strong> (two equivalent forms):</p>
+<p class="display-math">$$q\le q_0 = 0.37\left(\frac{\mu_e}{\mu_{ic}}\right)^2 \approx 0.08, \qquad M_c\le M_{sc}=0.10\,M_{tot}$$</p>
+<p><strong>Electron degeneracy condition:</strong></p>
+<p class="display-math">$$\frac{T}{\rho^{2/3}} &lt; D\approx10^{5}\ \text{K cm}^2\text{g}^{-2/3}, \qquad \log T = \tfrac23\log\rho + 5.11\ \text{(boundary)}$$</p>
+<h2 id="main-sequence-evolution-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Determine burning mode and structure from mass:</strong> compare $M$ to $1.2\,M_\odot$ → CNO (convective core) vs pp (radiative core); compare to $0.3\,M_\odot$ → fully convective; this single branch point (mass → burning mode) propagates through structure, $T_c$–$M$ relation, mass–luminosity slope, and post-MS morphology (Section 14.2 "central organizing principle").</li>
+<li><strong>Derive $L_{ed}$:</strong> set the radiative pressure gradient equal to the hydrostatic gradient, cancel $\rho$ and $r^2$, solve for $L$.</li>
+<li><strong>Derive the SC limit:</strong></li>
+</ol>
+<p>   - Step 1: integrate hydrostatic equilibrium over the isothermal core to get a virial-like relation; maximize $P_{ic}$ over core radius to find $P_{ic}^{max}\propto 1/M_{ic}^2$.    - Step 2: integrate hydrostatic equilibrium over the envelope (using $M_{ic}^2\ll M^2$) to estimate the envelope pressure on the core, $P_{env}\propto 1/M^2$.    - Step 3: equate $P_{ic}^{max}=P_{env}$ and solve for $M_{ic}/M$; the coefficient depends on $(\mu_{env}/\mu_{ic})^2$.</p>
+<ol>
+<li><strong>Determine post-MS pathway from mass (Section 13.1):</strong> $M&gt;6\,M_\odot$ → no isothermal phase, stays ideal gas, direct He ignition; $2.2&lt;M/M_\odot&lt;6$ → temporary isothermal core, hits SC limit, contracts, ignites He (small hook); $M&lt;2.2\,M_\odot$ → core crosses the degeneracy line before the SC limit, grows without heating, long RGB ascent, helium flash.</li>
+<li><strong>Track H-profile → Point-2/3 transition:</strong> radiative core (low mass) gives smooth gradient → seamless shell ignition (Points 2≈3); convective core (high mass) gives flat/step profile that empties simultaneously → gravitational-contraction gap → hook → Point 3.</li>
+</ol>
+<h2 id="main-sequence-evolution-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>ZAMS ≠ evolutionary track — a common conflation; ZAMS is a snapshot across masses at $t=0$.</li>
+<li>The $90\,M_\odot$ upper limit is <em>not</em> rigorous — it is metallicity-dependent and stems from $L_\star$ approaching $L_{ed}$ (only a factor of ~3 away at $90\,M_\odot$).</li>
+<li>The pp/CNO transition mass is deceptively low ($\approx1.2\,M_\odot$) despite core temperatures differing only modestly — the $T^{15}$ vs $T^5$ exponent, not the absolute $T$, is what matters.</li>
+<li>Higher-mass stars have <strong>lower</strong> central density despite higher luminosity/temperature — this is why degeneracy is avoided at high mass and unavoidable at low mass (exam favorite: connect $\rho_c$ trend to degeneracy condition $T/\rho^{2/3}&lt;D$).</li>
+<li>Mass–luminosity exponent is not a single number: $\approx3.6$ (upper MS, CNO), $4$–$4.5$ (lower MS, pp), $2.6$ (very low mass) — a broken power law, not one universal slope.</li>
+<li>Metallicity and helium effects can seem to pull in the same "brighter/hotter" direction but arise from different mechanisms and have <strong>opposite</strong> effects on turnoff mass at fixed age: higher $Z$ → longer lifetime → <strong>larger</strong> turnoff mass; higher $Y$ → shorter lifetime → <strong>smaller</strong> turnoff mass.</li>
+<li>Low-mass MS track shifts slightly up-and-left (hotter) during 1–2, while high-mass shifts up-and-right (cooler) — the sign of the $T_{eff}$ change flips because the burning region's spatial extent (20–30% vs ~10% of radius) determines whether core contraction can counteract envelope expansion. Do not assume both regimes redden or both bluen.</li>
+<li>Increasing $R$ does not automatically mean cooling — only if $R^2$ grows faster than $L$; in low-mass stars $L$ outpaces $R^2$, so $T_{eff}$ still rises.</li>
+<li>Two SC-limit numbers exist and are <em>not</em> interchangeable defaults: $q_0\approx0.08$–$0.10$ is compositional/derived; the commonly quoted round number $M_c\le0.10\,M_{tot}$ is the practical formulation.</li>
+<li>The textbook derivation of the SC limit yields a coefficient of 0.7, not the accepted 0.37 — the discrepancy is from approximations in $P_{env}$ and $R$; the $(\mu_{env}/\mu_{ic})^2$ scaling is the exact, examinable part.</li>
+<li>The hook is diagnostic of a <strong>convective core</strong> during the MS, not of high mass per se — it is observationally confirmed (NGC 1978 CMD) and only appears for $M\gtrsim1.2\,M_\odot$ (technically most visible in the $2.2$–$6\,M_\odot$ regime).</li>
+<li>Do not confuse "isothermal" with "unsupported" — the isothermal core still satisfies hydrostatic equilibrium via a density gradient, not a temperature gradient.</li>
+<li>The three post-MS regimes are separated by two different physical limits (SC limit vs. degeneracy boundary), not the same limit at different masses — know which boundary is crossed first for a given mass.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="post-ms-rgb-hb-agb" hidden>
+  <h1 class="title">Post-MS: RGB, HB &amp; AGB — Summary</h1>
+  <section class="prose">
+<h2 id="post-ms-rgb-hb-agb-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Point 2</strong>: HRD point marking complete core H exhaustion; creates the core–envelope chemical dichotomy ($\mu_i \ne \mu_e$).</li>
+<li><strong>Chemical dichotomy</strong>: He-rich core ($\mu_i=4/3$) beneath H-rich envelope ($\mu_e=0.63$); root cause of all post-MS structural evolution.</li>
+<li><strong>Point 3</strong>: H-burning shell ignites ($u&gt;0$); combined with chemical dichotomy, triggers envelope expansion.</li>
+<li><strong>Hertzsprung Gap</strong>: Sparsely populated CMD region for rapid Segment 4–5 crossing (intermediate/high-mass stars); reflects short time spent there.</li>
+<li><strong>Sub-Giant Branch (SGB)</strong>: Segment 4–5 becomes populated when crossing time is long (low-mass, old populations); its presence is an age indicator.</li>
+<li><strong>Hayashi Track (HT)</strong>: Locus of fully convective models, nearly vertical at $T_\text{eff}\approx3500$–$4000$K; no stable hydrostatic models exist to its right.</li>
+<li><strong>Red Giant Branch (RGB)</strong>: Ascent along/parallel to the HT, powered entirely by the H-shell; $L$ rises steeply while $T_\text{eff}$ changes little.</li>
+<li><strong>First Dredge-Up</strong>: Convective envelope mixes CN-processed material to the surface; produces the CN anticorrelation and a frozen H-abundance discontinuity.</li>
+<li><strong>RGB Bump</strong>: Temporary luminosity dip when the H-shell crosses the H-discontinuity from dredge-up; causes triple-crossing of a luminosity strip, a bump in the differential LF, and a slope change in the integrated LF.</li>
+<li><strong>Electron degeneracy</strong>: Non-relativistic degenerate electrons give $P\propto\rho^{5/3}$, independent of $T$; removes thermoregulation.</li>
+<li><strong>Transition mass $M=2.2\,M_\odot$</strong>: Boundary between degenerate (He-flash) and non-degenerate (stable) He ignition.</li>
+<li><strong>Helium Flash</strong>: Thermonuclear runaway of $3\alpha$ in a degenerate He-core; energy consumed internally lifting degeneracy — no surface luminosity signature.</li>
+<li><strong>Off-center ignition</strong>: Neutrino cooling creates a temperature inversion, so the Main Flash ignites off-center, followed by a cascade of sub-flashes working inward.</li>
+<li><strong>RGB Tip / TRGB</strong>: Universal, mass-independent maximum RGB luminosity ($\log L/L_\odot\approx3.45$) for $M&lt;2.2\,M_\odot$; used as a standard candle.</li>
+<li><strong>RGB Phase Transition</strong>: Sudden appearance of a well-populated RGB when turnoff mass drops below $2.2\,M_\odot$ ($\sim$1–2 Gyr); integrated light reddens.</li>
+<li><strong>Reimers law</strong>: Empirical RGB mass-loss prescription with free efficiency parameter $\eta$.</li>
+<li><strong>Zero Age Horizontal Branch (ZAHB)</strong>: Locus of stable He-core ignition onset; analog of the ZAMS, positioned by $q=M_c/M_E$.</li>
+<li><strong>Second parameter problem</strong>: Two clusters of equal age/metallicity can show very different HB morphology — an unresolved extra parameter (He abundance? mass loss?) is implicated.</li>
+<li><strong>EHB / AGB-manqué</strong>: Extremely H-poor HB stars that skip the AGB, evolving directly to post-HB blue subdwarfs; linked to the UV upturn in old populations.</li>
+<li><strong>Overshooting</strong>: Non-zero convective-cell velocity at the Schwarzschild border causes extra mixing beyond the formal boundary; parametrized by $\Lambda_\text{ov}$.</li>
+<li><strong>Semi-convection</strong>: Marginally stable ($\nabla_\text{rad}\approx\nabla_\text{ad}$) partially-mixed zone forming a three-zone core structure during He-burning.</li>
+<li><strong>HB blue loop</strong>: HRD loop from competing He-core expansion (segment A, bluer) and later core contraction/envelope expansion (segment B, redder).</li>
+<li><strong>Transition mass $M^\text{up}=8\,M_\odot$</strong>: Boundary between degenerate CO-core (WD fate) and non-degenerate CO-core (Type II SN fate).</li>
+<li><strong>AGB (Asymptotic Giant Branch)</strong>: Second ascent to the HT after He exhaustion in the core; double-shell burning phase.</li>
+<li><strong>Second Dredge-Up</strong>: E-AGB mixing event bringing CN-processed material to the surface; significant only for $M&gt;4$–$5\,M_\odot$.</li>
+<li><strong>Thermal Pulse (TP-AGB)</strong>: Cyclic alternation of H-shell and He-shell burning, each pulse a minor thermonuclear runaway in the He-shell.</li>
+<li><strong>Third Dredge-Up</strong>: Combination of intershell convection (pulse-driven) and envelope convection bringing C, O to the surface; source of Carbon Stars.</li>
+<li><strong>Carbon Star</strong>: AGB star whose surface C/O > 1 after repeated Third Dredge-Up.</li>
+<li><strong>s-process</strong>: Slow neutron capture (capture slower than $\beta$-decay) building elements past Fe along the valley of stability; AGB stars are a prime site.</li>
+<li><strong>Neutron poison</strong>: $^{14}$N absorbs neutrons efficiently, suppressing the s-process unless removed.</li>
+<li><strong>Hot Bottom Burning (HBB)</strong>: H-burning at the base of the convective envelope in massive AGB stars ($M&gt;6$–$7\,M_\odot$); raises $L$, destroys surface C, produces Li via Cameron-Fowler.</li>
+<li><strong>Cameron-Fowler mechanism</strong>: Convective transport of freshly made $^7$Li to cool layers before it is proton-destroyed, producing large Li overabundances.</li>
+<li><strong>NeNa / MgAl cycles</strong>: High-T proton-capture cycles in HBB producing O-Na and Mg-Al anticorrelations seen in globular clusters.</li>
+<li><strong>AGB Phase Transition</strong>: Onset of a well-populated, luminous AGB when turnoff mass drops below $8\,M_\odot$ ($\sim$200–300 Myr).</li>
+</ul>
+<h2 id="post-ms-rgb-hb-agb-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>$\mu = 1/(2X+\tfrac34 Y+\tfrac12 Z)$ — mean molecular weight from composition; gives $\mu_e=0.63$, $\mu_i=4/3$.</li>
+<li>$P=k\rho T/(\mu H)$ — ideal gas EoS; used to link $\rho,T,P$ across the core–envelope boundary.</li>
+<li>$\rho_i/\rho_e=\mu_i/\mu_e\approx2.11$ — density jump at the boundary from continuity of $P,T$.</li>
+<li>$\left(\frac{d\rho}{dr}\right)_e\Big/\left(\frac{d\rho}{dr}\right)_i=(\mu_e/\mu_i)^2\dfrac{\alpha-\gamma\beta}{\alpha-\beta}$ — master formula for the envelope/core density-gradient ratio; ratio $\ll1$ forces envelope expansion.</li>
+<li>$\gamma=(1+u)\dfrac{1+X_e}{1+X_i}\left(\dfrac{\mu_e}{\mu_i}\right)^n$ — combines shell efficiency $u$ and chemistry/opacity factors; $\gamma&gt;1$ needed (requires $u&gt;0.3$) for expansion beyond the ZAMS value $\gamma=1$.</li>
+<li>$L=4\pi R^2\sigma T_\text{eff}^4$ — Stefan-Boltzmann; explains constant-$L$, rising-$R$, falling-$T_\text{eff}$ on the SGB.</li>
+<li>$dT/dr \propto \kappa\rho L/(T^3 r^2)$, with $\kappa\propto(1+X)\rho^n$ — radiative gradient and opacity law used to derive $\gamma$.</li>
+<li>$L_H\propto\mu^7$ — extreme sensitivity of shell luminosity to mean molecular weight; explains the RGB Bump dip and the tight $M_c^\text{He}$–$L$ relation.</li>
+<li>$\log T=\tfrac23\log\rho+5$ — boundary between ideal-gas and non-relativistic degenerate electron gas.</li>
+<li>$P\propto\rho^{5/3}$ — degenerate electron pressure (T-independent), source of the runaway in the He Flash.</li>
+<li>$\varepsilon_{3\alpha}\propto T^{25}$ — extreme temperature sensitivity of the triple-alpha reaction, driving both the He Flash runaway and TP thermal pulses.</li>
+<li>$T/\rho^{2/3}&gt;10^5$ — condition for degeneracy to be lifted during the He-flash cascade.</li>
+<li>$M_c^\text{He}\approx0.5\,M_\odot$ — universal He-core mass at ignition for all $M&lt;2.2\,M_\odot$ stars; basis of the RGB Tip standard candle.</li>
+<li>$\log(L/L_\odot)\approx3.45$, $M_I\approx-4.0$ — universal RGB Tip luminosity, used as TRGB distance indicator: $(m-M)_I=m_I+4.0$.</li>
+<li>$g=GM/R^2$ and $\dot M\propto LR/M$ — surface gravity and general mass-loss scaling (low $g$ → high mass loss).</li>
+<li>Reimers law: $\dot M=-4\times10^{-13}\,\eta\,\dfrac{L}{gR}\;M_\odot\,\text{yr}^{-1}$ — empirical RGB mass-loss rate ($\eta\sim0.2$–0.5).</li>
+<li>$q=M_c/M_E$ — parameter setting ZAHB position; higher $q$ (thinner envelope) → hotter/bluer HB.</li>
+<li>$M_V(\text{ZAHB})\approx+0.5$ (metal-poor GCs) — ZAHB luminosity as a distance indicator.</li>
+<li>$\kappa_\text{FF}=D_\text{FF}(Z)/u^3$, $D_\text{FF}\propto Z^2$ — free-free opacity scaling; explains growing convective core during He-burning as C,O accumulate.</li>
+<li>$dP/P=4(s/r)\,d\rho/\rho$ and $(d\rho/\rho)(4s/r-\alpha)=\beta\,dT/T$ — thin-shell relations; when $4s/r&lt;\alpha$, density decrease raises $T$, producing the TP-AGB thermal-pulse runaway.</li>
+<li>$t_\text{TP}\approx2\times10^5$ yr (0.6 $M_\odot$ CO core) vs. $\approx10^3$ yr (5 $M_\odot$ core) — inter-pulse timescale, shorter for more massive cores.</li>
+<li>s-process neutron capture: $A+n\to(A+1)+\gamma$, followed by $\beta$-decay if unstable — defines "slow" relative to decay time.</li>
+<li>$^{22}$Ne chain (needs $T\sim3.5\times10^8$K, $M&gt;3\,M_\odot$): $^{14}N(\alpha,\gamma)^{18}F\to^{18}O(\alpha,\gamma)^{22}Ne(\alpha,n)^{25}Mg$ — high-mass neutron source.</li>
+<li>$^{13}$C source (needs $T\sim9\times10^7$K): $^{13}C(\alpha,n)^{16}O$, with $^{13}$C built via $^{12}C(p,\gamma)^{13}N(\beta^+)^{13}C$ — low-mass neutron source.</li>
+<li>$^{14}N(n,\gamma)^{15}N$ — neutron poison reaction suppressing the s-process unless $^{14}$N is converted away.</li>
+<li>Cameron-Fowler chain: $^3He(\alpha,\gamma)^7Be(e^-,\nu)^7Li$, destroyed by $^7Li(p,\alpha)^4He$ unless convected to cool layers.</li>
+</ul>
+<h2 id="post-ms-rgb-hb-agb-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Envelope-expansion derivation</strong>: (i) equate $P,T,M$ at core–envelope boundary; (ii) get $\rho_i/\rho_e=\mu_i/\mu_e$ from the EoS; (iii) differentiate EoS to get the density-gradient ratio; (iv) get pressure-gradient ratio from hydrostatic equilibrium; (v) get temperature-gradient ratio from radiative transport + opacity law; (vi) combine into the master formula; (vii) evaluate $\gamma$ to determine if/how much the envelope must expand.</li>
+<li><strong>He-Flash cascade</strong>: Main Flash ignites off-center (due to neutrino-cooled temperature inversion) → convection lifts degeneracy in a shell above the ignition point → Second Flash ignites at new degenerate/non-degenerate boundary → cascade repeats inward until the whole core is non-degenerate (~$10^6$ yr, only ~5% of He converted) → post-flash core expansion/H-shell dimming (A→B) → stable 3$\alpha$ ignition at ZAHB (B→C).</li>
+<li><strong>Convective-core evolution during He-burning (overshooting/semi-convection)</strong>: Step 1 — overshooting mixes C,O outward and He inward, temporarily lowering $\nabla_\text{rad}$; Step 2 — $\nabla_\text{rad}$ develops a minimum that touches $\nabla_\text{ad}$, splitting the convective zone; Step 3 — the outer sub-region becomes marginally stable (semi-convective), yielding the three-zone (convective core / semi-convective / radiative) structure.</li>
+<li><strong>HB blue loop</strong>: Segment A — 3$\alpha$-driven core convection expands the core, pushes the H-shell outward/cooler, envelope contracts, star moves blueward; Segment B — core contraction as He depletes raises 3$\alpha$ rate, envelope expands, star moves redward; absent (no segment A) in EHB stars lacking an H-envelope.</li>
+<li><strong>TP-AGB cycle</strong>: H-shell burns and deposits He onto intershell → intershell mass reaches critical value → He-shell ignites (thermal pulse, runaway via thin-shell instability) → convection/expansion cools and switches off H-shell → He-shell fuel exhausts, intershell contracts → H-shell reignites → repeat.</li>
+<li><strong>Third Dredge-Up</strong>: (i) intershell convection during a thermal pulse homogenizes and C/O-enriches the intershell; (ii) after inner convection ceases, envelope convection deepens and reaches the enriched intershell; (iii) C,O-rich material is carried to the surface — repeated cycles raise surface C/O, eventually producing a Carbon Star.</li>
+<li><strong>TRGB distance determination</strong>: measure apparent $I$-band magnitude of the sharp RGB-tip discontinuity in the luminosity function → apply $(m-M)_I=m_I+4.0$ → correct for extinction and (weak) metallicity dependence → solve $5\log d-5=(m-M)_0$ for distance.</li>
+</ol>
+<h2 id="post-ms-rgb-hb-agb-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>Both ingredients (chemical dichotomy <strong>and</strong> active shell, $u&gt;0$) are required for expansion; dichotomy alone (Points 2→3) causes no significant expansion.</li>
+<li>$\gamma&gt;1$ requires $u&gt;0.3$ regardless of opacity law ($n=0$ or $1$) — don't assume any shell activity suffices.</li>
+<li>The Helium Flash releases $L\sim10^{11}L_\odot$ internally but produces <strong>no observable brightening</strong> at the surface — a common trap is assuming the flash is directly observed.</li>
+<li>The Main Flash is <strong>off-center</strong>, driven by neutrino cooling creating a temperature inversion — not a naive assumption that ignition starts at $r=0$.</li>
+<li>Only $\sim5\%$ of core He is converted during the entire flash cascade — the flashes remove degeneracy, they are not the main He-burning event.</li>
+<li>$M_c^\text{He}\approx0.5\,M_\odot$ is universal only for $M&lt;2.2\,M_\odot$; stars below $0.5\,M_\odot$ never reach it and become He-WDs without HB.</li>
+<li>The TRGB standard candle applies <strong>only</strong> to populations older than ~1–2 Gyr (i.e., containing low-mass, degenerate-core stars) — not to young populations.</li>
+<li>HB position is set by $q=M_c/M_E$, not by total mass directly; since $M_c$ is fixed (~0.5 $M_\odot$), all variation comes from $M_E$ (mass loss + age + Y + metallicity).</li>
+<li>The "second parameter problem" is unresolved — do not attribute HB morphology to age and metallicity alone.</li>
+<li>Bolometric HB luminosity is nearly uniform across morphology types; apparent diversity in visual/UV bands is a bandpass effect, not a true luminosity spread (relevant to why EHB stars look faint in $R$-band).</li>
+<li>Overshooting/semi-convection only matters for the <em>core</em> during He-burning; during H-burning in massive MS stars the convective core <em>shrinks</em> (opposite trend) due to falling opacity as He replaces H.</li>
+<li>The Second Dredge-Up is significant only for $M&gt;4$–$5\,M_\odot$ — do not conflate with the (universal) First Dredge-Up.</li>
+<li>The Third Dredge-Up requires two convective events that are <strong>not simultaneous</strong> — intershell convection first, then (separately) envelope convection reaching down; a common error is treating them as one mixing episode.</li>
+<li>$^{14}$N is a neutron poison: an efficient s-process needs conditions that remove it (He-rich, via the $^{22}$Ne chain) while independently generating $^{13}$C — the two neutron sources ($^{13}$C vs $^{22}$Ne) apply to different mass ranges and different temperatures.</li>
+<li>HBB explains why <strong>massive</strong> AGB stars ($M&gt;6$–$7\,M_\odot$) do NOT become carbon stars despite active Third Dredge-Up — CNO cycling at the envelope base destroys the dredged-up $^{12}$C.</li>
+<li>Li production via Cameron-Fowler requires convective transport to cool layers <strong>before</strong> proton destruction — without convection, all Li is destroyed; this is why only bright LPVs (with deep envelope convection) show Li excess.</li>
+<li>Three critical masses must not be confused: $0.5\,M_\odot$ (He-ignition threshold), $2.2\,M_\odot$ (degenerate/non-degenerate He-core, RGB Ph-T), $8\,M_\odot$ (degenerate/non-degenerate CO-core, AGB Ph-T, WD vs. SN fate).</li>
+<li>$7$–$11\,M_\odot$ is a genuinely uncertain transition zone (O-Mg WD, electron-capture SN, or Type II SN) — not a clean boundary at exactly $8\,M_\odot$.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="pulsating-stars" hidden>
+  <h1 class="title">Pulsating Stars — Summary</h1>
+  <section class="prose">
+<h2 id="pulsating-stars-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Pulsating star:</strong> intrinsic periodic oscillation of stellar radius $R$ and effective temperature $T_e$, producing a periodic luminosity/light curve (not caused by eclipses).</li>
+<li><strong>Instability Strip:</strong> near-vertical band in the HRD ($T_{\rm eff}\approx6300$–$7100$ K, $\delta T\sim600$–$1000$ K) where pulsation occurs; pulsation is a transient phase, not a permanent property.</li>
+<li><strong>Cepheids ($\delta$ Cephei prototype):</strong> Population I radial pulsators, periods 1–50 days; historically the first-studied class.</li>
+<li><strong>Light curve:</strong> periodic apparent-magnitude variation; classical Cepheids show fast rise, slow decline.</li>
+<li><strong>Leavitt's discovery / Period–Luminosity (P-L) relation:</strong> more luminous Cepheids have longer periods (found using the SMC's common distance).</li>
+<li><strong>Cosmic Distance Ladder:</strong> the P-L relation is its first rung — all extragalactic distances trace back to it.</li>
+<li><strong>Radial pulsation (Shapley 1914, mechanism by Eddington, zones by Zhevakin):</strong> whole-star expansion/contraction; $R$ and $T_e$ vary in <strong>anti-phase</strong> (adiabatic heating/cooling).</li>
+<li><strong>Phase Lag:</strong> observed delay — maximum luminosity occurs slightly <em>after</em> minimum radius, not simultaneously.</li>
+<li><strong>Pulsating star classes</strong> (Table 14.1): LPVs, Classical Cepheids, W Virginis (Pop II Cepheid analogs), RR Lyrae (Pop II, HB), $\delta$ Scuti (MS, radial+non-radial), $\beta$ Cephei, ZZ Ceti (WD, non-radial).</li>
+<li><strong>Strip crossings:</strong> 1st (post-MS expansion, fast), 2nd (He-burning/HB, slow — dominant source of observed pulsators), 3rd (toward AGB, fast).</li>
+<li><strong>RR Lyrae as standard candles:</strong> near-constant HB luminosity ($M_V\approx+0.5$) regardless of period.</li>
+<li><strong>HB morphology / "second parameter" problem:</strong> metallicity, He abundance, age, mass loss set whether a cluster's HB crosses the strip (hosts RR Lyrae) or lies entirely red/blue of it.</li>
+<li><strong>Standing acoustic wave modes:</strong> fundamental (no interior node), first overtone (1 node), second overtone (2 nodes) — pipe-with-closed-center analogy; higher overtones = shorter period.</li>
+<li><strong>Period–Density relation:</strong> $\Pi\propto\rho^{-1/2}$ — the physical root of the P-L relation.</li>
+<li><strong>Eddington valve / Carnot-engine analogy:</strong> a driving layer must convert heat into mechanical work like a heat engine (clockwise P–V loop = driving).</li>
+<li><strong>$\kappa$-mechanism (Zhevakin):</strong> in partially ionized zones, opacity rises on compression (opposite of Kramers' law), trapping/releasing heat in the right phase to drive oscillations.</li>
+<li><strong>$\gamma$-mechanism:</strong> secondary driving effect — ionization absorbs energy, suppressing $\delta T$, encouraging extra heat inflow.</li>
+<li><strong>He II ionization zone ($T\approx4\times10^4$K):</strong> the real "piston" driving pulsation.</li>
+<li><strong>H ionization zone ($T\approx1.5\times10^4$K):</strong> does not drive strongly but produces the Phase Lag.</li>
+<li><strong>Blue edge / Red edge:</strong> strip boundaries from two distinct causes — too little overlying mass (blue) vs. convective damping (red).</li>
+<li><strong>One-zone model:</strong> toy model (all mass at center, thin shell) used to derive the dynamical-stability condition.</li>
+<li><strong>Dynamical stability condition:</strong> oscillation requires $\gamma&gt;4/3$.</li>
+<li><strong>Period–Luminosity–Color (PLC) relation:</strong> the more fundamental relation; the simple PL relation is the PLC evaluated at mean Cepheid color.</li>
+</ul>
+<h2 id="pulsating-stars-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>Stefan–Boltzmann (why $L$ varies): <p class="display-math">$$L=4\pi R^2\sigma T_e^4$$</p></li>
+<li>P-L relation (empirical, standard candle use): <p class="display-math">$$M_V=-2.8\log P_{\rm days}-1.43$$</p></li>
+<li>Distance modulus: <p class="display-math">$$(m-M)_V=\langle V\rangle-M_V,\qquad (m-M)_0=5\log d-5$$</p></li>
+<li>Pulsation period as acoustic crossing time: <p class="display-math">$$\Pi=2\int_0^R\frac{dr}{v_s}$$</p></li>
+<li>Adiabatic sound speed: <p class="display-math">$$v_s=\sqrt{\gamma P/\rho}$$</p> (from $B=-V(\partial P/\partial V)_{ad}=\gamma P$)</li>
+<li>Hydrostatic pressure in a uniform-density star: <p class="display-math">$$P(r)=\tfrac{2}{3}\pi G\rho^2(R^2-r^2)$$</p></li>
+<li><strong>Boxed period–density result</strong> (from acoustic derivation): <p class="display-math">$$\Pi\approx\sqrt{\dfrac{3\pi}{2\gamma G\rho}}\ \Rightarrow\ \Pi\propto\rho^{-1/2}$$</p></li>
+<li>One-zone linearized equation of motion (SHM): <p class="display-math">$$\ddot{(\delta R)}=-(3\gamma-4)\dfrac{GM}{R_0^3}\delta R,\qquad \omega^2=(3\gamma-4)\dfrac{GM}{R_0^3}$$</p></li>
+<li>One-zone period (equivalent form): <p class="display-math">$$\boxed{P=\dfrac{2\pi}{\sqrt{\tfrac{4\pi}{3}G\rho_0}}}$$</p> — real oscillation requires $\omega^2&gt;0\Rightarrow\gamma&gt;4/3$.</li>
+<li>Period in terms of $M,L,T_{\rm eff}$: <p class="display-math">$$\boxed{\log P=-\tfrac12\log M+\tfrac34\log L-3\log T_{\rm eff}+c}$$</p></li>
+<li>Final PLC relations (period depends on <strong>both</strong> magnitude and color): <p class="display-math">$$\boxed{\log P=-0.239M_V+0.602(B-V)-0.456}$$</p> <p class="display-math">$$\boxed{M_V=-3.53\log P_{\rm days}-2.13+2.13(B-V)}$$</p></li>
+</ul>
+<h2 id="pulsating-stars-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Cepheid distance determination:</strong></li>
+</ol>
+<p>   1. From the light curve, measure period $P$ and mean apparent magnitude $\langle V\rangle$.    2. Get $M_V$ from the P-L relation using $P$.    3. Compute distance modulus $(m-M)_V=\langle V\rangle-M_V$ (correct for reddening if present), then solve $5\log d-5=(m-M)_0$ for $d$.</p>
+<ol>
+<li><strong>Period–density derivation (acoustic wave method):</strong> compute $v_s(r)$ from adiabatic sound speed → get $P(r)$ from hydrostatic equilibrium (uniform $\rho$) → substitute into $\Pi=2\int dr/v_s$ → integrate (substitution $x=r/R$, $\int_0^1 dx/\sqrt{1-x^2}=\pi/2$) → obtain $\Pi\propto\rho^{-1/2}$.</li>
+<li><strong>$\kappa$-mechanism driving cycle (per partially ionized layer):</strong> compression → temperature rise diverted into ionization → opacity increases → energy trapped; expansion → recombination releases stored energy → opacity drops → energy escapes. Net effect: heat absorbed when hot, released when cold → positive work → driving.</li>
+<li><strong>PLC derivation chain:</strong> period–density relation → substitute $\rho\propto M/R^3$ → eliminate $R$ via Stefan–Boltzmann → eliminate $M$ via the ZAMS mass–luminosity relation (shifted +1 mag for He-burning stage) → convert $M_{\rm bol}$ to $M_V,(B-V)$ via bolometric correction and $T_e$–color calibration → final PLC relation.</li>
+</ol>
+<h2 id="pulsating-stars-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>Luminosity variation is driven <strong>mainly by $T_e^4$, not $R^2$</strong> — radius changes only ~10%, but this is a common source of confused reasoning.</li>
+<li>Maximum luminosity coincides with maximum $T_e$ and <strong>minimum radius</strong> — but maximum <em>observed</em> luminosity lags slightly behind minimum radius (Phase Lag), caused by the <strong>H-ionization zone</strong>, not the He zone.</li>
+<li>Don't confuse the driving layer (<strong>He II zone = piston</strong>) with the phase-lag layer (<strong>H zone</strong>) — removing He II kills pulsation entirely; removing H just removes the phase lag.</li>
+<li>Kramers' opacity ($\kappa\propto\rho/T^{3.5}$) is normally <strong>damping</strong> (opacity drops when compressed/hot) — the $\kappa$-mechanism only works because partially ionized zones reverse this trend.</li>
+<li>Instability strip edges have <strong>two different physical causes</strong>: blue edge = ionization zones too shallow (mass problem), red edge = convection damping — do not attribute both edges to the same mechanism.</li>
+<li>Dynamical stability requires $\gamma&gt;4/3$; if radiation pressure or ionization pushes $\gamma$ toward or below $4/3$, the star becomes unstable (collapse/explosion) rather than oscillatory.</li>
+<li>The "P-L relation" is an approximation of the more fundamental <strong>P-L-Color (PLC) relation</strong> — scatter in the classic PL diagram is largely due to ignoring color/metallicity differences.</li>
+<li>RR Lyrae work as standard candles because they share nearly the same HB luminosity — this only holds because they're all in the same evolutionary stage (core He-burning), not a universal property of pulsators.</li>
+<li>Whether a cluster hosts RR Lyrae depends on <strong>HB morphology</strong> (metallicity and He abundance shift HB stars red or blue of the strip) — a purely evolutionary/compositional effect, unrelated to the pulsation mechanism itself.</li>
+<li>Most Cepheids/RR Lyrae observed are in the <strong>second (He-burning) strip crossing</strong> because it is much slower than the first and third crossings — not because it's the only crossing that exists.</li>
+<li>Classical Cepheids and W Virginis pulsate in the <strong>fundamental mode</strong>; RR Lyrae can pulsate in fundamental, first overtone, or both (double-mode/beat) — know which classes allow overtone pulsation.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="white-dwarfs" hidden>
+  <h1 class="title">White Dwarfs — Summary</h1>
+  <section class="prose">
+<h2 id="white-dwarfs-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>$M_\mathrm{up}$ ($\approx 8\,M_\odot$):</strong> mass boundary separating stars that end as WDs (degenerate CO core, no further burning) from stars that ignite carbon and beyond.</li>
+<li><strong>Reimers law regime / stellar wind:</strong> empirical mass-loss prescription for RGB/AGB stars, parametrised by free efficiency parameter $\eta$.</li>
+<li><strong>Radiation-driven / dust-driven wind:</strong> mass loss driven by radiation pressure on dust grains formed in cool, extended atmospheres.</li>
+<li><strong>Superwind:</strong> extreme terminal AGB mass-loss phase ($\dot M \sim 10^{-4}\,M_\odot\,\mathrm{yr}^{-1}$) linked to MIRA pulsations; ends the AGB when envelope mass drops below $10^{-3}\,M_\odot$.</li>
+<li><strong>Planetary Nebula (PN):</strong> UV-ionised ejected envelope, triggered once the contracting remnant reaches $T_\mathrm{eff}\approx 30{,}000$ K.</li>
+<li><strong>CO white dwarf:</strong> the electron-degenerate carbon-oxygen remnant left after envelope ejection and cessation of nuclear burning.</li>
+<li><strong>Electron degeneracy:</strong> quantum state where the Pauli exclusion principle sets the pressure, independent of temperature; condition $T/\rho^{2/3} &lt; D = 1.3\times10^5$.</li>
+<li><strong>DA/DB/DC spectral classes:</strong> WD atmosphere types (H-rich ~80%, He-rich ~8%, featureless ~14%), explained by gravitational settling of heavy elements under extreme surface gravity.</li>
+<li><strong>Mass-radius relation (non-relativistic):</strong> $R \propto M^{-1/3}$ — WDs get smaller as they get more massive (opposite of normal stars).</li>
+<li><strong>Chandrasekhar mass ($M_\mathrm{Ch}$):</strong> the unique maximum mass ($1.44\,M_\odot$) an electron-degenerate structure can support; applies generally, not only to WDs (also degenerate He cores, degenerate Fe cores).</li>
+<li><strong>Isothermal degenerate core:</strong> highly efficient electron conduction (Pauli-blocked scattering → long mean free paths) flattens the temperature profile in the interior.</li>
+<li><strong>Degenerate/non-degenerate border:</strong> the radius ($r/R_\mathrm{WD}\approx0.97$) where $T/\rho^{2/3}=D$ exactly; core temperature $T_c$ holds there since the core is isothermal.</li>
+<li><strong>Mestel cooling law (1952):</strong> WD cooling model where luminosity is drawn purely from ionic thermal energy, giving $L\propto t^{-7/5}$ at late times.</li>
+<li><strong>Crystallisation:</strong> CO ions form an ordered lattice as $T_c$ drops, releasing latent heat and producing a luminosity plateau in cooling curves.</li>
+<li><strong>WD luminosity function (WDLF):</strong> number density of WDs vs. luminosity; its faint-end cutoff is used as a cosmic chronometer, though less precise than main-sequence turnoff (MS-TO) dating.</li>
+<li><strong>Slowly cooling WDs (Chen et al. 2021):</strong> WDs with residual H-layer above $10^{-4}M_\mathrm{WD}$ that sustain stable H-burning, cooling more slowly than canonical models predict; linked to blue Horizontal Branch (E-HB) progenitors that skip the AGB and Third Dredge-Up.</li>
+</ul>
+<h2 id="white-dwarfs-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>Surface gravity: $g = GM/R^2$ — governs binding of surface layers; drops ~5 orders of magnitude from MS to RGB, driving mass loss.</li>
+<li>General mass-loss scaling: $\dot M \propto LR/M$ — mass loss favoured by high luminosity, large radius, low mass.</li>
+<li>Reimers law: $\dot M = -4\times10^{-13}\eta\,L/(gR)\ [M_\odot\,\mathrm{yr}^{-1}]$ — empirical RGB/AGB mass-loss rate.</li>
+<li>Stefan-Boltzmann: $L = 4\pi\sigma R^2T^4$ — used to show post-AGB contraction at constant $L$ raises $T$, and (with $R$=const) gives WD cooling tracks slope 4 in $\log L$–$\log T_e$.</li>
+<li>Degeneracy condition: $T/\rho^{2/3} &lt; D=1.3\times10^5$ (T in K, $\rho$ in g cm$^{-3}$) — tests whether a plasma is electron-degenerate.</li>
+<li>Electron number density: $n_e = (Z/A)\,\rho/m_H$ — used throughout degenerate-pressure derivations.</li>
+<li>Non-relativistic degenerate pressure: $P \sim \tfrac{1}{3}(\hbar^2/m_e)[(Z/A)\rho/m_H]^{5/3}$, exact form with $(3\pi^2)^{2/3}/5$ — valid while electrons are non-relativistic; $P\propto\rho^{5/3}$, $T$-independent (why WDs cool at constant $R$).</li>
+<li>Non-relativistic mass-radius relation: $M^{1/3}R \sim 3\times10^{19}$ [cgs] — more massive WD → smaller radius; breaks down once electrons go relativistic ($v\sim c/3$ at $\rho=10^6\,\mathrm{g\,cm^{-3}}$).</li>
+<li>Relativistic degenerate pressure: $P = \dfrac{(3\pi^2)^{1/3}}{4}\hbar c\,[(Z/A)\rho/m_H]^{4/3}$ — applies once electrons are ultra-relativistic; $P\propto\rho^{4/3}$.</li>
+<li>Chandrasekhar mass: $M_\mathrm{Ch} = \dfrac{3\sqrt{2\pi}}{8}(\hbar c/G)^{3/2}[(Z/A)/m_H]^2 = 1.44\,(1+X)^2\,M_\odot$ — the unique fixed mass where relativistic degenerate pressure balances gravity; no equilibrium above it.</li>
+<li>Luminosity-central temperature relation: $L = c\,T_c^{7/2}$, with $c = 7.3\times10^5\,(M_\mathrm{WD}/M_\odot)\,\mu/[Z(1+X)]$ — links observable $L$ to core temperature via the thin non-degenerate envelope (Kramers opacity).</li>
+<li>Thermal energy reservoir: $U = (M_\mathrm{WD}/Am_H)\,\tfrac{3}{2}kT_c$ — the sole energy source for WD luminosity ($\approx 2.5\times10^{47}$ erg for $1M_\odot$ at $T_c=10^7$K).</li>
+<li>Mestel cooling law: $L_\mathrm{WD}(t) = L_0\,[1+\tfrac{5}{2}t/\tau_0]^{-7/5}$, with $\tau_0=B/(cT_0^{5/2})$ — predicts $L\propto t^{-7/5}$ at late times, near-linear decline early on.</li>
+<li>Cooling-time formula: $t_\mathrm{cool} = 8.8\times10^6\,(M/M_\odot)^{5/7}(L/L_\odot)^{-5/7}$ yr (canonical CO, $A=12,\mu=2$) — more massive WDs take longer to cool to a given $L$.</li>
+<li>Density-mass relation: $\rho \propto M^2$ — small mass increase (e.g. accretion) drives a large density increase; key to Type Ia SN ignition as $M\to M_\mathrm{Ch}$.</li>
+</ul>
+<h2 id="white-dwarfs-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Deriving degenerate electron pressure (order-of-magnitude):</strong> get $n_e$ from composition and density → get momentum $p$ from Heisenberg uncertainty ($\Delta x\sim n_e^{-1/3}$) → get velocity $v=p/m_e$ (non-rel.) or $v=c$ (rel.) → combine via $P\sim\tfrac13 n_e pv$.</li>
+<li><strong>Deriving the mass-radius relation / Chandrasekhar mass:</strong> equate degenerate pressure to the virial/hydrostatic estimate $\tfrac23\pi G\rho^2R^2$ → substitute uniform-density $\rho=M/(\tfrac43\pi R^3)$ → in the non-relativistic case $R$-powers leave a residual $R^{-1}$ dependence (gives $M^{1/3}R=$const); in the relativistic case all $R$-dependence cancels (gives a fixed $M=M_\mathrm{Ch}$, no free radius).</li>
+<li><strong>Deriving $L=cT_c^{7/2}$:</strong> combine hydrostatic equilibrium and radiative gradient in the non-degenerate envelope → substitute Kramers opacity $\kappa=\kappa_0\rho T^{-3.5}$ and ideal-gas EOS → integrate from surface ($P\approx0$) to the degenerate border → impose $T=T_c$ and $T/\rho^{2/3}=D$ at that border → solve for $L$.</li>
+<li><strong>Deriving the Mestel law:</strong> equate envelope luminosity $L=cT_c^{7/2}$ to reservoir depletion $L=-B\,dT_c/dt$ → separate variables and integrate from $T_0$ at $t=0$ → obtain $T_c(t)$ then $L(t)$.</li>
+<li><strong>WD chronometry method:</strong> observe cluster/field WD population → build the WD luminosity function (WDLF) → identify the faint-end cutoff (oldest WDs) → convert cutoff luminosity to age via the Mestel/cooling-time formula.</li>
+<li><strong>Testing for slow-cooling WDs (Chen et al. 2021 logic):</strong> compare "twin" clusters of identical age/metallicity but different HB morphology → excess of bright WDs in the blue-HB cluster → attribute to AGB-skipping (E-HB) progenitors retaining $M_H&gt;10^{-4}M_\mathrm{WD}$ → confirm via lower $N_\mathrm{AGB}/N_\mathrm{HB}$ ratio and via cooling models mixing standard + H-burning WDs to fit the observed WDLF.</li>
+</ol>
+<h2 id="white-dwarfs-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>$M_\mathrm{Ch}=1.44\,M_\odot$ is <strong>not</strong> the initial stellar mass — it is the mass of the electron-degenerate substructure only (applies equally to CO WDs, He WDs, and degenerate Fe cores in massive stars).</li>
+<li>Degenerate pressure is temperature-independent — this, not "no fuel," is the reason cooling occurs at constant radius (no structural adjustment when $T$ drops).</li>
+<li>Non-relativistic $M^{1/3}R=$const cannot be extrapolated to high mass; electrons become relativistic ($v\sim c/3$ already at $\rho=10^6\,\mathrm{g\,cm^{-3}}$), forcing the switch to $P\propto\rho^{4/3}$.</li>
+<li>At the Chandrasekhar limit the idealised $R\to0$; real physics intervenes via inverse beta decay/neutronisation before that, leading to a neutron star or (if via accretion) a Type Ia SN — not a literal point object.</li>
+<li>$T_c$ in the Mestel law is the <strong>central</strong>, not surface, temperature; the link to observable $T_\mathrm{eff}$ runs through the thin non-degenerate envelope only.</li>
+<li>Counterintuitive result: at <strong>fixed age</strong>, more massive WDs are <strong>more luminous</strong> (they cool slower, larger reservoir) — opposite of the fixed-$T_e$ comparison where more massive WDs are less luminous (smaller radius).</li>
+<li>The theoretical HR-diagram cooling track is a straight line, but the <strong>observational CMD</strong> shows a kink near $T_e\approx10{,}000$K from the H ionisation/opacity transition — not a real change in cooling physics.</li>
+<li>WD chronometry is systematically biased young if slow-cooling WDs (thick residual H, blue-HB progenitors) are present and uncorrected; the technique remains less precise than MS-TO dating even in ideal cases.</li>
+<li>$\rho\propto M^2$ means even small accreted mass causes a large density jump — the physical trigger connecting WD accretion to Type Ia SN ignition near $M_\mathrm{Ch}$.</li>
+<li>Only ~80% of WDs are DA (H atmosphere) despite virtually all retaining some H layer initially — gravitational settling, not composition alone, explains the spectral-type distribution.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="final-stages-high-mass" hidden>
+  <h1 class="title">Final Stages of High-Mass Stars — Summary</h1>
+  <section class="prose">
+<h2 id="final-stages-high-mass-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>$M_\mathrm{up}$ ($\sim 8\,M_\odot$):</strong> transition mass separating WD-forming stars from those that later form neutron stars/BHs.</li>
+<li><strong>Mildly degenerate CO core regime ($7$–$11\,M_\odot$):</strong> ignites C under partial electron degeneracy → carbon flash → O-Ne WD or EC-SN.</li>
+<li><strong>No-degenerate CO core regime ($&gt;11\,M_\odot$):</strong> non-degenerate C ignition, full advanced-burning sequence to Type II CCSN.</li>
+<li><strong>Carbon flash:</strong> He-flash analog; degeneracy decouples P from T so ignition runs away before expansion can cool it; occurs off-centre due to central neutrino cooling.</li>
+<li><strong>Super-AGB phase:</strong> AGB-like evolution (2nd/3rd dredge-up, He-shell thermal pulses, dredge-out) around a compact O-Ne-Mg core instead of a CO core.</li>
+<li><strong>Electron-capture supernova (EC-SN):</strong> collapse triggered by $e^-$ capture on Mg/Ne (not photodisintegration of Fe) when O-Ne-Mg core nears $M_\mathrm{Ch}$; weak explosion, low $^{56}$Ni, leaves a neutron star.</li>
+<li><strong>O-Ne white dwarf:</strong> remnant of Super-AGB star if envelope is lost before core reaches $M_\mathrm{Ch}$; higher mass ($1.0$–$1.2\,M_\odot$) and faster cooling than CO WDs (larger mean ion mass → lower heat capacity).</li>
+<li><strong>Staircase structure:</strong> alternating stable-burning plateaus and rapid gravitational-contraction ramps in $T$–time space, driven by neutrino losses forcing contraction between fuels.</li>
+<li><strong>Photo-disintegration:</strong> high-energy photons breaking nuclei apart; drives Ne-burning, Si-burning, and (catastrophically) Fe-core breakup.</li>
+<li><strong>Nuclear statistical equilibrium (NSE):</strong> end-state of Si burning; abundance distribution set by nuclear binding energy, favoring iron-peak nuclei.</li>
+<li><strong>URCA process:</strong> $p^+ + e^- \rightarrow n+\nu_e$, removes both electrons and energy with no compensating gain — pure energy sink.</li>
+<li><strong>Onion-shell structure:</strong> concentric compositional layers (H/He/C/O/Ne/Si/Fe) built up by sequential burning, innermost = inert Fe core.</li>
+<li><strong>Adiabatic index $\Gamma$ instability:</strong> collapse becomes unavoidable once $\Gamma&lt;4/3$ (Jeans criterion violated).</li>
+<li><strong>Core bounce:</strong> nuclear-density incompressibility halts inner-core infall and rebounds, launching the shock.</li>
+<li><strong>Neutrino-sphere:</strong> surface below which neutrinos are trapped/diffusing, above which they escape freely.</li>
+<li><strong>Gain region:</strong> shell between neutrino-sphere and stalled shock where neutrino absorption deposits energy.</li>
+<li><strong>Delayed neutrino-driven explosion (Wilson 1985):</strong> currently favored mechanism reviving the stalled shock via neutrino heating in the gain region, ~100–500 ms post-bounce.</li>
+<li><strong>Explosive nucleosynthesis:</strong> new, non-equilibrium nuclear burning triggered as the shock heats each onion shell during passage (distinct from pre-collapse hydrostatic burning).</li>
+<li><strong>r-process (rapid neutron capture):</strong> neutron capture faster than beta decay; builds very neutron-rich nuclei up to heaviest elements; occurs in innermost ejecta. Contrast <strong>s-process</strong> (AGB, slow capture, follows valley of stability).</li>
+<li><strong>Recombination front:</strong> boundary in the H envelope where H$^+$ recombines to HI, controlling opacity drop and hence the SN light curve peak/plateau.</li>
+<li><strong>SN spectroscopic classification:</strong> empirical tree by H (Type I/II) → Si (Ia) → He (Ib/Ic); purely observational, not mechanism-based.</li>
+<li><strong>Prompt vs fallback black hole:</strong> prompt = explosion fails outright (no visible SN); fallback = explosion succeeds but ejecta mass falls back, later pushing remnant over $M_\mathrm{NS,max}$.</li>
+</ul>
+<h2 id="final-stages-high-mass-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>$^{12}\mathrm{C}+^4\mathrm{He}\rightarrow ^{16}\mathrm{O}+\gamma$ — converts C to O during/after He burning; makes CO (or ONe) cores O-rich.</li>
+<li>$^{12}\mathrm{C}+^{12}\mathrm{C}\rightarrow ^{20}\mathrm{Ne}+^4\mathrm{He}$ (mildly degenerate case) and $^{12}\mathrm{C}+^{12}\mathrm{C}\rightarrow ^{16}\mathrm{O}+2\,^4\mathrm{He}$ (non-degenerate case) — carbon-burning channels; both liberate $\alpha$ particles for further captures.</li>
+<li>$^{20}\mathrm{Ne}+\gamma\rightarrow ^{16}\mathrm{O}+^4\mathrm{He}$ then $^{20}\mathrm{Ne}+^4\mathrm{He}\rightarrow ^{24}\mathrm{Mg}+\gamma$ — neon burning; photodisintegration + alpha-capture, not direct fusion; occurs at lower T than O burning.</li>
+<li>$^{16}\mathrm{O}+^{16}\mathrm{O}\rightarrow ^{32}\mathrm{S}^*\rightarrow ^{28}\mathrm{Si}+^4\mathrm{He}$ (main), $\rightarrow ^{31}\mathrm{P}+p$, $\rightarrow ^{31}\mathrm{S}+n$ — oxygen burning; produces Si, S, P plus free n/p that build Ca, Ar.</li>
+<li>$^{28}\mathrm{Si}+\gamma\rightarrow ^{24}\mathrm{Mg}+^4\mathrm{He}$ ... down to $^{12}\mathrm{C}+\gamma\rightarrow 3\,^4\mathrm{He}$, then alpha-capture chain up to $^{52}\mathrm{Cr}+^4\mathrm{He}\rightarrow ^{56}\mathrm{Ni}+\gamma$ — Si burning is a photodisintegration cascade feeding an alpha-capture chain; ends in NSE at the iron peak.</li>
+<li>$^{56}\mathrm{Ni}\rightarrow ^{56}\mathrm{Co}(\tau_{1/2}=6.1\,\mathrm{d})\rightarrow ^{56}\mathrm{Fe}(\tau_{1/2}=77.1\,\mathrm{d})$ — radioactive decay chain; powers the SN light curve tail. Si burning yields Ni not Fe because weak interactions are too slow to equilibrate $n/p$ ratio in the available time.</li>
+<li>$^{56}\mathrm{Fe}+e^-\rightarrow ^{56}\mathrm{Mn}+\nu_e$ (and further captures) — electron capture on Fe-group nuclei; removes electron pressure support, triggers collapse.</li>
+<li>$^{56}\mathrm{Fe}+\gamma\rightarrow 13\,^4\mathrm{He}+4n$ (absorbs $\sim124\,\mathrm{MeV}$) — photodisintegration of Fe; endothermic, accelerates collapse and later saps the prompt shock ($\sim10^{51}\,\mathrm{erg}$ lost per $0.1\,M_\odot$ Fe traversed).</li>
+<li>$p^++e^-\rightarrow n+\nu_e$ — URCA process; net sink of both electrons and energy.</li>
+<li>$\tau_\mathrm{FF}\propto 1/\sqrt{\rho_0}$ — free-fall collapse timescale; gives $\tau_d\approx10\,\mathrm{ms}$ at $\rho\sim10^{10}\,\mathrm{g\,cm^{-3}}$.</li>
+<li>$\Delta E_g\approx GM^2/R_f\approx10^{53}\,\mathrm{erg}$ — total gravitational energy released in collapse (with $R_f\sim10\,\mathrm{km}$); only $\sim10^{51}\,\mathrm{erg}$ (1 Bethe) needed to unbind the envelope — the rest escapes as neutrinos.</li>
+<li>$\bar\nu_e+p^+\leftrightarrow n+e^+$, $\nu_e+n\leftrightarrow e^-+p^+$ — neutrino absorption reactions in the gain region that revive the stalled shock.</li>
+<li>$N(t)=N_0e^{-0.693t/\tau_{1/2}}$, $L\propto N(t)$, $d\ln L/dt=-0.693/\tau_{1/2}$, $dM_\mathrm{bol}/dt\propto 0.74/\tau_{1/2}$ — radioactive-tail decline law; the light-curve slope directly encodes the decaying isotope's half-life (universal $^{56}$Co slope = 77.1 d unless another isotope, e.g. $^{57}$Co, dominates later).</li>
+<li>r-process chain: ${}^A_ZX+n\rightarrow{}^{A+1}_ZX(\text{unstable})\rightarrow{}^{A+1}_{Z+1}X+e^-+\bar\nu_e$ — repeated fast captures build neutron-rich nuclei before beta decay; peaks at $A\approx80,130,195$ from neutron magic numbers $N=50,82,126$.</li>
+</ul>
+<h2 id="final-stages-high-mass-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Determine a star's endpoint from He-core mass:</strong> compare final He-core mass to thresholds ($&lt;0.5\,M_\odot\to$ He-WD; up to $\sim7\,M_\odot\to$ CO-WD; $7$–$11\,M_\odot\to$ mildly degenerate C ignition; $&gt;11\,M_\odot\to$ full advanced burning) to predict WD/EC-SN/CCSN fate.</li>
+<li><strong>Carbon flash sequence (7–11 $M_\odot$):</strong> (i) off-centre convective ignition where T peaks (degeneracy + central neutrino cooling) → (ii) convective flame propagates inward, erasing degeneracy → (iii) stable central C burning once flame reaches centre.</li>
+<li><strong>Super-AGB → remnant decision:</strong> track competition between carbon-shell mass deposition onto O-Ne core and envelope mass loss; if envelope lost first → O-Ne WD; if core reaches $M_\mathrm{Ch}$ first → EC-SN → neutron star.</li>
+<li><strong>EC-SN collapse chain:</strong> electron capture on Mg/Ne → loss of pressure support → runaway contraction (density↑ → Fermi energy↑ → more capture) → O ignition at $\rho\sim2.5\times10^{10}\,\mathrm{g\,cm^{-3}}$ as a deflagration → neutron star.</li>
+<li><strong>Advanced burning staircase (>11 $M_\odot$):</strong> sequentially ignite H→He→C→Ne→O→Si→Fe(inert); each stage: nuclear burning holds T roughly constant (horizontal step) until fuel exhausted, then neutrino losses force gravitational contraction (rising slope) that heats the core to the next ignition T; durations shrink from $10^7$ yr (H) to ~1 week (Si).</li>
+<li><strong>Iron-core collapse sequence:</strong> exhaustion of nuclear fuel → electron capture + photodisintegration + URCA all reduce pressure/remove energy → $\Gamma&lt;4/3$ → free-fall collapse → core bounce at $\rho_\mathrm{nuc}$ → shock launch.</li>
+<li><strong>Delayed explosion mechanism:</strong> prompt shock stalls (loses energy to Fe photodisintegration + neutrino cooling behind shock) at ~100–200 km → neutrinos diffuse from neutrino-sphere into gain region → absorption deposits ~$10^{51}$ erg → shock revives and propagates outward (~100–500 ms post-bounce) → explosive nucleosynthesis in swept-up shells → ejection of everything outside the proto-neutron star.</li>
+<li><strong>SN classification tree:</strong> check for H lines (Type II vs I) → within Type I check Si lines (Ia) → within no-Si check He lines (Ib vs Ic).</li>
+<li><strong>Light-curve phase progression (Type II):</strong> shock breakout (UV/X-ray flash, T~200,000 K) → envelope expands/cools, opacity high (ionized H) → recombination front moves inward, opacity drops, trapped radiation escapes → optical peak → plateau (constant ~5,000 K recombination T, lasts until front clears H envelope) → radioactive tail powered by $^{56}$Co decay.</li>
+</ol>
+<h2 id="final-stages-high-mass-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li><strong>7–11 $M_\odot$ carbon ignition is off-centre and a flash</strong>, not central and stable — the opposite of what happens above $11\,M_\odot$. Lower mass within this range → more degenerate → flash occurs further off-centre.</li>
+<li><strong>EC-SN mechanism ≠ classical Fe-core collapse mechanism.</strong> EC-SN is triggered by $e^-$ capture on Mg/Ne at $M_\mathrm{Ch}$, not by Fe photodisintegration; it produces weaker explosions and less $^{56}$Ni.</li>
+<li><strong>O-Ne WDs cool faster than CO WDs</strong> despite being more massive — counter-intuitive; the cause is smaller ion number (larger mean $A$) giving lower heat capacity, not composition-specific opacity effects.</li>
+<li><strong>Neon burning happens at lower T than oxygen burning</strong> even though Ne is heavier than O — because it proceeds by photodisintegration + alpha-capture, not direct heavy-ion fusion, so the ignition condition compares photon energy to nuclear binding, not Coulomb barrier height.</li>
+<li><strong>Silicon burning does not directly fuse two $^{28}$Si nuclei</strong> — it is a photodisintegration cascade supplying alpha particles for a capture chain.</li>
+<li><strong>$^{56}$Ni, not $^{56}$Fe, is the direct product of Si burning</strong> — a very common trap. Reason: weak interactions are too slow at Si-burning timescales to equilibrate $n/p$ ratio, so equal-N-Z $^{56}$Ni is favored over neutron-richer $^{56}$Fe.</li>
+<li><strong>Timescale collapse is driven by neutrino losses scaling as $T^9$, not by faster fusion rates</strong> — the real reason each burning stage is drastically shorter than the last.</li>
+<li><strong>The iron produced in the pre-collapse core does NOT escape</strong> — it stays locked in the compact remnant. All Fe seen in Type II ejecta comes from <em>explosive</em> nucleosynthesis of $^{56}$Ni in the shock, not from the hydrostatic Si-burning iron.</li>
+<li><strong>The prompt shock mechanism fails</strong> — do not describe core collapse SNe as being powered directly by the bounce shock; it stalls and must be revived by delayed neutrino heating.</li>
+<li><strong>Only a small fraction (~1%) of the ~$10^{53}$ erg neutrino energy budget powers the explosion</strong> — the coupling efficiency, not the total energy, is the bottleneck.</li>
+<li><strong>r-process vs s-process:</strong> r-process nuclei lie far off the valley of stability (fast capture, slow beta decay catch-up); s-process nuclei stay on the valley of stability (slow capture allows beta decay between captures, occurs in AGB stars). Do not conflate sites or nuclide paths.</li>
+<li><strong>SN spectroscopic type is not the same as explosion mechanism</strong> — Type Ia is thermonuclear (WD, no collapse, no remnant); Types II/Ib/Ic are all core-collapse, differing only by how much H/He envelope was stripped pre-explosion.</li>
+<li><strong>SNII-P vs SNII-L difference is envelope mass, not explosion energy</strong> — IIL progenitors have lost most of the H envelope, cutting the plateau short/eliminating it.</li>
+<li><strong>Remnant mass thresholds ($M&lt;25\,M_\odot\to$NS, $M&gt;25\,M_\odot\to$BH) are approximate</strong>, strongly modulated by the density gradient at the Fe/Si-O boundary (steep gradient favors successful explosion regardless of mass).</li>
+<li><strong>Prompt BH formation gives no visible supernova</strong>; fallback BH formation <em>does</em> produce a (possibly dim/unusual) supernova — these are observationally distinguishable scenarios, don't treat "black hole formation" as always invisible.</li>
+<li><strong>Radioactive tail slope is universal (set by nuclear half-life)</strong>, but the tail's amplitude/brightness depends on the (highly variable) amount of $^{56}$Ni synthesized — do not confuse "universal slope" with "universal brightness."</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="binary-systems" hidden>
+  <h1 class="title">Binary Systems — Summary</h1>
+  <section class="prose">
+<h2 id="binary-systems-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Binary system:</strong> two gravitationally bound stars orbiting a common barycentre; not orbiting each other directly.</li>
+<li><strong>Separation $a$:</strong> distance between component centres of mass (semi-major axis if elliptical).</li>
+<li><strong>Primary/secondary ($M_1, M_2$):</strong> by convention $M_1 \geq M_2$; mass ratio $q = M_2/M_1 \leq 1$.</li>
+<li><strong>Roche potential $\Phi_\text{eff}$:</strong> effective gravitational + centrifugal potential in the co-rotating frame.</li>
+<li><strong>Equipotential surfaces:</strong> surfaces of constant $\Phi_\text{eff}$; hydrostatic gas follows them; form a figure-eight at the critical (Roche lobe) value.</li>
+<li><strong>Lagrangian points $L_1$–$L_5$:</strong> points where $\nabla\Phi_\text{eff}=0$. $L_1$ (between stars), $L_2$ (beyond $M_2$), $L_3$ (beyond $M_1$) are unstable saddle points; $L_1$ is the mass-transfer gateway. $L_4$, $L_5$ (triangular, $60°$ off) are stable (Coriolis-stabilized, requires $M_1/M_2 &gt; 25$).</li>
+<li><strong>Roche lobe:</strong> the equipotential surface through $L_1$; the largest closed surface still gravitationally bound to a star; teardrop-shaped, pointed toward $L_1$.</li>
+<li><strong>Roche lobe overflow (RLOF):</strong> mass flow through $L_1$ once a star fills its Roche lobe.</li>
+<li><strong>Detached / semidetached / contact systems:</strong> classification by whether 0, 1, or 2 stars fill their Roche lobes.</li>
+<li><strong>Common envelope (CE):</strong> in contact systems, a shared gas envelope surrounding both cores; short-lived, ends in merger or envelope ejection.</li>
+<li><strong>Accretion disk:</strong> Keplerian disk formed by infalling material that retains orbital angular momentum; rotates in the same sense as the binary orbit.</li>
+<li><strong>Blue straggler stars (BSS):</strong> stars brighter/bluer than the cluster MS-turnoff; formed via mass-transfer rejuvenation or direct MS-MS merger; observational proof of binary interaction.</li>
+<li><strong>Reduced mass $\mu$:</strong> effective one-body mass equivalent for the two-body orbital problem.</li>
+<li><strong>Conservative mass transfer:</strong> idealized case with no mass or angular momentum lost from the system.</li>
+<li><strong>Cataclysmic variable (CV):</strong> WD accreting from a low-mass donor; outbursts from disk instabilities, not nuclear burning.</li>
+<li><strong>Classical nova:</strong> thermonuclear runaway (H-flash) of degenerate accreted hydrogen on a WD surface; recurrent, WD survives.</li>
+<li><strong>Type Ia supernova:</strong> thermonuclear disruption of a WD approaching the Chandrasekhar mass (accretion or WD–WD merger); standardizable candle.</li>
+<li><strong>Single-degenerate / double-degenerate channels:</strong> Type Ia progenitor scenarios — WD + non-degenerate donor, vs. two merging WDs.</li>
+<li><strong>Binary survival criterion:</strong> condition on ejected SN mass for the binary to remain bound.</li>
+<li><strong>X-ray binary:</strong> NS or BH accretor releasing gravitational energy as X-rays; can arise via wind accretion or RLOF.</li>
+</ul>
+<h2 id="binary-systems-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>Effective (Roche) potential: <p class="display-math">$$\Phi_{\text{eff}}(\mathbf{r}) = -\frac{GM_1}{|\mathbf{r}-\mathbf{r}_1|} -\frac{GM_2}{|\mathbf{r}-\mathbf{r}_2|} -\frac{1}{2}\omega^2|\mathbf{r}-\mathbf{r}_\text{cm}|^2$$</p> — potential in the co-rotating frame; used to locate Lagrangian points and equipotentials.</li>
+<li>Roche lobe effective radii: <p class="display-math">$$l_1 = a\left(0.5-0.227\log\frac{M_2}{M_1}\right), \quad l_2 = a\left(0.5+0.227\log\frac{M_2}{M_1}\right), \quad l_1+l_2=a$$</p> — approximate radii of the sphere with equal volume to each Roche lobe; the more massive star always has the larger lobe.</li>
+<li>Reduced mass: <p class="display-math">$$\mu = \frac{M_1 M_2}{M_1+M_2}$$</p> — equivalent one-body mass for Keplerian orbit analysis.</li>
+<li>Orbital angular momentum (general): <p class="display-math">$$L = \mu\sqrt{GMa(1-e^2)}$$</p> — reduces to $L=\mu\sqrt{GMa}$ for circular orbits ($e=0$).</li>
+<li>Perihelion/aphelion velocity ratio: <p class="display-math">$$\frac{v_p}{v_a}=\frac{r_a}{r_p}=\frac{1+e}{1-e}, \qquad v_p^2=\frac{GM}{a}\frac{1+e}{1-e}$$</p> — from angular momentum + energy conservation at the turning points.</li>
+<li><strong>Conservative mass-transfer orbital evolution equation (central result):</strong> <p class="display-math">$$\boxed{\frac{1}{a}\frac{da}{dt} = \frac{2\dot M_1(M_1-M_2)}{M_1 M_2}}$$</p> — governs whether the orbit shrinks or widens; sign set by who is losing mass and the current mass ratio.</li>
+<li>Kepler's third law / frequency evolution: <p class="display-math">$$\omega^2=\frac{GM}{a^3}, \qquad \frac{1}{\omega}\frac{d\omega}{dt}=-\frac{3}{2}\frac{1}{a}\frac{da}{dt}$$</p> — orbit shrinking ($\dot a&lt;0$) speeds up the orbit ($\dot\omega&gt;0$) and vice versa.</li>
+<li>Accretion kinetic energy release: <p class="display-math">$$K=\frac{GMm}{R}$$</p> — energy released per infalling mass $m$; scales inversely with accretor radius (compactness).</li>
+<li>Nuclear vs. accretion efficiency (fraction of $mc^2$): H-burning $\approx 0.007$; WD accretion $\approx 0.00025$; NS accretion $\approx 0.15$; non-spinning BH $\approx 0.1$; maximally spinning BH $\approx 0.42$ — sets the luminosity hierarchy of accreting systems.</li>
+<li>Binary survival after instantaneous SN mass ejection $\delta m$: <p class="display-math">$$\delta m &lt; \frac{M_1+M_2}{2}$$</p> — the ejected mass must be less than half the pre-explosion total mass for the system to stay bound.</li>
+</ul>
+<h2 id="binary-systems-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>Deriving $L=\mu\sqrt{GMa(1-e^2)}$:</strong> apply angular-momentum conservation at perihelion/aphelion ($L=\mu r v$, $v\perp r$) → get $v_p/v_a$ ratio → apply energy conservation to solve $v_p$ → substitute into $L=\mu r_p v_p$ → simplify to the general formula (circular case drops the $e$ term).</li>
+<li><strong>Deriving the conservative mass-transfer orbital equation:</strong> start from $L=\mu\sqrt{GMa}$ (circular, $M=$const) → differentiate, set $\dot L=0$ → get $\frac{1}{a}\dot a = -\frac{2}{\mu}\dot\mu$ → compute $\dot\mu$ from $\mu=M_1M_2/M$ using $\dot M_2=-\dot M_1$ → substitute to obtain $\frac{1}{a}\dot a=\frac{2\dot M_1(M_1-M_2)}{M_1M_2}$.</li>
+<li><strong>Sign analysis of mass transfer (apply the boxed equation):</strong></li>
+</ol>
+<p>   a. Identify which star is currently the donor (sign of $\dot M_1$).    b. Compare current masses ($M_1-M_2$ sign).    c. Product of signs gives $\dot a$: same-sign factors → orbit widens (self-regulating/negative feedback); opposite-sign factors → orbit shrinks (runaway/positive feedback).    d. Track how the shrinking/growing Roche lobe ($l\propto a$) feeds back on the donor's overflow rate.</p>
+<ol>
+<li><strong>Nova thermonuclear runaway sequence:</strong> accreted H layer becomes degenerate → shell reaches critical mass ($\sim10^{-4}M_\odot$) → CNO ignition at $T\gtrsim2\times10^7$K → degenerate burning raises $T$ without raising $P$ (runaway) → degeneracy lifted → explosive expansion/ejection at $\sim10^3$ km/s → WD survives, cycle repeats every $10^4$–$10^5$ yr.</li>
+<li><strong>Case-study evolutionary pipeline (massive binary → X-ray binary):</strong> ZAMS binary → primary fills Roche lobe first (RLOF, positive then self-regulating feedback) → primary strips to He core, secondary gains mass and widens orbit → He core collapses (Type II SN) → check survival criterion ($\delta m$ vs. $M_\text{tot}/2$) → if bound, detached BH+MS phase with wind accretion (HMXB) → secondary evolves, fills its own Roche lobe → full accretion disk forms onto BH, luminosity rises.</li>
+</ol>
+<h2 id="binary-systems-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>$L_1$, $L_2$, $L_3$ are all unstable (local maxima/saddle points) — only $L_4$/$L_5$ are stable, and only under the mass-ratio condition $M_1/M_2&gt;25$.</li>
+<li>By convention, the mass-<strong>losing</strong> star in a semidetached system is called "the secondary" regardless of its original identity — naming reflects current state, not birth mass.</li>
+<li>Roche lobe radius depends on <strong>both</strong> $a$ and mass ratio — as $a$ changes, $l_1, l_2$ change too, creating the feedback loop; don't treat the Roche lobe as fixed.</li>
+<li>Sign convention trap: in the orbital evolution equation, $\dot M_1$ is positive when $M_1$ <em>accretes</em>, negative when it <em>donates</em> — always check which star is $M_1$ in a given problem before applying signs.</li>
+<li>Feedback reverses mid-transfer: once the initially more massive donor becomes the less massive star, $(M_1-M_2)$ flips sign, turning runaway (shrinking) into self-regulating (widening) — the system self-corrects rather than transferring indefinitely.</li>
+<li>Distinguish CV dwarf-nova outbursts (disk instability, no nuclear burning) from classical novae (thermonuclear H-flash) — different physical mechanisms despite both being WD binaries.</li>
+<li>A classical nova does <strong>not</strong> destroy the WD; only a Type Ia SN (or merger reaching $M_\text{Ch}$) fully disrupts it.</li>
+<li>Neutron star accretion is ~30× more efficient than H-burning per unit mass, and BH accretion (spinning) can reach $0.42\,mc^2$ — far exceeding nuclear energy scales; don't assume nuclear burning dominates energetics near compact objects.</li>
+<li>SN survival criterion applies to <strong>half the total pre-explosion mass</strong>, not half the exploding star's own mass — easy factor-of-two error.</li>
+<li>Prior RLOF stripping the exploding star's envelope is often what allows the SN ejecta to satisfy the survival criterion; without it, ejected mass could exceed the bound-system threshold.</li>
+<li>Blue stragglers can form via <strong>two distinct channels</strong> (mass-transfer rejuvenation vs. direct MS-MS merger) — both are valid, not mutually exclusive explanations.</li>
+<li>Detached systems still interact gravitationally (tides, circularization) even with zero mass transfer — "detached" does not mean "non-interacting."</li>
+<li>In the HS 2231+2441 case, the object causing the common envelope is a <strong>brown dwarf</strong>, well below the H-burning mass limit ($\sim80\,M_J$) — CE physics does not require a stellar-mass companion.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="supernovae-neutron-stars" hidden>
+  <h1 class="title">Supernovae &amp; Neutron Stars — Summary</h1>
+  <section class="prose">
+<h2 id="supernovae-neutron-stars-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Type II SN</strong>: H present in spectrum; core collapse of massive star ($M&gt;8$–$11\,M_\odot$).</li>
+<li><strong>Type Ia SN</strong>: no H, Si present; thermonuclear disruption of a CO white dwarf at $M_{Ch}$; no remnant.</li>
+<li><strong>Type Ib SN</strong>: no H, no Si, He present; core collapse of a star stripped of its H envelope.</li>
+<li><strong>Type Ic SN</strong>: no H, no Si, no He; core collapse of a star stripped of both H and He envelopes.</li>
+<li><strong>Chandrasekhar mass ($M_{Ch}\approx1.4\,M_\odot$)</strong>: maximum mass supportable by electron degeneracy pressure.</li>
+<li><strong>Double-degenerate scenario</strong>: SN Ia progenitor route via merger of two CO-WDs driven by gravitational-wave orbital decay.</li>
+<li><strong>Single-degenerate scenario</strong>: SN Ia progenitor route via accretion onto a CO-WD from a non-degenerate companion.</li>
+<li><strong>Nova phenomenon</strong>: recurrent explosive H-shell burning on a WD at low $\dot M$; ejects most accreted mass, so it cannot build the WD to $M_{Ch}$.</li>
+<li><strong>Double-detonation mechanism</strong>: He-shell detonation drives a secondary C detonation, destroying a sub-$M_{Ch}$ WD.</li>
+<li><strong>Deflagration</strong>: subsonic thermonuclear burning front; allows expansion, yields mixed nucleosynthesis (W7 model).</li>
+<li><strong>Detonation</strong>: supersonic burning front; incinerates unburned fuel at high density, would yield pure Fe-peak (ruled out alone by observed intermediate-mass lines).</li>
+<li><strong>Delayed detonation model</strong>: deflagration transitions to detonation later; best match to observed SN Ia spectra/light curves.</li>
+<li><strong>Stretch-factor (Phillips) correction</strong>: empirical width–luminosity relation making SN Ia "secondary" standard candles.</li>
+<li><strong>Electron-capture supernova (EC SN)</strong>: collapse of a degenerate ONeMg core once $e^-$ captures on $^{20}$Ne/$^{24}$Mg push it past $M_{Ch}$ ($7$–$11\,M_\odot$ progenitors).</li>
+<li><strong>[el/H]</strong>: logarithmic abundance ratio relative to solar; proxy for ISM metallicity at star's birth.</li>
+<li><strong>[$\alpha$/Fe]–[Fe/H] diagram</strong>: chemical-clock diagnostic combining prompt ($\alpha$, SN II) and delayed (Fe, SN Ia) enrichment.</li>
+<li><strong>Plateau/Knee/Descending slope</strong>: three regimes of the [$\alpha$/Fe]–[Fe/H] diagram, set by IMF (plateau height) and SFR (knee position).</li>
+<li><strong>s-process</strong>: slow neutron capture in AGB (main, $A&gt;90$) and massive stars (weak, $70&lt;A&lt;90$).</li>
+<li><strong>r-process</strong>: rapid neutron capture producing heaviest/most neutron-rich nuclei; sites are CC SNe and kilonovae (confirmed via GW170817, 2017).</li>
+<li><strong>Neutronization</strong>: suppression of $\beta^-$ decay in a fully degenerate electron sea, stabilizing neutron-rich nuclei.</li>
+<li><strong>Neutron drip</strong>: density ($\sim4\times10^{11}$ g cm$^{-3}$) above which free neutrons exist outside nuclei.</li>
+<li><strong>Oppenheimer-Volkov limit</strong>: maximum NS mass ($\sim2.5$–$3\,M_\odot$), poorly constrained (unknown super-nuclear EoS).</li>
+<li><strong>Pulsar</strong>: rotating, magnetized NS emitting a beamed radiation lighthouse; discovered 1967 (Bell).</li>
+<li><strong>Characteristic (spindown) age</strong> $\tau=P/\dot P$: order-of-magnitude pulsar age estimate; invalid for recycled pulsars.</li>
+<li><strong>Light cylinder</strong>: radius where co-rotation speed would equal $c$; defines open vs. closed field lines.</li>
+<li><strong>Relativistic headlight effect</strong>: beams isotropic emission into a narrow forward cone ($\theta\sim1/\gamma$) for relativistic sources.</li>
+<li><strong>Lighthouse effect</strong>: misalignment of magnetic and rotation axes sweeps the beam past the observer once per rotation.</li>
+<li><strong>Dispersion measure (DM)</strong>: column density of free electrons along the line of sight; used to estimate pulsar distance from frequency-dependent pulse delay.</li>
+<li><strong>Death line</strong>: $P$–$\dot P$ boundary below which the pair-cascade mechanism cannot operate; pulsars beyond it enter the "graveyard."</li>
+<li><strong>Millisecond pulsar (MSP) / recycling scenario</strong>: old, spun-down pulsar re-accelerated to ms periods by accretion from an evolving companion.</li>
+<li><strong>Alfvén (magnetospheric) radius</strong>: where magnetic pressure balances the ram pressure of infalling gas, truncating the accretion disk.</li>
+<li><strong>Black Widow pulsar</strong>: isolated MSP that has evaporated its low-mass companion via irradiation.</li>
+<li><strong>Bulge Fossil Fragment (BFF)</strong>: massive bulge system (e.g. Terzan 5, Liller 1) with multiple stellar populations of different ages, proposed as a surviving primordial clump from hierarchical bulge assembly.</li>
+</ul>
+<h2 id="supernovae-neutron-stars-2-key-equations">2. Key Equations</h2>
+<p class="display-math">$$^{56}\text{Ni}\xrightarrow{\text{EC},\,t_{1/2}=6.1\text{d}}{}^{56}\text{Co}\xrightarrow{80\%\text{EC},20\%\beta^+,\,t_{1/2}=77\text{d}}{}^{56}\text{Fe}$$</p>
+<p>Powers the SN Ia light curve (early rise/peak from Ni decay, late tail from Co decay).</p>
+<p class="display-math">$$\left[\frac{\text{el}}{\text{H}}\right]=\log\left(\frac{\text{el}}{\text{H}}\right)_*-\log\left(\frac{\text{el}}{\text{H}}\right)_\odot$$</p>
+<p>Logarithmic metallicity/abundance scale, zero for the Sun.</p>
+<p class="display-math">$$M=\left(\frac{15.2\text{ km}}{R}\right)^3 M_\odot,\qquad R=14.6\left(\frac{10^{15}\text{ g cm}^{-3}}{\rho_c}\right)^{1/6}\text{km}$$</p>
+<p>NS mass–radius and radius–central-density relations (degenerate neutron pressure support); more massive NS $\Rightarrow$ smaller/denser.</p>
+<p class="display-math">$$\frac{R_\text{core}^\text{pre-col}}{R_\text{core}^\text{post-col}}=\frac{m_n}{m_e}\left(\frac{Z}{A}\right)^{5/3}\approx500$$</p>
+<p>Radius shrinkage factor from WD-like Fe core to NS during collapse.</p>
+<p class="display-math">$$P_{NS}=P_i\left(\frac{R_f}{R_i}\right)^2=4\times10^{-6}P_\text{pre-collapse}$$</p>
+<p>Spin-up from angular momentum conservation during collapse (explains ms-period newborn NS).</p>
+<p class="display-math">$$B_{NS}=B_{WD}\left(\frac{R_{WD}}{R_{NS}}\right)^2$$</p>
+<p>Magnetic flux conservation during collapse; amplifies modest WD fields to $10^{13}$–$10^{14}$ G.</p>
+<p class="display-math">$$\lambda T=0.29\text{ cm K};\qquad L=4\pi R^2\sigma T^4$$</p>
+<p>Wien law and blackbody luminosity for NS thermal (X-ray) cooling emission.</p>
+<p class="display-math">$$\tau=\frac{P}{\dot P}$$</p>
+<p>Pulsar characteristic (spindown) age.</p>
+<p class="display-math">$$K=\frac{1}{2}I\omega^2=\frac{2\pi^2I}{P^2},\qquad \frac{dK}{dt}=-\frac{4\pi^2I\dot P}{P^3}$$</p>
+<p>Rotational kinetic energy and its loss rate; matches Crab Nebula's synchrotron luminosity, proving rotational powering.</p>
+<p class="display-math">$$R_\text{lc}=\frac{c}{\omega}=\frac{cP}{2\pi}$$</p>
+<p>Light cylinder radius — boundary between closed/open magnetic field lines.</p>
+<p class="display-math">$$B^2=\frac{3Ic^3}{8\pi^2R^6}P\dot P\ \Rightarrow\ B\propto\sqrt{P\dot P}$$</p>
+<p>Magnetic dipole spindown formula; constant-$B$ lines are diagonal in the $\log P$–$\log\dot P$ diagram.</p>
+<p class="display-math">$$P\approx2.42\times10^{-6}B^{1/2}\text{ s}$$</p>
+<p>Approximate pulsar death line.</p>
+<p class="display-math">$$\Delta t\propto \text{DM}\left(\frac{1}{\nu_2^2}-\frac{1}{\nu_1^2}\right),\quad \text{DM}=\int n_e\,dl$$</p>
+<p>Pulse dispersion delay vs. frequency; used to estimate pulsar distance.</p>
+<p class="display-math">$$r_A=\left(\frac{B_s^4R^{12}}{2GM\dot M^2}\right)^{1/7},\qquad r_d\approx0.5\,r_A$$</p>
+<p>Alfvén (magnetospheric) radius and effective disk-disruption radius for accreting NS.</p>
+<p class="display-math">$$\frac{\dot P}{P}=-\frac{P}{2\pi I}\sqrt{\alpha}\left(\frac{B_s^2R^6G^3M^3\dot M^6}{2}\right)^{1/7}$$</p>
+<p>Spin-up rate for accretion-powered NS; faster spin-up for higher $\dot M$, larger $B$, larger $M$.</p>
+<h2 id="supernovae-neutron-stars-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<ol>
+<li><strong>SN classification tree</strong>: check for H (Type II if present); else check Si (Ia); else check He (Ib) vs. no He (Ic).</li>
+<li><strong>Single-degenerate SN Ia viability check (nova-rate diagram)</strong>: locate $\dot M_H$ vs. $M_{WD}$ — low $\dot M$ → nova cycle (fails), high $\dot M$ → common envelope (fails), intermediate $\dot M$ → steady He-layer buildup toward $M_{Ch}$ (succeeds).</li>
+<li><strong>W7/delayed-detonation nucleosynthesis logic</strong>: burning starts as deflagration at $\rho\approx10^9$ g cm$^{-3}$ (inner $\sim0.85\,M_\odot$ → Fe-peak); WD expands, density drops in outer layers; transition to detonation (delayed-detonation) or continued deflagration (W7) produces intermediate-mass elements in outer ejecta.</li>
+<li><strong>Mass–remnant mapping</strong> (by ZAMS mass): $&lt;0.08\,M_\odot$ → brown dwarf; $0.08$–$0.5$ → He-WD; $0.5$–$7$ → CO-WD; $7$–$11$ → ONe-WD or EC-SN; $11$–$25$ → NS; $&gt;25$ → BH.</li>
+<li><strong>NS internal structure traversal</strong> (increasing $\rho$): outer crust (nuclei + degenerate $e^-$, electron capture) → inner crust (neutron drip, free neutrons appear) → interior (nuclear structures dissolve, $n{:}p{:}e\approx8{:}1{:}1$) → core (superfluid n, superconducting p; possible exotic matter).</li>
+<li><strong>Recycling scenario for MSPs</strong>: (1) NS born as young fast pulsar; (2) spins down toward graveyard; (3) companion evolves, Roche-lobe overflow spins NS up via accretion disk (X-ray binary phase); (4) NS emerges as MSP + He-WD companion; (5) appears in lower-left of $P$–$\dot P$ diagram.</li>
+<li><strong>Black Widow evolution</strong>: recycle NS to MSP → MSP wind irradiates/ablates low-mass companion → companion evaporated over Myr → isolated MSP remains.</li>
+<li><strong>[$\alpha$/Fe]–[Fe/H] diagnostic reading</strong>: identify plateau height (IMF), knee position (SFR — higher SFR shifts knee to higher [Fe/H]), and descending-slope shape to reconstruct a population's star-formation history.</li>
+</ol>
+<h2 id="supernovae-neutron-stars-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>Type I/II is purely spectroscopic (H presence); Ia vs. Ib/Ic is an explosion-mechanism distinction — Ia is thermonuclear, Ib/Ic/II are all core-collapse. Do not conflate spectroscopic Type I with a single physical mechanism.</li>
+<li>A pure detonation of a CO-WD is ruled out — it predicts only Fe-peak elements, contradicting observed Si/S/Ca lines. Only deflagration or delayed detonation reproduce real spectra.</li>
+<li>Sub-$M_{Ch}$ SN Ia (double-detonation via He-shell) is a valid but non-standard channel — do not assume all SN Ia reach $M_{Ch}$ by growth alone.</li>
+<li>SN Ia are only <em>secondary</em> standard candles — they need the stretch/Phillips width–luminosity correction before use as distance indicators.</li>
+<li>Type II SNe release ~300× more total energy than Type Ia, but ~99% escapes as neutrinos; optical luminosities of the two types are comparable despite this huge energy disparity — a common trap in energy-budget questions.</li>
+<li>NS masses cluster near $1.4\,M_\odot$ not by coincidence but because they descend from Fe cores supported by degenerate electrons near $M_{Ch}$.</li>
+<li>The Oppenheimer-Volkov limit, unlike $M_{Ch}$, is not precisely derived — it depends on an unknown super-nuclear equation of state (range $\sim2.0$–$2.7\,M_\odot$ across models).</li>
+<li>MSPs have short $P$ (young-like) but very small $\dot P$ (old-like) — this apparent paradox is resolved only by the recycling scenario, not by treating $\tau=P/\dot P$ at face value (that formula is invalid for recycled pulsars).</li>
+<li>Radio pulsar emission is powered by rotational kinetic energy, not thermal energy — thermal X-ray emission from an old NS is fainter than the Sun and generally undetectable directly.</li>
+<li>The narrow pulsar beam requires three ingredients together: relativistic beaming, magnetic/rotation axis misalignment, and fast rotation — missing any one gives no observed pulses.</li>
+<li>Distinguish the two roles of the [$\alpha$/Fe]–[Fe/H] diagram: plateau height ← IMF; knee position ← SFR. These are commonly swapped in exam answers.</li>
+<li>Iron-peak elements come mostly from Type Ia (2/3 of Galactic Fe) despite Type II being far more numerous per unit time early on; $\alpha$-elements come almost exclusively from Type II.</li>
+<li>r-process sites include both core-collapse SNe and neutron-star merger kilonovae — the kilonova contribution was only observationally confirmed in 2017 (GW170817), so don't treat it as settled decades-old physics.</li>
+<li>Bulge Fossil Fragments (Terzan 5, Liller 1) differ from normal globular clusters specifically by hosting multiple age/metallicity populations — a single old, coeval population is the globular-cluster norm, not the BFF signature.</li>
+</ul>
+  </section>
+</article>
+<article class="article" data-project="black-holes-gravitational-waves" hidden>
+  <h1 class="title">Black Holes &amp; Gravitational Waves — Summary</h1>
+  <section class="prose">
+<h2 id="black-holes-gravitational-waves-1-key-concepts">1. Key Concepts</h2>
+<ul>
+<li><strong>Oppenheimer–Volkoff (OV) limit:</strong> ~$2.5$–$3\,M_\odot$; the maximum mass a neutron star can support against gravity via degeneracy pressure. Remnants above it collapse to a BH; corresponds to a progenitor of roughly $25\,M_\odot$.</li>
+<li><strong>Black star (Michell, 1784):</strong> Newtonian prediction that a sufficiently compact mass has escape velocity $&gt; c$; correct numerology for $R_s$, wrong physics (needs GR).</li>
+<li><strong>Schwarzschild radius $R_s$:</strong> the critical radius at which escape velocity equals $c$; defines the event horizon size.</li>
+<li><strong>Spacetime interval $\Delta s$:</strong> invariant separation between two events; sign classifies causal relation (timelike/lightlike/spacelike).</li>
+<li><strong>Timelike / lightlike (null) / spacelike:</strong> regions reachable by $v&lt;c$ particles / by light only / causally disconnected ("elsewhere").</li>
+<li><strong>Light cone:</strong> geometric structure bounding all causal trajectories; tilts and distorts near mass in GR.</li>
+<li><strong>Schwarzschild metric:</strong> exact GR solution describing curved spacetime outside a static, spherical, uncharged mass.</li>
+<li><strong>Proper distance vs. coordinate distance:</strong> physical radial distance always exceeds the coordinate difference $dr$ near a mass.</li>
+<li><strong>Gravitational time dilation:</strong> clocks run slower at smaller $r$; freeze ($d\tau \to 0$) at the horizon as seen from infinity.</li>
+<li><strong>Event horizon:</strong> the $r=R_s$ surface; a one-way causal boundary, not a physical/material surface — no locally detectable effect on an infalling observer.</li>
+<li><strong>Singularity:</strong> the $r=0$ point of infinite curvature/zero volume where classical GR breaks down, requiring quantum gravity.</li>
+<li><strong>Cosmic Censorship hypothesis:</strong> conjecture that singularities are always hidden behind horizons (never "naked").</li>
+<li><strong>Compactness parameter $\xi_M$ (esp. $\xi_{2.5}$):</strong> measures how tightly mass is packed at core collapse; predicts successful SN (→NS) vs. failed SN (→BH) via a threshold $\approx 0.2$.</li>
+<li><strong>Failed supernova:</strong> direct collapse to BH with no explosion or optical transient; entire mass falls in.</li>
+<li><strong>Metallicity dependence of remnant mass:</strong> metal-poor stars lose less wind mass and form larger CO cores → more massive BHs; at solar metallicity no remnant exceeds $25\,M_\odot$.</li>
+<li><strong>BH mass classes:</strong> stellar-mass ($\lesssim 50$–$100\,M_\odot$), intermediate-mass (IMBH, $10^2$–$10^5\,M_\odot$, unconfirmed), supermassive (SMBH, $10^6$–$10^9\,M_\odot$).</li>
+<li><strong>Magorrian ($M_\mathrm{BH}$–$M_\mathrm{bulge}$/$\sigma$) relation:</strong> SMBH mass co-scales with host galaxy bulge mass; extrapolated to GCs predicts IMBH masses.</li>
+<li><strong>Sphere of influence:</strong> radius within which an IMBH's gravity dominates cluster stellar kinematics, producing a Keplerian ($v\propto r^{-1/2}$) cusp in velocity dispersion and a density cusp in surface brightness.</li>
+<li><strong>Gravitational waves (GWs):</strong> spacetime ripples from accelerating mass/energy; transverse, quadrupolar (spin-2), unlike EM dipole radiation; absent in Newtonian gravity.</li>
+<li><strong>Strain $h(t)$:</strong> fractional distortion of proper length caused by a passing GW.</li>
+<li><strong>Chirp:</strong> simultaneous rise in GW amplitude and frequency during inspiral, giving the signature time–frequency sweep.</li>
+<li><strong>Chirp mass $M_\mathrm{chirp}$:</strong> the unique mass combination directly measurable from $\nu_\mathrm{gw}(t)$ alone, independent of distance or individual masses.</li>
+<li><strong>Mass-ratio degeneracy:</strong> chirp mass alone cannot separate $m_1,m_2$; equal masses give the minimum possible total mass.</li>
+<li><strong>Coalescence/merger condition:</strong> onset when binary separation equals the sum of the two Schwarzschild radii.</li>
+<li><strong>Michelson interferometer (LIGO):</strong> detector design measuring differential arm-length change from a passing GW via interference.</li>
+<li><strong>Multi-messenger astronomy:</strong> simultaneous detection of GW + EM (GRB, kilonova) signals from the same event (established by GW170817).</li>
+<li><strong>Kilonova:</strong> optical/near-IR transient powered by radioactive decay of freshly synthesised r-process nuclei in merger ejecta.</li>
+<li><strong>r-process (rapid neutron capture):</strong> nucleosynthesis path building neutron-rich heavy nuclei (up to/beyond U) faster than beta decay; occurs in NS mergers (and some CC SNe).</li>
+<li><strong>s-process (slow neutron capture):</strong> nucleosynthesis in AGB stars producing Ba/La/Ce/Pb peaks.</li>
+<li><strong>Cosmological redshift of GW observables:</strong> detector-frame frequency/derivative and masses are shifted relative to source-frame values.</li>
+</ul>
+<h2 id="black-holes-gravitational-waves-2-key-equations">2. Key Equations</h2>
+<ul>
+<li>Escape velocity criterion: $v^2 = \dfrac{2GM}{R} &gt; c^2$ — Newtonian analogy motivating $R_s$.</li>
+<li>Schwarzschild radius: <p class="display-math">$$R_s = \frac{2GM}{c^2} = 3\left(\frac{M}{M_\odot}\right)\,\mathrm{km}$$</p> — event horizon size; must be memorised.</li>
+<li>Flat-spacetime interval: $(\Delta s)^2 = [c\Delta t]^2 - \Delta x^2 - \Delta y^2 - \Delta z^2$ — defines causal structure in SR.</li>
+<li>Schwarzschild metric: <p class="display-math">$$(ds)^2 = c^2dt^2\left(1-\frac{R_s}{r}\right) - \frac{dr^2}{1-R_s/r} - r^2 d\Omega^2$$</p> — exact curved geometry outside a static spherical mass.</li>
+<li>Proper radial distance: $dL = \dfrac{dr}{\sqrt{1-R_s/r}} &gt; dr$ — physical distance exceeds coordinate separation; diverges as $r\to R_s$.</li>
+<li>Gravitational time dilation: $d\tau = dt\sqrt{1-R_s/r} &lt; dt$ — clocks near a mass run slow relative to a distant observer; $\to 0$ at horizon.</li>
+<li>Coordinate speed of light: $\dfrac{dr}{dt} = c\left(1-\dfrac{R_s}{r}\right) \to 0$ as $r\to R_s$ — light appears frozen at the horizon to a distant observer.</li>
+<li>Compactness parameter: <p class="display-math">$$\xi_{2.5} = \frac{M_{2.5}/M_\odot}{R(M_{2.5})/1000\,\mathrm{km}}, \quad \xi_{2.5}\gtrless 0.2 \Leftrightarrow \text{SN vs. failed SN}$$</p></li>
+<li>Wind mass-loss metallicity scaling: $\dot M \propto Z^\alpha,\ \alpha\approx 0.5$–$0.9$ — higher $Z$ → more mass lost → smaller remnants.</li>
+<li>Magorrian relation: $M_\mathrm{BH} \approx 10^{-3} M_\mathrm{gal}$ — links SMBH/IMBH mass to host system mass.</li>
+<li>Sphere of influence: <p class="display-math">$$r_\mathrm{BH} = \frac{GM_\mathrm{BH}}{\sigma^2} = 4.32\times10^{-3}\frac{M_\mathrm{BH}/M_\odot}{(\sigma/\mathrm{km\,s^{-1}})^2}\,\mathrm{pc}$$</p> — angular size $\approx 0.89\frac{M_\mathrm{BH}/M_\odot}{(\sigma/\mathrm{km\,s^{-1}})^2\,d_\mathrm{kpc}}''$; sets AO/IFS requirement.</li>
+<li>Kepler's third law (binary orbit): $\omega_s^2 = \dfrac{GM}{R^3}$ — links separation to orbital (and GW) frequency.</li>
+<li>Strain definition and signal: $\dfrac{\Delta L}{L}=h_0$, $\ h(t)=h_0\cos(\omega_\mathrm{gw}t)$, with $\omega_\mathrm{gw}=2\omega_s$ (factor 2 from quadrupole symmetry).</li>
+<li>Strain amplitude: <p class="display-math">$$h_0 = 2\frac{R_{S1}}{r}\frac{R_{S2}}{R} = 2\left(\frac{2GM}{c^2r}\right)\left(\frac{2G\mu}{c^2R}\right)$$</p> — product of compactness ratios over distance; grows as orbit shrinks, falls as $1/r$.</li>
+<li>Total orbital energy: $E_\mathrm{tot} = -\dfrac{GM\mu}{2R} = -\dfrac{Gm_1m_2}{2R}$ — becomes more negative (system loses energy) as $R$ shrinks.</li>
+<li>GW luminosity: <p class="display-math">$$L = \frac{32}{5}\frac{G}{c^5}(\mu R^2\omega_s^3)^2 \propto R^{-5}$$</p> — negligible for ordinary binaries; diverges near merger.</li>
+<li>GW energy flux: $F = \dfrac{1}{32\pi}\dfrac{c^3}{G}h_0^2\omega_\mathrm{gw}^2$ — connects observables to radiated power; used for distance estimate.</li>
+<li>Inspiral (frequency evolution) equation: $\dot\omega_s = \dfrac{96G}{5c^5}\dfrac{\mu}{M}R^5\omega_s^7$ — derived from energy balance $L=-dE_\mathrm{tot}/dt$; mass dependence enters as $\mu^3M^2$.</li>
+<li>Chirp mass definition and observable form: <p class="display-math">$$M_\mathrm{chirp}=(\mu^3M^2)^{1/5}=\frac{(m_1m_2)^{3/5}}{(m_1+m_2)^{1/5}} = \frac{c^3}{G}\left[\frac{5}{96}\pi^{-8/3}\nu_\mathrm{gw}^{-11/3}\dot\nu_\mathrm{gw}\right]^{3/5}$$</p> — the primary, distance/mass-independent observable; $[\nu_\mathrm{gw}^{-11}\dot\nu_\mathrm{gw}^3]$ is constant through the inspiral.</li>
+<li>Total mass vs. mass ratio: <p class="display-math">$$M_\mathrm{tot} = \frac{M_\mathrm{chirp}}{[\alpha(1-\alpha)]^{3/5}} \geq 2.3\,M_\mathrm{chirp}$$</p> — minimum at equal masses ($\alpha=1/2$).</li>
+<li>Total mass from max GW frequency: <p class="display-math">$$M_\mathrm{tot} = \frac{1}{\pi\sqrt8}\frac{c^3}{G\nu_\mathrm{gw}^\mathrm{max}}$$</p> — from the coalescence condition $R_S = 2GM/c^2$; higher merger frequency → lighter system.</li>
+<li>Distance estimate: <p class="display-math">$$r = \frac{16}{\sqrt5}\frac{G}{c^4}\frac{\mu R^2\omega_s^2}{h_0}$$</p> — from setting $L=4\pi r^2F$.</li>
+<li>Redshift transformations: <p class="display-math">$$\nu_\mathrm{gw}^\mathrm{det}=\frac{\nu_\mathrm{gw}^s}{1+z},\quad \dot\nu_\mathrm{gw}^\mathrm{det}=\frac{\dot\nu_\mathrm{gw}^s}{(1+z)^2},\quad M_\mathrm{chirp}^\mathrm{det}=(1+z)M_\mathrm{chirp}^s$$</p> — detector-frame chirp/individual masses are over-estimated by $(1+z)$.</li>
+</ul>
+<h2 id="black-holes-gravitational-waves-3-key-algorithms-procedures">3. Key Algorithms / Procedures</h2>
+<p><strong>Determining BH binary parameters from a GW signal (e.g. GW150914):</strong></p>
+<ol>
+<li>From the time–frequency spectrogram, read successive time intervals $\Delta t$ between wave minima at different inspiral stages → gives $\nu_\mathrm{gw}$ and $\dot\nu_\mathrm{gw}$ at each stage.</li>
+<li>Compute the chirp mass from $\nu_\mathrm{gw}, \dot\nu_\mathrm{gw}$ (constant across stages — internal consistency check); GW150914 → $M_\mathrm{chirp}\approx 30\,M_\odot$.</li>
+<li>Get a <strong>minimum total mass</strong>: $M_\mathrm{tot}^\mathrm{min}=2.3\,M_\mathrm{chirp}$ (equal-mass assumption) → $\approx 69\,M_\odot$.</li>
+<li>Read the <strong>maximum observed GW frequency</strong> ($\nu_\mathrm{gw}^\mathrm{max}\approx 330$ Hz for GW150914) and compute $M_\mathrm{tot}$ independently from the coalescence-frequency formula → $70\,M_\odot$ (cross-check against step 3; also gives merger $R_S$ as a consistency check with the minimum orbital separation from the data).</li>
+<li>Solve $[\alpha(1-\alpha)]^{3/5}=M_\mathrm{chirp}/M_\mathrm{tot}$ for the mass ratio $\alpha$ → individual masses $m_1=\alpha M_\mathrm{tot}$, $m_2=(1-\alpha)M_\mathrm{tot}$.</li>
+<li>Estimate the source distance $r$ from the flux–luminosity relation using measured $h_0$, $\nu_\mathrm{gw}$ (hence $\omega_s$, $R$) and $\mu$.</li>
+<li>If an EM counterpart or host-galaxy redshift is available (or via luminosity-distance–redshift cosmology), correct detector-frame masses to source-frame masses using the $(1+z)$ relations.</li>
+</ol>
+<p><strong>Assessing SN vs. failed SN (BH) outcome for a massive star:</strong></p>
+<ol>
+<li>Evolve the star to the point of Fe-core infall (e.g. via PARSEC/MESA models).</li>
+<li>Compute the compactness $\xi_{2.5}$ from the enclosed mass/radius at $2.5\,M_\odot$.</li>
+<li>Compare to threshold $\approx0.2$: below → successful SN, NS remnant; above → failed SN, direct BH collapse (no optical transient, full mass retained in remnant).</li>
+</ol>
+<p><strong>Detecting an IMBH candidate in a globular cluster:</strong></p>
+<ol>
+<li>Obtain a high-resolution surface-brightness profile (HST/AO imaging) — look for a power-law density cusp vs. flat King-model core.</li>
+<li>Obtain resolved stellar radial velocities near the centre (AO-assisted IFS) to build a velocity-dispersion profile.</li>
+<li>Compare the observed VD profile to a King-only model vs. a "King + IMBH" model; a Keplerian ($v\propto r^{-1/2}$) upward cusp within the sphere of influence supports an IMBH.</li>
+</ol>
+<h2 id="black-holes-gravitational-waves-4-watch-out-for">4. Watch Out For</h2>
+<ul>
+<li>The Newtonian "escape velocity = $c$" derivation gives the numerically correct $R_s$ but for the wrong physical reason — don't confuse this heuristic with an actual GR derivation.</li>
+<li>The event horizon is <strong>not</strong> a physical surface; nothing special happens locally to an infalling observer crossing it (exam trap: "you'd feel a wall" is wrong).</li>
+<li>Distant observers never see anything actually cross the horizon (infinite coordinate time / frozen image); the infalling observer's own proper time to cross is finite. Don't mix these two frames.</li>
+<li>Compactness threshold $\xi_{2.5}\approx0.2$ is <strong>not monotonic</strong> in $M_\mathrm{ZAMS}$ — the $18$–$26\,M_\odot$ range is mixed (both outcomes possible), not a clean cutoff.</li>
+<li>Metallicity effect is twofold and same-signed: lower $Z$ → less wind mass loss <strong>and</strong> larger CO core → both push toward more massive remnants. At solar $Z$, no single star can produce a remnant $&gt;25\,M_\odot$ — this rules out single-star channels for LIGO's most massive BH-BH events at solar metallicity.</li>
+<li>GW frequency is <strong>twice</strong> the orbital frequency ($\omega_\mathrm{gw}=2\omega_s$) — a common factor-of-2 slip when converting between them.</li>
+<li>Chirp mass alone cannot give individual masses (mass-ratio degeneracy); the "equal mass" total-mass estimate is a strict <strong>lower bound</strong>, not the true value, unless independently confirmed (as it was for GW150914 via the max-frequency method).</li>
+<li>GW strain is dimensionless and minuscule ($h_0\sim10^{-22}$) — remember the "one-atom-diameter change over the Earth–Sun distance" scale to sanity-check any strain calculation.</li>
+<li>Newtonian orbital mechanics has <strong>no GW emission</strong>; the quadrupole (not dipole or monopole) is the lowest radiating multipole for gravity — a purely spherical or axisymmetric collapse emits no GWs.</li>
+<li>Detector-frame (observed) masses/chirp mass are systematically <strong>larger</strong> than source-frame values by $(1+z)$; always ask whether a quoted LIGO mass has been redshift-corrected. Redshift cannot be read from the GW signal alone — needs an EM counterpart or cosmological distance–redshift relation.</li>
+<li>Two widely separated detectors (Hanford–Livingston, light-travel time ~10 ms) are required to reject local noise and confirm a real signal — a single-detector "detection" is not credible evidence.</li>
+<li>Final BH mass after a merger is always <strong>less</strong> than $m_1+m_2$; the mass deficit is radiated as GWs (e.g. ~$3\,M_\odot$ for GW150914) — don't assume mass is conserved in the merger remnant.</li>
+<li>Distinguish the two independent NS-merger EM signatures and their physical origins: short GRB (relativistic jet, arrives within ~seconds) vs. kilonova (radioactive r-process decay, evolves over days, reddens as ejecta becomes lanthanide-rich/high-opacity).</li>
+<li>r-process happens in NS mergers (and some CC SNe); s-process happens in AGB stars — do not conflate the two neutron-capture channels or their products (r: Au/Pt/Eu/Ir/U; s: Ba/La/Ce/Pb).</li>
+<li>IMBH existence remains <strong>observationally unconfirmed</strong> — sphere-of-influence signals are subtle (sub-arcsecond) and require both imaging (density cusp) and spectroscopy (velocity-dispersion cusp) together; either alone is not sufficient evidence.</li>
+<li>Cosmic Censorship is a <strong>conjecture</strong>, not a proven theorem — do not state it as an established law of GR.</li>
+</ul>
+  </section>
+</article>
+  </div>
+</div>
+
+<script>
+
+/* ── Theme picker ── */
+(function () {
+  const btns = document.querySelectorAll('.theme-picker button[data-theme]');
+  const css  = document.getElementById('themeCSS');
+  function setTheme(t) {
+    if (css) css.href = 'themes/' + t + '.css';
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === t)));
+    try { localStorage.setItem('gaia-theme', t); } catch(e) {}
+  }
+  btns.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+  let saved = null;
+  try { saved = localStorage.getItem('gaia-theme'); } catch(e) {}
+  const valid = saved && document.querySelector('[data-theme="' + saved + '"]');
+  if (valid) setTheme(saved);
+})();
+
+
+
+/* ── Font / typography settings ── */
+(function () {
+  const BODY_FONTS = {
+    theme:    null,
+    system:   'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    georgia:  'Georgia, "Times New Roman", serif',
+    palatino: '"Palatino Linotype", Palatino, "Book Antiqua", serif',
+    inter:    '"Inter", system-ui, sans-serif',
+  };
+  const CODE_FONTS = {
+    theme:     null,
+    mono:      'ui-monospace, "Cascadia Code", "Fira Code", "Courier New", monospace',
+    jetbrains: '"JetBrains Mono", ui-monospace, monospace',
+    fira:      '"Fira Code", "Fira Mono", ui-monospace, monospace',
+  };
+  const DEF = { bodyFont: 'theme', codeFont: 'theme', fontSize: 15 };
+
+  function apply(s) {
+    const r = document.documentElement;
+    const bf = BODY_FONTS[s.bodyFont];
+    const cf = CODE_FONTS[s.codeFont];
+    if (bf) { r.style.setProperty('--font-body',    bf); r.style.setProperty('--font-heading', bf); }
+    else     { r.style.removeProperty('--font-body');      r.style.removeProperty('--font-heading'); }
+    if (cf) r.style.setProperty('--font-code', cf);
+    else    r.style.removeProperty('--font-code');
+    r.style.setProperty('--size-base', s.fontSize + 'px');
+    r.style.fontSize = s.fontSize + 'px';  /* makes 1rem = chosen size */
+  }
+
+  let s;
+  try { s = { ...DEF, ...JSON.parse(localStorage.getItem('gaia-font') || '{}') }; }
+  catch (e) { s = { ...DEF }; }
+  apply(s);
+
+  const panel = document.getElementById('settingsPanel');
+  const btn   = document.getElementById('settingsBtn');
+  if (!panel || !btn) return;
+
+  const bodyFSel = document.getElementById('spBodyFont');
+  const codeFSel = document.getElementById('spCodeFont');
+  const slider   = document.getElementById('spFontSize');
+  const sizeVal  = document.getElementById('spFontSizeVal');
+
+  if (bodyFSel) bodyFSel.value = s.bodyFont;
+  if (codeFSel) codeFSel.value = s.codeFont;
+  if (slider)   slider.value   = s.fontSize;
+  if (sizeVal)  sizeVal.textContent = s.fontSize + 'px';
+
+  function save() { localStorage.setItem('gaia-font', JSON.stringify(s)); }
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = panel.classList.toggle('is-open');
+    btn.classList.toggle('is-open', open);
+  });
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && !btn.contains(e.target)) {
+      panel.classList.remove('is-open'); btn.classList.remove('is-open');
+    }
+  });
+
+  if (bodyFSel) bodyFSel.addEventListener('change', e => { s.bodyFont = e.target.value; apply(s); save(); });
+  if (codeFSel) codeFSel.addEventListener('change', e => { s.codeFont = e.target.value; apply(s); save(); });
+  if (slider)   slider.addEventListener('input', e => {
+    s.fontSize = parseInt(e.target.value, 10);
+    if (sizeVal) sizeVal.textContent = s.fontSize + 'px';
+    apply(s); save();
+  });
+})();
+
+
+
+/* ── Session nav: sliding window tabs + dropdown ── */
+(function () {
+const PROJ_KEYS   = ["introduction", "pre-main-sequence-evolution", "main-sequence-evolution", "post-ms-rgb-hb-agb", "pulsating-stars", "white-dwarfs", "final-stages-high-mass", "binary-systems", "supernovae-neutron-stars", "black-holes-gravitational-waves"];
+  const PROJ_LABELS = {"introduction": "Introduction", "pre-main-sequence-evolution": "Pre-Main Sequence Evolution", "main-sequence-evolution": "Main Sequence Evolution", "post-ms-rgb-hb-agb": "Post-Ms: Rgb, Hb & Agb", "pulsating-stars": "Pulsating Stars", "white-dwarfs": "White Dwarfs", "final-stages-high-mass": "Final Stages High Mass", "binary-systems": "Binary Systems", "supernovae-neutron-stars": "Supernovae & Neutron Stars", "black-holes-gravitational-waves": "Black Holes & Gravitational Waves"};
+  const STORAGE_KEY = "gaia-iris-tab";
+  const SIDE_PREFIX = "IRIS";
+
+  const total = PROJ_KEYS.length;
+  let currentIdx = 0;
+
+  function _esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function winStart(idx) {
+    return Math.max(0, Math.min(idx - 1, total - 3));
+  }
+
+  /* ── Render tab window ── */
+  function renderTabs(idx, direction) {
+    const tw = document.getElementById('tabWindow');
+    if (!tw) return;
+    const doRender = () => {
+      const ws    = winStart(idx);
+      const count = Math.min(3, total);
+      tw.innerHTML = Array.from({ length: count }, (_, i) => {
+        const pi    = ws + i;
+        const key   = PROJ_KEYS[pi];
+        const act   = pi === idx ? ' is-active' : '';
+        return `<a class="session-tab${act}" data-idx="${pi}" data-project="${_esc(key)}" href="#" role="tab" aria-selected="${pi === idx}">${_esc(PROJ_LABELS[key] || key)}</a>`;
+      }).join('');
+      tw.querySelectorAll('.session-tab').forEach(t =>
+        t.addEventListener('click', e => { e.preventDefault(); activateSession(parseInt(t.dataset.idx, 10)); })
+      );
+    };
+    if (!direction) { doRender(); return; }
+    const exitCls  = direction === 'right' ? 'exit-left'   : 'exit-right';
+    const enterCls = direction === 'right' ? 'enter-right' : 'enter-left';
+    tw.classList.remove('exit-left','exit-right','enter-left','enter-right');
+    tw.classList.add(exitCls);
+    tw.addEventListener('animationend', function onEnd() {
+      tw.removeEventListener('animationend', onEnd);
+      tw.classList.remove(exitCls);
+      doRender();
+      void tw.offsetWidth;
+      tw.classList.add(enterCls);
+      tw.addEventListener('animationend', () => tw.classList.remove(enterCls), { once: true });
+    }, { once: true });
+  }
+
+  /* ── Render dropdown ── */
+  function renderDropdown(idx) {
+    const list = document.getElementById('dropList');
+    if (!list) return;
+    list.innerHTML = PROJ_KEYS.map((key, i) =>
+      `<li><button class="drop-item-btn${i === idx ? ' is-active' : ''}" data-idx="${i}">`+
+      `<span class="drop-dot"></span>${_esc(PROJ_LABELS[key] || key)}</button></li>`
+    ).join('');
+    list.querySelectorAll('.drop-item-btn').forEach(b =>
+      b.addEventListener('click', () => { closeDropdown(); activateSession(parseInt(b.dataset.idx, 10)); })
+    );
+  }
+
+  function openDropdown() {
+    const t = document.getElementById('dropTrigger');
+    const l = document.getElementById('dropList');
+    if (t) { t.classList.add('is-open'); t.setAttribute('aria-expanded','true'); }
+    if (l) l.hidden = false;
+  }
+  function closeDropdown() {
+    const t = document.getElementById('dropTrigger');
+    const l = document.getElementById('dropList');
+    if (t) { t.classList.remove('is-open'); t.setAttribute('aria-expanded','false'); }
+    if (l) l.hidden = true;
+  }
+
+  /* ── Main activate ── */
+  function activateSession(newIdx) {
+    if (newIdx < 0 || newIdx >= total) return;
+    const prevWs = winStart(currentIdx);
+    const newWs  = winStart(newIdx);
+    const dir    = newWs > prevWs ? 'right' : newWs < prevWs ? 'left' : null;
+    currentIdx   = newIdx;
+    const key    = PROJ_KEYS[newIdx];
+
+    /* Side label */
+    const lbl = document.getElementById('sideLabel');
+    if (lbl) lbl.textContent = SIDE_PREFIX + ' · ' + (PROJ_LABELS[key] || key);
+
+    renderTabs(newIdx, dir);
+    renderDropdown(newIdx);
+    try { localStorage.setItem(STORAGE_KEY, key); } catch(e) {}
+    if (typeof onProjectActivated === 'function') onProjectActivated(key);
+  }
+
+  /* Dropdown toggle */
+  const dropTrigger = document.getElementById('dropTrigger');
+  if (dropTrigger) {
+    dropTrigger.addEventListener('click', e => {
+      e.stopPropagation();
+      const l = document.getElementById('dropList');
+      if (l && !l.hidden) closeDropdown(); else openDropdown();
+    });
+  }
+  document.addEventListener('click', e => {
+    const dd = document.getElementById('sessionDropdown');
+    if (dd && !dd.contains(e.target)) closeDropdown();
+  });
+
+  /* Init */
+  let savedKey = null;
+  try { savedKey = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+  const startIdx = savedKey && PROJ_KEYS.includes(savedKey) ? PROJ_KEYS.indexOf(savedKey) : 0;
+  renderDropdown(startIdx);
+  activateSession(startIdx);
+
+  /* Expose for search / external callers */
+  window._gaiaActivateSession = activateSession;
+  window._gaiaProjKeys = PROJ_KEYS;
+})();
+
+
+/* ── Per-project activation (called by shared tab system) ── */
+function onProjectActivated(key) {
+  document.querySelectorAll('.article[data-project]').forEach(a => { a.hidden = a.dataset.project !== key; });
+  document.querySelectorAll('.sidebar .nav[data-project]').forEach(n => { n.hidden = n.dataset.project !== key; });
+}
+
+/* ── Sidebar category collapse ── */
+document.querySelectorAll('[data-toggle="cat"]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const cat = btn.closest('.cat');
+    cat.dataset.collapsed = cat.dataset.collapsed === 'true' ? 'false' : 'true';
+  });
+});
+
+/* ── Sidebar anchor scroll ── */
+document.querySelectorAll('.sidebar a.leaf[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.sidebar a.leaf.is-current').forEach(el => el.classList.remove('is-current'));
+      a.classList.add('is-current');
+    }
+  });
+});
+
+/* ── Mobile menu ── */
+(function () {
+  const btn     = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  if (!btn || !sidebar) return;
+  btn.addEventListener('click', () => sidebar.classList.toggle('is-open'));
+  document.addEventListener('click', e => {
+    if (!sidebar.contains(e.target) && !btn.contains(e.target))
+      sidebar.classList.remove('is-open');
+  });
+})();
+</script>
+</body>
+</html>
