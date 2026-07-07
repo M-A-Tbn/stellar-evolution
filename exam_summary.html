@@ -19,11 +19,18 @@ MathJax = {
 /* ── Definition entries ── */
 .def-entry {
   display: grid;
-  grid-template-columns: 210px 1fr;
+  grid-template-columns: 210px minmax(0, 1fr);
   gap: 0.4rem 1.4rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid var(--line-soft);
   align-items: baseline;
+}
+@media (max-width: 640px) {
+  /* Plain `1fr` still respects the body column's content-based minimum width, so an
+     unbroken inline formula could force the grid wider than its container and blow
+     out the page. `minmax(0, 1fr)` above fixes that; stacking the columns here also
+     makes the fixed 210px term column usable on a ~330px-wide mobile content area. */
+  .def-entry { grid-template-columns: 1fr; gap: 0.15rem; }
 }
 .def-term { font-weight: 600; color: var(--ink); font-size: 0.88rem; }
 .def-body { color: var(--body); font-size: 0.88rem; line-height: 1.6; }
@@ -144,10 +151,70 @@ blockquote { border-left: 3px solid var(--teal-edge); padding: 0.4rem 0.9rem;
 pre, code { font-family: var(--font-code, monospace); }
 
 /* ── Session nav ── */
-.session-nav   { display: flex; align-items: stretch; gap: 0; flex: 1; justify-content: center; }
-.tab-window    { display: flex; align-items: stretch; }
+.session-nav   {
+  display: flex; align-items: stretch; gap: 0; flex: 1; justify-content: center;
+  min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.session-nav::-webkit-scrollbar { display: none; }
+.tab-window    { display: flex; align-items: stretch; flex: none; }
 /* Push all topbar controls to the far right regardless of theme's flex-basis */
 .topbar-actions { flex: none; margin-left: auto; }
+
+/* ── Mobile: the theme's own responsive rules target a legacy `.topnav` class that
+   this sliding-window tab bar replaced, so `.session-nav` was never constrained and
+   forced the whole page wider than the viewport. Keep it scrollable-in-place instead,
+   with a guaranteed minimum width so it can't be squeezed out entirely by sibling
+   flex items (brand / search / actions) that carry their own content-based floors. ── */
+@media (max-width: 880px) {
+  .session-nav { justify-content: flex-start; min-width: 130px; }
+  .brand-name, .brand-issue { display: none; }
+  .session-tab {
+    max-width: 130px; padding: 0 12px; font-size: 12.5px;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  /* `build.py` hides these in its own <style> block on mobile, but iris_build.py /
+     coeus_build.py / metis_build.py never picked up that rule, so their theme-picker
+     (a full row of theme-swatch buttons) and settings-btn were left at full width —
+     the actual cause of most of the page-wide overflow on those pages. Centralize
+     the hide here so all four builders get it uniformly. */
+  .theme-picker, .settings-btn, .zen-btn { display: none !important; }
+  .topbar-actions { gap: 8px; }
+  /* With `.brand-name` hidden, `.brand` has nothing left to show but the icon —
+     but the theme's own `.brand { flex: 1; }` mobile override still gives it equal
+     grow priority against `.session-nav`, so it keeps claiming ~100px+ it doesn't
+     need. Let it size to content and hand that space to the tab bar instead. */
+  .brand { flex: 0 0 auto; }
+}
+@media (max-width: 480px) {
+  /* Themes set a fixed 28px/24px topbar padding+gap regardless of viewport; on a
+     phone that alone eats ~100px before any actual controls are laid out. */
+  .topbar { padding: 0 12px; gap: 10px; }
+  .session-nav { min-width: 110px; }
+  .session-tab { max-width: 96px; padding: 0 9px; font-size: 12px; }
+  .session-dropdown .drop-trigger { padding: 0 8px; }
+  /* Coeus quiz page: "New Test" button's un-wrapped text node can't be hidden by
+     itself, so collapse it via font-size and keep just the (fixed-px, unaffected) icon. */
+  .new-test-btn { font-size: 0; padding: 7px; gap: 0; }
+  .new-test-btn svg { width: 15px; height: 15px; }
+  /* Metis flashcards page: the progress "N / total" chip is visible by default
+     (unlike Coeus's score-chip, which starts `hidden`), so it must be compact
+     enough to coexist with the menu button in the remaining topbar space. */
+  .score-chip { padding: 3px 8px; font-size: 11.5px; }
+}
+
+/* ── MathJax overflow guard ──────────────────────────────────────────────────
+   `.display-math` paragraphs already scroll via their own overflow-x: auto, but
+   that only helps content the build scripts wrapped in that class. Any inline
+   formula living in ordinary flowing text (a `<p>`, list item, table cell, or an
+   Iris `.def-body` one-liner) renders its `mjx-container` as `display: inline`,
+   which browsers won't clip/scroll — a sufficiently wide equation just pushes the
+   whole page wider. Giving the block-level ancestor its own overflow-x: auto is a
+   no-op when nothing overflows, so it's safe to apply everywhere as a blanket
+   guard rather than track down every place math can appear. ── */
+.prose p, .intro-content p, .def-body, .prose li, .prose td {
+  max-width: 100%; overflow-x: auto;
+}
+
 
 @keyframes tabsExitLeft   { to   { opacity: 0; transform: translateX(-14px); } }
 @keyframes tabsExitRight  { to   { opacity: 0; transform: translateX(14px);  } }
