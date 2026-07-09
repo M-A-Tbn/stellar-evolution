@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Massive Star Evolution & Core Collapse - 30-Min Masterclass</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons for high-fidelity indicators -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #f6f0e2;
+      color: #3b3121;
+    }
+    .theme-sepia .card-bg {
+      background-color: #ede2cd;
+      border-color: #dacba9;
+    }
+    .theme-sepia .text-muted {
+      color: #645642;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #c4b391;
+    }
+
+    /* Circular Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #ccfbf1;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #0d9488;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #115e59;
+    }
+    .theme-sepia .circle-bg {
+      stroke: #e2d2b5;
+    }
+  </style>
+</head>
+<body class="bg-teal-50/30 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-teal-100 dark:border-teal-950 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-lg">
+          <i data-lucide="zap" class="w-6 h-6 animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Massive Star Evolution <span class="text-teal-600 dark:text-teal-400">Part IV & V</span></h1>
+          <p class="text-xs text-slate-500 dark:text-teal-500 font-medium">Exam Study Suite (Prof. F. R. Ferraro)</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-teal-100/50 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-teal-100/50 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-teal-600 dark:text-teal-400" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-teal-600 dark:text-teal-400" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-teal-600 dark:text-teal-400" title="Sepia Theme">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 px-3 py-1.5 rounded-lg border border-teal-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-teal-800 dark:hover:text-teal-200">
+            <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-teal-100 dark:bg-teal-950 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION & QUICK STUDY TOOLS -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-teal-600 dark:text-teal-400 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-teal-600 dark:text-teal-400 font-semibold bg-teal-50/50 dark:bg-teal-950/30">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-600 text-white text-xs">1</span>
+              <span class="truncate">Mass Limits & Transition</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">2</span>
+              <span class="truncate">Carbon Ignition Physics</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">3</span>
+              <span class="truncate">Super-AGB Phase</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">4</span>
+              <span class="truncate">O-Ne WD vs. EC-SN</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">5</span>
+              <span class="truncate">Advanced Core Fusions</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">6</span>
+              <span class="truncate">Neutrino Energy Loss</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">7</span>
+              <span class="truncate">The Onion Core Model</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">8</span>
+              <span class="truncate">Iron Core Collapse</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">9</span>
+              <span class="truncate">Bounce & Neutrinosphere</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">10</span>
+              <span class="truncate">Supernova Taxonomy</span>
+            </a>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">11</span>
+              <span class="truncate">Remnant Fate: NS vs. BH</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-600 text-white text-xs"><i data-lucide="award" class="w-3.5 h-3.5"></i></span>
+              <span class="truncate font-semibold">Recall Review Quiz</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-teal-950 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <!-- Ring indicator -->
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-teal-900 to-emerald-950 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-teal-300"></i>
+            <h4 class="font-bold text-sm text-teal-200 uppercase tracking-wider">Astrophysics Scales</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-teal-100">
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Transition Mass $M^{\text{up}}$:</span>
+              <span class="text-teal-300">$\approx 8 M_\odot$</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>C Ignition Temp:</span>
+              <span class="text-teal-300">$\approx 6 \times 10^8 \text{ K}$</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Iron Photo-disint:</span>
+              <span class="text-teal-300">$\approx 5 \times 10^9 \text{ K}$</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>Nuclear Density $\rho_0$:</span>
+              <span class="text-teal-300">$2.4 \times 10^{14}\text{ g cm}^{-3}$</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+        
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-teal-100 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-teal-100/50 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="orbit" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics Core Course</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              Advanced Stellar Evolution: Intermediate to Massive Final Stages
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive academic reference derived from slides "23.Evolution_HB_AGB_new.pdf", "24.pulsating_stars.pdf", and "25.WhiteDwarfs.pdf", mapping advanced nuclear kinetics, core collapse mechanics, shock waves, and explosive nucleosynthesis.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-teal-100 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Mass Limits & Post-He Burning Transitions</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Stellar evolution beyond core Helium exhaustion is dictated strictly by the initial mass of the star on the Zero Age Main Sequence ($M_{\text{ZAMS}}$). The fundamental mass threshold separating intermediate-mass stars from massive stars is defined as:
+              $$M^{\text{up}} \approx 8 M_\odot \quad \text{(Range: 7--11 } M_\odot \text{ based on metallicity)}$$
+            </p>
+            <p>
+              This boundary establishes the physical partition between stars whose core contraction is halted by electron degeneracy and those that can proceed to contract, heat up, and ignite Carbon under non-degenerate conditions.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+              <!-- Lower Range -->
+              <div class="p-5 rounded-2xl bg-teal-50/50 dark:bg-slate-900/50 border border-teal-100 dark:border-teal-950">
+                <span class="text-xs font-extrabold uppercase text-teal-600 dark:text-teal-400">1. Low Mass ($M < 7\text{--}8 M_\odot$)</span>
+                <p class="text-xs mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Upon central Helium exhaustion, the newly formed Carbon-Oxygen (C-O) core contracts and quickly enters a state of high electron degeneracy. The degeneracy pressure halts further contraction and temperature rises, concluding its core thermonuclear history. It ends as a degenerate **Carbon-Oxygen White Dwarf (CO-WD)**.
+                </p>
+              </div>
+              <!-- Intermediate range -->
+              <div class="p-5 rounded-2xl bg-teal-50/50 dark:bg-slate-900/50 border border-teal-100 dark:border-slate-800">
+                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">2. Intermediate ($7 M_\odot < M < 9\text{--}11 M_\odot$)</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  Often referred to as the <strong>Super-AGB (SAGB)</strong> mass range. These stars develop a mildly degenerate Carbon-Oxygen core. They possess enough gravitational potential energy to ignite Carbon burning, converting the core into Oxygen, Neon, and Magnesium (ONeMg).
+                </p>
+              </div>
+              <!-- High Mass range -->
+              <div class="p-5 rounded-2xl bg-teal-50/50 dark:bg-slate-900/50 border border-teal-200 dark:border-slate-800">
+                <span class="text-xs font-extrabold uppercase text-blue-500">3. High Mass ($M > 11 M_\odot$)</span>
+                <p class="text-xs mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
+                  The core never becomes degenerate during its nuclear burning phases. The star easily reaches the high temperatures required to ignite Carbon, Neon, Oxygen, and Silicon burning, ultimately forming a degenerate Iron core and ending as a **Type II Core-Collapse Supernova**.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Microphysics of Carbon Ignition & Flame Propagation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              For stars in the transition mass range of $7 M_\odot < M < 11 M_\odot$, the central Carbon-Oxygen core reaches a state of mild degeneracy. When the contracting core reaches a temperature of $T_c \approx 5\text{--}6 \times 10^8 \text{ K}$, Carbon burning is ignited.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Three Steps of Degenerate Carbon Ignition</h3>
+            <ol class="list-decimal list-inside space-y-4 pl-2 text-sm">
+              <li>
+                <strong>The Off-Center Carbon Flash:</strong>
+                Due to moderate electron degeneracy and highly efficient central cooling from neutrino losses, the temperature profile of the core is not monotonic; the temperature peak is shifted outward. This causes the first Carbon ignition (the Carbon Flash) to occur <strong>off-center</strong>.
+              </li>
+              <li>
+                <strong>Convective Flame Propagation:</strong>
+                The energy released by the off-center flash lifts the degeneracy in that layer, causing it to expand. This heating drives a convective combustion flame (or deflagration wave) that propagates inward toward the center, progressively removing the degeneracy throughout the core.
+              </li>
+              <li>
+                <strong>Stable Core Carbon Burning:</strong>
+                Once degeneracy is completely lifted, Carbon burning settles into a stable, non-degenerate state.
+              </li>
+            </ol>
+
+            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-4">
+              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 block mb-2">The Primary Carbon Fusion Reactions</span>
+              <p class="text-xs sm:text-sm">
+                The fusion of Carbon-12 nuclei proceeds through several nuclear channels, dominated by alpha ($\alpha$) and proton ($p$) emission:
+                $$^{12}\text{C} + ^{12}\text{C} \longrightarrow \begin{cases} 
+                  ^{20}\text{Ne} + ^{4}\text{He} & (\approx 50\text{--}60\%) \\
+                  ^{23}\text{Na} + p & (\approx 30\text{--}40\%) \\
+                  ^{23}\text{Mg} + n & (\text{Minor channel})
+                \end{cases}$$
+                This makes <strong>Oxygen ($^{16}\text{O}$)</strong> (a remnant of Helium burning), <strong>Neon ($^{20}\text{Ne}$)</strong>, and <strong>Magnesium ($^{24}\text{Mg}$)</strong> the dominant elements in the core at Carbon exhaustion.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Super-AGB (SAGB) Phase & Core Dredge-Out</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Following central Carbon exhaustion, intermediate-mass stars ($7\text{--}11 M_\odot$) enter the **Super-AGB (SAGB)** phase. The structure of these stars resembles that of lower-mass AGB stars, consisting of an inert, degenerate Oxygen-Neon-Magnesium (O-Ne-Mg) core surrounded by active Helium- and Hydrogen-burning shells.
+            </p>
+            <p>
+              However, the higher mass of SAGB stars introduces distinct structural behaviors:
+            </p>
+            <ul class="list-disc list-inside space-y-3 text-sm pl-2">
+              <li>
+                <strong>The Second Dredge-Up (Early AGB):</strong>
+                As the Helium-burning shell ignites, it expands the outer layers, cooling and turning off the Hydrogen-burning shell. The deep convective envelope then penetrates downward, reaching past the inactive Hydrogen-burning shell to dredge up Helium and Nitrogen ($^{14}\text{N}$) to the surface.
+              </li>
+              <li>
+                <strong>Dredge-Out / Third Dredge-Up:</strong>
+                During the thermally pulsing phase, the Helium-burning shell undergoes violent instabilities. Convection zones can develop on top of the Helium-burning shell and merge with the outer convective envelope. This mixes Helium-burning products—primarily Carbon—directly into the outer envelope, a process known as <strong>dredge-out</strong>.
+              </li>
+              <li>
+                <strong>High Thermal Pulse Frequency:</strong>
+                Due to the high core mass, the intershell region is very thin. This results in rapid, short-lived thermal pulses ($\tau_{\text{pulse}} \sim 10^3\text{ years}$) compared to lower-mass AGB stars ($\tau_{\text{pulse}} \sim 2 \times 10^5\text{ years}$).
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">ONeMg White Dwarf vs. Electron-Capture Supernova</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The ultimate fate of an SAGB star is determined by the competition between <strong>stellar wind mass loss</strong> and the <strong>growth rate of the degenerate Oxygen-Neon-Magnesium core</strong>:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <!-- O-Ne WD Case -->
+              <div class="p-6 bg-white dark:bg-slate-900 border border-teal-150 dark:border-slate-800 rounded-2xl card-bg space-y-3">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-teal-600 dark:text-teal-400">Case A: O-Ne White Dwarf (High Mass Loss)</span>
+                <p class="text-sm">
+                  If stellar winds strip the outer envelope before the O-Ne-Mg core reaches the Chandrasekhar mass ($M_{\text{Ch}} \approx 1.4 M_\odot$), the star escapes a core-collapse explosion.
+                </p>
+                <p class="text-sm">
+                  The ONe degenerate core settles onto a cooling track, forming an <strong>O-Ne White Dwarf</strong> (typical mass $\approx 1.0\text{--}1.2 M_\odot$).
+                </p>
+                <div class="bg-teal-50/50 dark:bg-slate-950 p-3 rounded-lg border border-teal-100 dark:border-slate-900 text-xs">
+                  <strong>Cooling Timescale Note:</strong> O-Ne White Dwarfs cool faster than C-O White Dwarfs. Because Oxygen and Neon have higher atomic weights ($A_{\text{O}} = 16, A_{\text{Ne}} = 20$), an O-Ne core contains fewer ions than a C-O core of the same mass. This reduced ion count stores less thermal energy, leading to a smaller "heat reservoir" ($U = \frac{3}{2} N_{\text{ion}} k_B T_c$) and more rapid cooling.
+                </div>
+              </div>
+
+              <!-- EC-SN Case -->
+              <div class="p-6 bg-white dark:bg-slate-900 border border-teal-150 dark:border-slate-800 rounded-2xl card-bg space-y-3">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400">Case B: Electron-Capture Supernova (Low Mass Loss)</span>
+                <p class="text-sm">
+                  If the envelope remains intact and the degenerate O-Ne-Mg core grows to near the Chandrasekhar limit ($M_{\text{core}} \approx 1.37 M_\odot$), the high central density triggers <strong>electron capture</strong> reactions:
+                  $$e^- + \text{ }^{24}\text{Mg} \longrightarrow \text{ }^{24}\text{Na} + \nu_e$$
+                  $$e^- + \text{ }^{20}\text{Ne} \longrightarrow \text{ }^{20}\text{F} + \nu_e$$
+                </p>
+                <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                  Because degenerate electrons supply the pressure supporting the core, capturing free electrons reduces this support. This triggers a catastrophic core collapse, resulting in an <strong>Electron-Capture Supernova (EC-SN)</strong> and leaving behind a Neutron Star.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Advanced Core Fusion Stages in Massive Stars ($M > 11 M_\odot$)</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In stars with initial masses above $11 M_\odot$, the core never becomes degenerate. Instead, the star undergoes a continuous cycle of core contraction, heating, and stable ignition of increasingly heavy fuels:
+            </p>
+
+            <div class="overflow-x-auto border border-teal-100 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-teal-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200">
+                  <tr>
+                    <th class="px-4 py-3">Core Stage</th>
+                    <th class="px-4 py-3">Ignition Temp ($10^9\text{ K}$)</th>
+                    <th class="px-4 py-3">Typical Duration ($20 M_\odot$)</th>
+                    <th class="px-4 py-3">Key Reactions & Products</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-teal-50/50 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-teal-50/10">
+                    <td class="px-4 py-3 font-semibold text-teal-600 dark:text-teal-400">Carbon Burn</td>
+                    <td class="px-4 py-3">$\approx 0.8$</td>
+                    <td class="px-4 py-3">$10^3 \text{ years}$</td>
+                    <td class="px-4 py-3">$^{12}\text{C} + ^{12}\text{C} \to ^{20}\text{Ne} + \alpha$</td>
+                  </tr>
+                  <tr class="hover:bg-teal-50/10">
+                    <td class="px-4 py-3 font-semibold text-teal-600 dark:text-teal-400">Neon Burn</td>
+                    <td class="px-4 py-3">$\approx 1.6$</td>
+                    <td class="px-4 py-3">$3 \text{ years}$</td>
+                    <td class="px-4 py-3">$^{20}\text{Ne}(\gamma, \alpha)^{16}\text{O}$, $^{20}\text{Ne}(\alpha, \gamma)^{24}\text{Mg}$</td>
+                  </tr>
+                  <tr class="hover:bg-teal-50/10">
+                    <td class="px-4 py-3 font-semibold text-teal-600 dark:text-teal-400">Oxygen Burn</td>
+                    <td class="px-4 py-3">$\approx 2.0$</td>
+                    <td class="px-4 py-3">$0.8 \text{ years}$</td>
+                    <td class="px-4 py-3">$^{16}\text{O} + ^{16}\text{O} \to ^{28}\text{Si} + \alpha$</td>
+                  </tr>
+                  <tr class="hover:bg-teal-50/10">
+                    <td class="px-4 py-3 font-semibold text-teal-600 dark:text-teal-400">Silicon Burn</td>
+                    <td class="px-4 py-3">$\approx 3.5$</td>
+                    <td class="px-4 py-3">$7 \text{ days}$</td>
+                    <td class="px-4 py-3">Photodisintegration & $\alpha$-captures to $^{56}\text{Ni}$</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Photodisintegration Bottleneck of Silicon Burning</h3>
+            <p>
+              Silicon burning at $T \approx 3.5 \times 10^9 \text{ K}$ does not proceed through direct fusion due to extreme Coulomb repulsion. Instead, high-energy gamma-ray ($\gamma$) photons rip silicon nuclei apart, producing a sea of free protons, neutrons, and alpha particles:
+              $$^{28}\text{Si} + \gamma \rightleftharpoons ^{24}\text{Mg} + \alpha \rightleftharpoons ^{20}\text{Ne} + 2\alpha \rightleftharpoons \dots$$
+            </p>
+            <p>
+              These free alpha particles are rapidly captured by other intact silicon nuclei in an equilibrium cascade known as the **$\alpha$-capture chain**:
+              $$^{28}\text{Si} + \alpha \to \text{ }^{32}\text{S} + \alpha \to \text{ }^{36}\text{Ar} + \alpha \to \dots \to \text{ }^{56}\text{Ni}$$
+            </p>
+            <p>
+              This chain ends at the iron-peak elements ($^{56}\text{Ni}$, $^{56}\text{Co}$, $^{56}\text{Fe}$), which have the highest nuclear binding energy per nucleon. Beyond this peak, further fusion is endothermic and cannot support the star's weight.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Neutrino Energy Loss Mechanics</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              During Carbon burning and subsequent advanced phases ($T \ge 8 \times 10^8 \text{ K}$), the primary source of core energy loss is **neutrino emission** rather than photon radiation. 
+            </p>
+            <p>
+              Because neutrinos interact only via the weak force, they escape the star immediately without depositing energy in the stellar envelope. At these high temperatures, three primary thermal neutrino production mechanisms dominate:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+              <!-- Photoneutrinos -->
+              <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg">
+                <span class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400">1. Photoneutrino Process</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  An electron absorbs a high-energy photon and re-emits a neutrino-antineutrino pair:
+                  $$e^- + \gamma \longrightarrow e^- + \nu + \bar{\nu}$$
+                </p>
+              </div>
+              <!-- Pair Annihilation -->
+              <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg">
+                <span class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400">2. Pair Annihilation</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  At $T \ge 10^9 \text{ K}$, gamma-ray photons produce electron-positron pairs in thermal equilibrium:
+                  $$\gamma + \gamma \rightleftharpoons e^- + e^+$$
+                  Occasionally, these annihilate directly into a neutrino pair instead of photons:
+                  $$e^- + e^+ \longrightarrow \nu + \bar{\nu}$$
+                </p>
+              </div>
+              <!-- Plasma process -->
+              <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg">
+                <span class="text-xs font-mono font-bold text-teal-600 dark:text-teal-400">3. Plasma-Neutrino Process</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  In highly dense core plasma, electromagnetic waves undergo collective oscillations, behaving as massive quasi-particles called plasmons ($\gamma_{\text{pl}}$). These plasmons can decay directly into a neutrino pair:
+                  $$\gamma_{\text{pl}} \longrightarrow \nu + \bar{\nu}$$
+                </p>
+              </div>
+            </div>
+
+            <div class="bg-blue-500/5 border border-blue-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase font-extrabold text-blue-500">Astrophysical Impact: Accelerated Evolution</span>
+              <p class="text-sm">
+                At temperatures near $10^9 \text{ K}$, neutrinos carry away virtually 100% of the energy produced by nuclear fusion. Because this energy is lost, the stellar core is forced to contract on a rapid **gravitational Kelvin-Helmholtz timescale** to maintain hydrostatic support. 
+              </p>
+              <p class="text-sm font-semibold">
+                This explains why the duration of advanced evolutionary stages plunges so dramatically, shrinking from millions of years (Hydrogen burning) to mere days (Silicon burning).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Pre-Supernova Structure: The Onion Core</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As a massive star ($M > 11 M_\odot$) near core collapse, its interior develops a highly stratified, concentric **onion skin** shell structure. Each shell burns a progressively lighter element outward from the center, reflecting the history of the star's nuclear burning:
+            </p>
+
+            <!-- Custom Clean SVG of Onion Shell Core -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-teal-100 dark:border-slate-800">
+              <svg viewBox="0 0 600 320" class="w-full max-w-xl h-auto">
+                <!-- Concentric Shell circles (Teal & Emerald theme) -->
+                <circle cx="300" cy="160" r="140" class="fill-none stroke-teal-500/20 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="120" class="fill-none stroke-teal-500/40 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="100" class="fill-none stroke-emerald-500/30 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="80" class="fill-none stroke-emerald-500/50 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="60" class="fill-none stroke-emerald-600 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="40" class="fill-none stroke-teal-700 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="20" class="fill-slate-700 dark:fill-slate-800"/>
+
+                <!-- Labeling arrows and notes -->
+                <!-- Core -->
+                <line x1="300" y1="160" x2="160" y2="70" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="150" y="65" text-anchor="middle" class="fill-slate-900 dark:fill-white text-[11px] font-mono font-bold">1. Inert degenerate Iron (Fe-Ni) Core</text>
+
+                <!-- Si shell -->
+                <line x1="300" y1="120" x2="170" y2="100" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="160" y="95" text-anchor="middle" class="fill-teal-700 dark:fill-teal-400 text-[10px] font-mono">2. Silicon Shell</text>
+
+                <!-- O shell -->
+                <line x1="300" y1="100" x2="150" y2="130" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="140" y="125" text-anchor="middle" class="fill-emerald-700 dark:fill-emerald-400 text-[10px] font-mono">3. Oxygen-Neon Shell</text>
+
+                <!-- C shell -->
+                <line x1="300" y1="80" x2="150" y2="160" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="140" y="155" text-anchor="middle" class="fill-emerald-600 dark:fill-emerald-500 text-[10px] font-mono">4. Carbon Shell</text>
+
+                <!-- He shell -->
+                <line x1="300" y1="60" x2="430" y2="100" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="440" y="95" text-anchor="start" class="fill-teal-600 text-[10px] font-mono">5. Helium Shell</text>
+
+                <!-- H shell -->
+                <line x1="300" y1="40" x2="430" y2="130" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="440" y="125" text-anchor="start" class="fill-teal-500 text-[10px] font-mono">6. Hydrogen Shell</text>
+
+                <!-- Envelope -->
+                <line x1="300" y1="20" x2="430" y2="160" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="440" y="155" text-anchor="start" class="fill-slate-500 text-[10px] font-mono">7. Non-burning H-He Envelope</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 3: Concordant cross-section schematic of the onion-layer core.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Iron Core Collapse & The URCA Process</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Once Silicon is exhausted in the inner $1.3\text{--}2.0 M_\odot$ of the core, the star has run out of nuclear fuel. The inert Iron core begins to contract, raising the central temperature to $T_c \approx 5\text{--}10 \times 10^9 \text{ K}$ and central density to $\rho_c \ge 10^9 \text{ g/cm}^3$.
+            </p>
+            <p>
+              Under these extreme conditions, two catastrophic physical processes destabilize the core, triggering a rapid gravitational collapse:
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-teal-600 dark:text-teal-400">1. Photodisintegration (Endothermic Destruction)</h3>
+            <p>
+              The highly energetic thermal photon field inside the core begins to break iron nuclei apart:
+              $$\text{Reaction I: } \quad ^{56}\text{Fe} + \gamma \longrightarrow 13 \alpha + 4n \quad (\Delta Q = -124.4 \text{ MeV})$$
+              $$\text{Reaction II: } \quad \alpha + \gamma \longrightarrow 2p + 2n \quad (\Delta Q = -28.3 \text{ MeV})$$
+            </p>
+            <p class="font-bold">
+              Because these photodisintegration reactions are highly endothermic (absorbing energy), they remove thermal energy from the core, lowering the pressure and accelerating the gravitational collapse.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-teal-600 dark:text-teal-400">2. The URCA Process & Electron Capture</h3>
+            <p>
+              As the density rises, the Fermi energy ($E_F$) of degenerate electrons exceeds the threshold energy needed for proton-to-neutron conversion. This triggers rapid electron capture reactions on iron-group nuclei and free protons:
+              $$\text{Electron capture: } \quad e^- + \text{ }^{56}\text{Fe} \longrightarrow \text{ }^{56}\text{Mn} + \nu_e$$
+              $$\text{URCA proton capture: } \quad e^- + p^+ \longrightarrow n + \nu_e$$
+            </p>
+            <p>
+              This process is known as the **URCA process** (named by George Gamow and Mário Schenberg after the Casino de Urca in Rio de Janeiro, because the cooling of the core via neutrino emission acts as an "unrecordable energy sink" that drains energy from the star, much like the casino drained money from gamblers). 
+            </p>
+            <p>
+              Because electron capture removes the free electrons that supply the core's degeneracy pressure, the core collapses almost in **free fall**:
+              $$\tau_{\text{freefall}} \approx \frac{1}{\sqrt{G \bar{\rho}}} \approx \frac{2600}{\sqrt{\rho}} \quad \text{seconds}$$
+              At $\rho \sim 10^{10} \text{ g/cm}^3$, the core collapses in a fraction of a second: **$\tau_{\text{freefall}} \approx 10^{-2} \text{ seconds}$**.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Core Rebound, Shockwaves, & Neutrino Trapping</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The gravitational collapse of the core continues until its central density reaches nuclear matter density:
+              $$\rho_0 \approx 2.4 \times 10^{14} \text{ g/cm}^3$$
+            </p>
+            <p>
+              At this density, the nucleons are packed tightly together, and the **short-range strong nuclear force** becomes highly repulsive. This sudden stiffening of nuclear matter halts the collapse of the inner $\approx 0.7 M_\odot$ of the core, causing it to **bounce** outward.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-teal-600 dark:text-teal-400">The Revived Shockwave: Neutrino-Driven Delay Mechanism</h3>
+            <p>
+              The supersonic impact of the infalling outer core layers on the rebounding inner core generates a powerful **shockwave**. 
+            </p>
+            <p>
+              However, as the shockwave moves outward, it loses energy by photodisintegrating iron nuclei in the overlying layers, losing $\approx 10^{51} \text{ erg}$ for every $0.1 M_\odot$ of material it crosses. This energy loss causes the shockwave to stall within milliseconds, becoming a **standing accretion shock**.
+            </p>
+            <p>
+              The shockwave is revived by the emission of neutrinos from the collapsing core:
+            </p>
+            <ul class="list-disc list-inside space-y-3 text-sm pl-2">
+              <li>
+                <strong>The Neutrinosphere ($\nu$-sphere):</strong> At nuclear densities, the core is opaque to neutrinos. Neutrinos become trapped inside a region known as the **neutrinosphere**, diffusing outward slowly rather than escaping instantly.
+              </li>
+              <li>
+                <strong>Neutrino Heating:</strong> Just outside the neutrinosphere (in the "gain region"), these trapped neutrinos are absorbed by free nucleons behind the stalled shock:
+                $$\nu_e + n \longrightarrow e^- + p^+$$
+                $$\bar{\nu}_e + p^+ \longrightarrow e^+ + n$$
+                This neutrino heating deposits massive amounts of energy ($\sim 10^{53} \text{ erg}$) into the matter, reviving the stalled shockwave and driving it outward to produce a **Type II Supernova** explosion.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Supernova Classification & Spectral Diagnostics</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Supernovae are historically classified based on the presence or absence of specific spectral lines in their observed spectra at maximum light. This empirical classification is summarized below:
+            </p>
+
+            <!-- Diagnostic Taxonomy SVG diagram -->
+            <div class="flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-teal-100 dark:border-slate-800">
+              <svg viewBox="0 0 600 240" class="w-full max-w-lg h-auto">
+                <!-- Taxonomy Tree nodes -->
+                <rect x="250" y="10" width="100" height="30" rx="5" class="fill-teal-600 stroke-teal-700 text-white"/>
+                <text x="300" y="28" text-anchor="middle" class="fill-white font-mono font-bold text-xs">SUPERNOVA</text>
+
+                <!-- H vs No H lines -->
+                <line x1="250" y1="25" x2="150" y2="70" class="stroke-slate-500 stroke-2"/>
+                <line x1="350" y1="25" x2="450" y2="70" class="stroke-slate-500 stroke-2"/>
+                <text x="180" y="50" class="fill-slate-500 text-[10px] font-bold">No Hydrogen</text>
+                <text x="410" y="50" class="fill-slate-500 text-[10px] font-bold">Hydrogen Present</text>
+
+                <!-- Type II -->
+                <rect x="400" y="70" width="100" height="30" rx="5" class="fill-teal-100 dark:fill-slate-800 stroke-teal-300 dark:stroke-slate-700"/>
+                <text x="450" y="88" text-anchor="middle" class="fill-teal-700 dark:fill-teal-400 font-mono font-bold text-xs">Type II (Core Collapse)</text>
+
+                <!-- Type I split -->
+                <rect x="100" y="70" width="100" height="30" rx="5" class="fill-teal-100 dark:fill-slate-800 stroke-teal-300 dark:stroke-slate-700"/>
+                <text x="150" y="88" text-anchor="middle" class="fill-teal-700 dark:fill-teal-400 font-mono font-bold text-xs">Type I (No H)</text>
+
+                <!-- Sub-split Ia / Ib / Ic -->
+                <line x1="100" y1="85" x2="50" y2="140" class="stroke-slate-500 stroke-1"/>
+                <line x1="150" y1="100" x2="150" y2="140" class="stroke-slate-500 stroke-1"/>
+                <line x1="200" y1="85" x2="250" y2="140" class="stroke-slate-500 stroke-1"/>
+
+                <!-- Type Ia -->
+                <rect x="10" y="140" width="80" height="30" rx="5" class="fill-emerald-100 dark:fill-slate-800 stroke-emerald-300 dark:stroke-slate-700"/>
+                <text x="50" y="158" text-anchor="middle" class="fill-emerald-700 dark:fill-emerald-400 font-mono text-[10px] font-bold">Ia (Si II line)</text>
+                <text x="50" y="190" text-anchor="middle" class="fill-slate-400 text-[9px]">Thermonuclear WD</text>
+
+                <!-- Type Ib -->
+                <rect x="110" y="140" width="80" height="30" rx="5" class="fill-teal-100 dark:fill-slate-800 stroke-teal-300 dark:stroke-slate-700"/>
+                <text x="150" y="158" text-anchor="middle" class="fill-teal-700 dark:fill-teal-400 font-mono text-[10px] font-bold">Ib (He I line)</text>
+                <text x="150" y="190" text-anchor="middle" class="fill-slate-400 text-[9px]">Stripped Core Collapse</text>
+
+                <!-- Type Ic -->
+                <rect x="210" y="140" width="80" height="30" rx="5" class="fill-teal-100 dark:fill-slate-800 stroke-teal-300 dark:stroke-slate-700"/>
+                <text x="250" y="158" text-anchor="middle" class="fill-teal-700 dark:fill-teal-400 font-mono text-[10px] font-bold">Ic (No Si, No He)</text>
+                <text x="250" y="190" text-anchor="middle" class="fill-slate-400 text-[9px]">Highly Stripped Core Collapse</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 4: Standard observational taxonomy of Supernovae based on spectral diagnostics.</span>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-6">Light Curve Dynamics & Radioactive Powering</h3>
+            <p>
+              Type II (core-collapse) supernovae typically display a **plateau** in their light curves (Type II-P). As the ejected envelope expands and cools, Hydrogen recombines ($H^+ \to H^0$) at a constant temperature of $T \approx 5000 \text{ K}$. The recombination front moves inward through the expanding shell, keeping the photospheric temperature—and the star's optical luminosity—constant for months.
+            </p>
+            <p>
+              Once recombination is complete, the light curve drops onto an exponential **radioactive tail**. This late-stage luminosity is powered entirely by the decay of radioactive isotopes synthesized in the explosion:
+              $$^{56}\text{Ni} \xrightarrow[\tau_{1/2}=6.1\text{ d}]{\text{Electron Capture}} \text{ }^{56}\text{Co} \xrightarrow[\tau_{1/2}=77.1\text{ d}]{\text{Electron Capture (80\%) / }\beta^+\text{ (20\%)}} \text{ }^{56}\text{Fe (Stable)}$$
+            </p>
+            <p>
+              Because the number of radioactive nuclei decays exponentially ($N(t) = N_0 e^{-\lambda t}$), the late-time bolometric magnitude decreases linearly, with a slope determined by the half-life of Cobalt-56 ($\tau_{1/2} = 77.1 \text{ days}$):
+              $$\frac{dM_{\text{bol}}}{dt} \approx \frac{0.74}{\tau_{1/2}} \approx 0.01 \text{ mag/day}$$
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">11</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Compact Remnant Fate: Neutron Star vs. Black Hole</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Not every core collapse ends the same way. Whether the compact remnant left behind is a <strong>Neutron Star (NS)</strong> or a <strong>Black Hole (BH)</strong> depends on how much mass ultimately accretes onto the proto-neutron star after bounce — a factor only loosely tied to the progenitor's initial mass.
+            </p>
+
+            <div class="overflow-x-auto border border-teal-100 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-teal-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200">
+                  <tr>
+                    <th class="px-4 py-3">Progenitor Mass ($M_{\text{ZAMS}}$)</th>
+                    <th class="px-4 py-3">Typical Remnant</th>
+                    <th class="px-4 py-3">Governing Factor</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-teal-50/50 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-teal-50/10">
+                    <td class="px-4 py-3 font-semibold text-teal-600 dark:text-teal-400">$M \lesssim 25\, M_\odot$</td>
+                    <td class="px-4 py-3">Neutron Star</td>
+                    <td class="px-4 py-3">Shock revival (Sec. 9) succeeds; only $\sim 1$--$2\, M_\odot$ falls back</td>
+                  </tr>
+                  <tr class="hover:bg-teal-50/10">
+                    <td class="px-4 py-3 font-semibold text-teal-600 dark:text-teal-400">$M \gtrsim 25\, M_\odot$</td>
+                    <td class="px-4 py-3">Black Hole</td>
+                    <td class="px-4 py-3">Shock revival fails outright, or succeeds but is overwhelmed by fallback</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 italic">
+              These thresholds are approximate rules of thumb only: the true outcome is strongly modulated by the steepness of the density gradient at the Fe/Si-O core boundary. A steep gradient favors a successful explosion (hence an NS) even above $25\, M_\odot$; a shallow gradient can push the remnant to a BH at lower mass.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Two Routes to Black Hole Formation</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <!-- Prompt Collapse -->
+              <div class="p-6 bg-white dark:bg-slate-900 border border-teal-150 dark:border-slate-800 rounded-2xl card-bg space-y-3">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">Route A: Prompt Collapse</span>
+                <p class="text-sm">
+                  The neutrino-driven revival mechanism (Sec. 9) fails outright — heating in the gain region never overcomes the ram pressure of infalling material, and the standing shock never revives. The star collapses directly to a black hole with <strong>no observable supernova</strong> at all: an outright "disappearing star."
+                </p>
+              </div>
+              <!-- Fallback -->
+              <div class="p-6 bg-white dark:bg-slate-900 border border-teal-150 dark:border-slate-800 rounded-2xl card-bg space-y-3">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500">Route B: Fallback</span>
+                <p class="text-sm">
+                  The shock revives and a genuine (though possibly dim or spectroscopically unusual) supernova is launched. Part of the ejecta, however, fails to reach escape velocity and rains back onto the proto-neutron star over minutes to hours, pushing its mass past $M_{\text{NS,max}}$ and collapsing it into a black hole <em>after</em> the explosion has already been observed.
+                </p>
+              </div>
+            </div>
+            <div class="bg-rose-500/5 border border-rose-500/20 rounded-2xl p-5">
+              <span class="text-xs uppercase font-extrabold text-rose-500 block mb-1">Exam Trap</span>
+              <p class="text-sm">
+                Do not treat "black hole formation" as always invisible. Prompt collapse produces no visible supernova, but fallback black hole formation <em>is</em> observationally distinguishable — it is preceded by a real explosion. Only prompt collapse corresponds to a star vanishing with no SN signature.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-6">The r-Process: Building the Heaviest Elements</h3>
+            <p>
+              The neutron-rich, explosively ejected innermost layers of the supernova host the <strong>rapid neutron-capture process (r-process)</strong>, responsible for synthesizing the heaviest elements in the universe:
+            </p>
+            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-2">
+              $$^{A}_{Z}X + n \longrightarrow {}^{A+1}_{Z}X \text{ (unstable)} \longrightarrow {}^{A+1}_{Z+1}X + e^- + \bar{\nu}_e$$
+              <p class="text-xs sm:text-sm mt-2">
+                Because successive neutron captures occur <strong>faster than the intervening $\beta$-decays</strong>, r-process nuclei are driven far off the valley of nuclear stability before finally decaying back toward it, producing abundance peaks near mass numbers $A \approx 80, 130, 195$ — set by the neutron magic numbers $N = 50, 82, 126$. This contrasts with the <strong>s-process</strong> (slow capture, occurring in AGB stars), where captures are slow enough that $\beta$-decay always keeps the nucleus on the valley of stability.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- QUIZ CHALLENGE SECTION -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-teal-100 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall Exam Preparation Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of the physical concepts before your exam.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-teal-100 dark:border-slate-800 shadow-sm card-bg space-y-8">
+            
+            <!-- Question 1 -->
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the critical mass boundary ($M^{\text{up}}$) above which stars ignite Carbon burning under non-degenerate conditions?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Approximately 8 M_solar (ranging between 7 and 11 M_solar depending on metallicity).
+                </button>
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Exactly 2.2 M_solar (which marks the Helium Flash transition).
+                </button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! $M^{\text{up}} \approx 8 M_\odot$ is the limiting mass dividing CO white dwarf endpoints from core-collapse supernovae.
+              </p>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does Carbon burning ignite off-center in the cores of transition stars ($7 M_\odot < M < 11 M_\odot$)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Convective overshooting mixes fresh Carbon fuel exclusively into the outer layers.
+                </button>
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) High central densities and temperatures drive intense neutrino emissions that cool the innermost core.
+                </button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Neutrino energy loss acts as a central cooling mechanism, causing the maximum temperature to occur off-center.
+              </p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why do Oxygen-Neon (ONe) White Dwarfs cool faster than Carbon-Oxygen (CO) White Dwarfs of the same mass?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) The higher average atomic weight of O-Ne mixtures results in fewer ions, reducing the core's total thermal energy reservoir.
+                </button>
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) The higher surface gravity of O-Ne White Dwarfs drives rapid heat conduction to the surface.
+                </button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Because $U \propto N_{\text{ion}} \propto M/A$, the larger atomic weight ($A$) of O and Ne results in fewer thermal ions to store heat.
+              </p>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What trigger initiates an Electron-Capture Supernova (EC-SN) in an SAGB star?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Free electrons are captured by Magnesium-24 and Neon-20 nuclei, reducing degeneracy pressure and causing the core to collapse.
+                </button>
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Photodisintegration converts Silicon into Iron-peak elements, absorbing the thermal support of the core.
+                </button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Electron capture on $^{24}\text{Mg}$ and $^{20}\text{Ne}$ removes the degenerate electrons that support the core, triggering collapse.
+              </p>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which burning stage has the shortest duration in a massive star ($M \approx 20 M_\odot$)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Core Oxygen Burning, which lasts approximately 200 days.
+                </button>
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Core Silicon Burning, which lasts only about 7 days.
+                </button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Due to extreme neutrino energy loss, Silicon burning is completed in only about a week.
+              </p>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What occurs during the photodisintegration phase of core collapse?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) High-energy photons rip Iron-56 nuclei apart into alpha particles and neutrons, absorbing thermal energy and accelerating collapse.
+                </button>
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Free positrons annihilate with electrons to produce photons, boosting the core's expansion pressure.
+                </button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Photodisintegration is highly endothermic, absorbing energy and accelerating core collapse.
+              </p>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does neutrino heating revive a stalled pre-supernova shockwave?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Neutrinos annihilate with positrons behind the shock, generating high-pressure acoustic waves.
+                </button>
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Trapped neutrinos are absorbed by free nucleons in the gain region, depositing energy that drives the shock wave outward.
+                </button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! This is the neutrino-driven delayed explosion mechanism.
+              </p>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical origin of the plateau phase (Type II-P) in core-collapse light curves?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) A Hydrogen recombination front propagates inward through the expanding shell, maintaining a constant photospheric temperature.
+                </button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Rapid expansion dilutes the core's opacity, allowing thermal energy from Nickel-56 decay to escape at a constant rate.
+                </button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Recombination ($H^+ \to H^0$) occurs at a nearly constant temperature of $\approx 5000\text{ K}$, creating the light curve plateau.
+              </p>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What observational line is the primary diagnostic used to distinguish Type II Supernovae from Type I Supernovae?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Broad Hydrogen alpha ($\text{H}\alpha$) lines.
+                </button>
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Singly ionized Silicon ($\text{Si II}$) absorption lines.
+                </button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The presence of Hydrogen in the spectrum defines Type II supernovae, while its absence defines Type I.
+              </p>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which radioactive decay chain powers the late-time exponential tail of core-collapse supernova light curves?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) $^{14}\text{N}(\alpha, \gamma)^{18}\text{F}$ decay to Oxygen-18.
+                </button>
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) $^{56}\text{Ni} \to \text{ }^{56}\text{Co} \to \text{ }^{56}\text{Fe}$.
+                </button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The decay of Nickel-56 and Cobalt-56 powers the light curve, with the late-time tail's slope determined by the 77.1-day half-life of $^{56}\text{Co}$.
+              </p>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 11</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What key observational difference distinguishes prompt collapse from fallback black hole formation?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(11, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Prompt collapse produces no visible supernova at all, while fallback black hole formation is preceded by a real explosion.
+                </button>
+                <button onclick="checkQuiz(11, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Prompt collapse always synthesizes more $^{56}\text{Ni}$, making it the brighter of the two.
+                </button>
+              </div>
+              <p id="q11-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Prompt collapse means the shock never revives — no explosion is ever seen. Fallback means a genuine SN occurs first, and the BH only forms afterward as ejecta rains back onto the proto-neutron star.
+              </p>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 12</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why do r-process nuclei end up far from the valley of nuclear stability, unlike s-process nuclei?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(12, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Neutron captures occur faster than the intervening beta decays, driving nuclei to extreme neutron-richness before they can decay back.
+                </button>
+                <button onclick="checkQuiz(12, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) The r-process only captures protons, producing proton-rich isotopes instead of neutron-rich ones.
+                </button>
+              </div>
+              <p id="q12-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Rapid neutron capture outruns beta decay, pushing nuclei off the valley of stability until captures cease and decay catches up — producing abundance peaks at the neutron magic numbers.
+              </p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-teal-600 dark:text-teal-400 font-bold">0 / 12 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (timerRunning) {
+        clearInterval(timerId);
+        btn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        btn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = true;
+      }
+      lucide.createIcons();
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+      
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = Math.max(0, dashOffset);
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-teal-50/50', 'dark:bg-teal-950/30', 'text-teal-600', 'dark:text-teal-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-teal-50/50', 'dark:bg-teal-950/30', 'text-teal-600', 'dark:text-teal-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+      
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 12 Correct`;
+    }
+  </script>
+</body>
+</html>

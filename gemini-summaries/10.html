@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Foundations of Stellar Structure - 30-Min Masterclass</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons for premium visual depth -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf6e8;
+      color: #433422;
+    }
+    .theme-sepia .card-bg {
+      background-color: #f4ebd0;
+      border-color: #e6d3a8;
+    }
+    .theme-sepia .text-muted {
+      color: #705e47;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d2b48c;
+    }
+
+    /* Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #e0e7ff;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #4f46e5;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #312e81;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-indigo-500/10 text-indigo-500 rounded-lg">
+          <i data-lucide="compass" class="w-6 h-6 animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Foundations of Stellar Structure <span class="text-indigo-500">Lecture 10</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Masterclass — Stellar Evolution Core Course</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 px-3 py-1.5 rounded-lg border border-indigo-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-indigo-800 dark:hover:text-indigo-200">
+            <i data-lucide="play" id="timer-icon-play" class="w-3.5 h-3.5 inline"></i>
+            <i data-lucide="pause" id="timer-icon-pause" class="w-3.5 h-3.5 inline hidden"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-indigo-500 to-violet-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50/50 dark:bg-indigo-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-indigo-500 text-white text-xs">1</span>
+              <span class="truncate">Course Aims & Exam Expectations</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
+              <span class="truncate">The H-R Diagram</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
+              <span class="truncate">Inputs & The Seven Equations</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
+              <span class="truncate">Hydrostatic Equilibrium & Mass Continuity</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
+              <span class="truncate">Equation of State & $\mu$</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
+              <span class="truncate">Electron Degeneracy</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
+              <span class="truncate">Virial Theorem & $t_{KH}$</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
+              <span class="truncate">Convection & Schwarzschild Criterion</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
+              <span class="truncate">Opacity & Kramers' Laws</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
+              <span class="truncate">Fusion I: Coulomb Barrier, PP & CNO</span>
+            </a>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">11</span>
+              <span class="truncate">Fusion II: $3\alpha$, Advanced Burning & n-Capture</span>
+            </a>
+            <a href="#sec-12" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">12</span>
+              <span class="truncate">Atmosphere, $T_e$ & Spectral Lines</span>
+            </a>
+            <a href="#sec-13" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">13</span>
+              <span class="truncate">Helium Problem & Big Bang Nucleosynthesis</span>
+            </a>
+            <a href="#sec-14" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">14</span>
+              <span class="truncate">The Sun as Reference Star</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-indigo-500 text-white text-xs"><i data-lucide="award" class="w-3 h-3"></i></span>
+              <span class="truncate font-semibold">Active Recall Mastery Test</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-indigo-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i>
+            <h4 class="font-bold text-sm text-indigo-200 uppercase tracking-wider">Foundational Constants</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-slate-300">
+            <div class="flex justify-between border-b border-indigo-900 pb-1.5">
+              <span>Mean mol. wt.:</span>
+              <span class="text-indigo-300">$\mu_\odot \approx 0.617$</span>
+            </div>
+            <div class="flex justify-between border-b border-indigo-900 pb-1.5">
+              <span>Degeneracy onset:</span>
+              <span class="text-indigo-300">$T/\rho^{2/3}\!<\!10^5$</span>
+            </div>
+            <div class="flex justify-between border-b border-indigo-900 pb-1.5">
+              <span>Solar $t_{KH}$:</span>
+              <span class="text-indigo-300">$\approx 1.5\times10^7$ yr</span>
+            </div>
+            <div class="flex justify-between border-b border-indigo-900 pb-1.5">
+              <span>$\nabla_\text{ad}$ (ideal gas):</span>
+              <span class="text-indigo-300">$0.4$</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>Solar $T_e$:</span>
+              <span class="text-indigo-300">$5770$ K</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-slate-100 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="atom" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-indigo-500/10 text-indigo-500 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics Core Course</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              The Physical Toolkit: Stellar Structure, Energy & the H-R Diagram
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive study companion covering lecture "10.introduction.pdf" verbatim — the seven governing equations of stellar structure, the physics of degenerate matter, thermonuclear fusion chains, and the stellar atmosphere. This is the physics toolkit every later lecture in the course builds on.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Course Aims, Syllabus & Exam Expectations</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The central goal of this course is to <strong>identify the physical processes that produce the major changes in the structure of stars of different masses and chemical composition as a function of time</strong>. This is not a descriptive catalogue of what stars look like at various ages — it demands a <strong>mechanistic</strong> understanding of why stars evolve the way they do.
+            </p>
+            <p>
+              Stellar evolution matters far beyond individual stars: every large-scale cosmic structure — globular clusters, spiral galaxies, interacting galaxy groups — is built from stars and gas. The <strong>photometric properties</strong> and <strong>chemical evolution</strong> of any cosmic structure depend directly on what the stars inside it are doing. To understand galaxy colors or interstellar chemical enrichment, one must first understand how a single star evolves.
+            </p>
+
+            <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg my-6">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-indigo-500 block mb-2">Course Syllabus (Lecture Numbering)</span>
+              <p class="text-sm">
+                10. Intro (this lecture) &middot; 20. Pre-Main Sequence &middot; 21. Main Sequence &middot; 22. Post-Main Sequence &middot; 23. HB &amp; AGB &middot; 24. Pulsating Stars &middot; 25. White Dwarfs &middot; 26. Final Stages of High-Mass Stars &middot; 27. Binary Systems &middot; 28. Supernovae &amp; Neutron Stars &middot; 29. Black Holes &amp; Gravitational Waves.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Five Competencies Tested at the Oral Exam</h3>
+            <p>
+              The oral exam is a "relaxed chat," but it demands genuine conceptual clarity across five specific competencies:
+            </p>
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+              <li><strong>Astrophysical language precision:</strong> use "contraction" only for changes on the Kelvin–Helmholtz (thermal) timescale; use "collapse" only for changes on the dynamical timescale.</li>
+              <li><strong>Comprehensive nuclear reaction knowledge:</strong> every thermonuclear chain and its ignition temperature.</li>
+              <li><strong>Final stages by mass:</strong> the endpoint of stars of every initial mass.</li>
+              <li><strong>Degeneracy's role:</strong> how electron degeneracy alters behavior at each evolutionary stage.</li>
+              <li><strong>Transition masses:</strong> the critical masses separating qualitatively different evolutionary paths, and the mechanism that sets each one.</li>
+            </ol>
+            <p class="text-sm">
+              Additionally, students must be able to draw and discuss evolutionary tracks on the H-R diagram for stars of different masses, read Kippenhahn (internal structure vs. time) diagrams, and identify the physical mechanism behind every major evolutionary event.
+            </p>
+
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: "Contraction" vs. "Collapse"</span>
+              </div>
+              <p class="text-sm">
+                This is not loose vocabulary — it is a precise, testable distinction. <strong>Contraction</strong> = a change occurring on the Kelvin–Helmholtz (thermal) timescale. <strong>Collapse</strong> = a change occurring on the (much shorter) dynamical timescale. Using the wrong word for the wrong timescale is an explicit exam trap.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Hertzsprung-Russell Diagram: The Master Tool</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The <strong>Hertzsprung-Russell (H-R) Diagram</strong> is the fundamental tool of stellar evolution: a two-dimensional plot relating a star's <strong>luminosity</strong> (vertical axis, $\log(L/L_\odot)$) to its <strong>effective temperature</strong> (horizontal axis, $\log T_e$).
+            </p>
+
+            <div class="p-6 bg-rose-500/5 border-2 border-dashed border-rose-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-500"></i>
+                <span class="text-xs uppercase font-extrabold text-rose-500">Exam Trap: The Temperature Axis Runs Backwards</span>
+              </div>
+              <p class="text-sm">
+                The horizontal axis <strong>increases toward the left</strong>. Hot, blue stars sit on the <em>left</em>; cool, red stars sit on the <em>right</em>. This is the opposite of almost every other graph a student has ever drawn, and it is a constant source of mislabeling errors. Lines of constant radius run diagonally from upper-left to lower-right.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Why the H-R Diagram Is the Ideal Tool</h3>
+            <p>
+              A stellar model takes as input a mass $M$ and chemical composition $(X,Y,Z)$ and, by solving the structure equations, produces as output a luminosity $L$ and surface temperature $T_e$. These two numbers define <strong>exactly one point</strong> on the H-R diagram — a single stellar model is one point.
+            </p>
+            <p>
+              When time is introduced, nuclear burning changes the internal composition. At each timestep $t\to t+\Delta t$, the structure equations are re-solved with the updated composition, producing a new $(L,T_e)$ pair and a new point. The sequence of points traced over the star's lifetime is an <strong>evolutionary track</strong>. The H-R diagram thus turns the abstract equations of stellar structure into a visually readable history of the star — simple lines for low-mass stars, complex loops and zig-zags for high-mass stars, one of the central mysteries this course explains.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Stellar Model Inputs & The Seven Governing Equations</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              A stellar model requires exactly <strong>two inputs</strong>: the total mass $M$, and the chemical composition $(X,Y,Z)$ — the mass fractions of hydrogen, helium, and "metals" (everything heavier than helium), satisfying $X+Y+Z=1$. For the Sun today: $X=0.70$, $Y=0.28$, $Z=0.02$. These values are not universal — they change with a star's age, formation environment, and its own nuclear burning history.
+            </p>
+            <p>
+              From these two inputs, a stellar model is built from a system of <strong>seven coupled differential equations</strong> (plus one algebraic equation of state), with the radial distance $r$ as the independent variable. Solving this system yields $L$ and $T_e$ — the star's single point on the H-R diagram.
+            </p>
+
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th class="px-4 py-3">#</th>
+                    <th class="px-4 py-3">Equation</th>
+                    <th class="px-4 py-3">What it fixes</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">1</td><td class="px-4 py-3">Hydrostatic equilibrium</td><td class="px-4 py-3">Pressure profile $P(r)$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">2</td><td class="px-4 py-3">Mass continuity</td><td class="px-4 py-3">Enclosed mass $M(r)$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">3</td><td class="px-4 py-3">Equation of state</td><td class="px-4 py-3">$P$ from $\rho, T,$ composition</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">4</td><td class="px-4 py-3">Energy source (luminosity gradient)</td><td class="px-4 py-3">$L(r)$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">5</td><td class="px-4 py-3">Radiative gradient / Schwarzschild criterion</td><td class="px-4 py-3">$T(r)$, convective vs. radiative</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">6</td><td class="px-4 py-3">Opacity</td><td class="px-4 py-3">$\kappa(\rho,T)$, radiation resistance</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3 text-indigo-600 dark:text-indigo-400 font-bold">7</td><td class="px-4 py-3">Thermonuclear energy production</td><td class="px-4 py-3">$\epsilon(\rho,T,\text{composition})$</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Equations 1 & 2: Hydrostatic Equilibrium & Mass Continuity</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              A star is a sphere of gas in <strong>hydrostatic equilibrium</strong>: gravity pulling inward is exactly balanced, at every layer, by the outward push of gas pressure. This is what makes a star a stable, long-lived structure instead of collapsing or exploding. For the Sun, the central temperature ($\sim1.5\times10^7$ K) and central density ($\sim1.5\times10^2$ g cm$^{-3}$) fall to $\sim6000$ K and $\sim2\times10^{-7}$ g cm$^{-3}$ at the surface.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Derivation</h3>
+            <p>
+              Consider a thin shell of area $dS$ and thickness $dr$ at radius $r$. The net pressure force is $F_\text{pres}=\frac{dP}{dr}dr\,dS$ (from a first-order Taylor expansion of $P(r+dr)$), and the inward gravitational force on the shell's mass $dm=\rho\,dr\,dS$ is $F_\text{grav}=\frac{GM(r)}{r^2}\rho(r)\,dr\,dS$. Setting the net force to zero and dividing by $dr\,dS$:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\frac{dP(r)}{dr} = -\frac{GM(r)}{r^2}\rho(r)$$
+            </div>
+            <p class="text-sm">
+              The negative sign is essential: pressure must decrease outward to balance the inward pull of gravity. Deeper layers (larger $\rho$, larger $M(r)$) require a steeper pressure gradient.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Mass Continuity</h3>
+            <p>
+              The mass in a thin shell is simply its volume times its density, $dM(r)=4\pi r^2\rho(r)\,dr$, giving:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\frac{dM(r)}{dr} = 4\pi r^2\rho(r)$$
+            </div>
+            <p class="text-sm">
+              Together, these first two equations form the backbone of the stellar-structure problem: given a density profile $\rho(r)$, both $P(r)$ and $M(r)$ follow. As a sanity check, a uniform-density sphere integrates to the familiar $M=\frac{4}{3}\pi R^3\bar\rho$.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Equation 3: The Equation of State</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The total pressure inside a star has two components: $P = P_\text{rad} + P_\text{gas}$. Radiation pressure is $P_\text{rad}=\frac{aT^4}{3}$ (with radiation constant $a=7.6\times10^{-15}$ erg cm$^{-3}$ K$^{-4}$, related to $\sigma$ via $a=4\sigma/c$) — negligible in the interior of most stars, but increasingly important in the most massive stars approaching the Eddington limit.
+            </p>
+            <p>
+              For a perfect (ideal) gas, $P_\text{gas} = \dfrac{k\rho T}{\mu H}$, where $k$ is the Boltzmann constant, $H$ is the proton mass, and $\mu$ is the <strong>mean molecular weight</strong> — the average particle mass in units of $H$.
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\mu = \frac{1}{2X+\frac{3}{4}Y+\frac{1}{2}Z}$$
+            </div>
+            <p class="text-sm">
+              Fully ionized hydrogen contributes 2 particles per proton mass (proton + electron); fully ionized helium contributes 3 particles per 4 proton masses; metals contribute roughly 1/2 particle per proton mass. Taking the reciprocal of the total particle density per unit mass gives $\mu$. For the Sun, $\mu\approx0.617$.
+            </p>
+
+            <div class="p-6 bg-indigo-500/5 border border-indigo-500/20 rounded-2xl space-y-2">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Thermoregulation — The "Breathing" of a Normal Gas</span>
+              <p class="text-sm">
+                The perfect gas law is <strong>self-regulating</strong>: temperature increases &rarr; pressure increases &rarr; the gas expands &rarr; temperature decreases. This negative feedback loop is what makes stable, non-explosive thermonuclear burning possible — any perturbation that heats the gas triggers an expansion that cools it back down. As Section 6 shows, degenerate gas breaks this loop entirely.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Electron Degeneracy: Loss of Thermoregulation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Electrons deviate from perfect-gas behavior when all quantum states below the Fermi level $\epsilon_F$ are completely occupied — the Pauli exclusion principle prevents electrons from dropping into already-filled lower states. The gas is then <strong>degenerate</strong>.
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\frac{T}{\rho^{2/3}} < 10^5 \quad\text{(electron degeneracy)}\qquad\qquad \frac{T}{\rho^{2/3}}<\frac{2.4\times10^{-22}}{m}\quad\text{(general species, mass }m\text{)}$$
+            </div>
+            <p class="text-sm">
+              Lighter particles degenerate more easily: electrons degenerate below $T/\rho^{2/3}\sim2.4\times10^5$, protons only below $\sim240$. For the solar core ($T=10^7$ K, $\rho=10^2$ g cm$^{-3}$), $T/\rho^{2/3}\approx10^{5.67}\gg10^5$ — confirming the solar core is a perfect gas.
+            </p>
+
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr><th class="px-4 py-3">Gas type</th><th class="px-4 py-3">Pressure law</th><th class="px-4 py-3">Depends on</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Radiation-dominated</td><td class="px-4 py-3 font-mono">$P\propto T^4$</td><td class="px-4 py-3">high $T$, low $\rho$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Perfect gas</td><td class="px-4 py-3 font-mono">$P\propto\rho T$</td><td class="px-4 py-3">$\rho$ and $T$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Non-rel. degenerate</td><td class="px-4 py-3 font-mono">$P=k_1\rho^{5/3}$</td><td class="px-4 py-3">$\rho$ only</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Rel. degenerate</td><td class="px-4 py-3 font-mono">$P=k_2\rho^{4/3}$</td><td class="px-4 py-3">$\rho$ only</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-6 bg-rose-500/5 border-2 border-dashed border-rose-500/40 rounded-2xl space-y-3">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-500"></i>
+                <span class="text-xs uppercase font-extrabold text-rose-500">Exam Trap: Only Electrons Degenerate — And Why That Matters</span>
+              </div>
+              <p class="text-sm">
+                In this course, "degenerate gas" <strong>always</strong> means electron-degenerate gas. The proton degeneracy boundary ($\log T=\frac{2}{3}\log\rho+2.38$) lies deep inside the relativistic-electron-degenerate region and is never physically reached — the ionic (proton/alpha) component of the equation of state is <strong>always</strong> a perfect gas, even when the electrons are fully degenerate.
+              </p>
+              <p class="text-sm font-semibold">
+                The crucial point is not just the formula but <em>why</em> it matters: degenerate pressure depends on $\rho$ <strong>only</strong>, not $T$. This destroys thermoregulation — heating no longer triggers expansion, so nothing cools the gas back down. If a thermonuclear reaction ignites under these conditions, the runaway temperature rise ($\epsilon\propto T^\nu$, large $\nu$) meets no negative feedback: a <strong>thermonuclear runaway</strong> results. The most important example in this course is the <strong>helium flash</strong> at the tip of the red giant branch. The same incompressibility (density-only pressure, strongly resisting further compression) is the physical basis of white dwarf stability.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Equation 4: Energy Source — The Virial Theorem & $t_{KH}$</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Defining $L(r)$ as the luminosity flowing outward through radius $r$, the extra luminosity contributed by a thin shell of energy generation rate $\epsilon$ (erg g$^{-1}$ s$^{-1}$) gives the energy-conservation equation:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\frac{dL(r)}{dr} = 4\pi r^2\rho(r)\,\epsilon$$
+            </div>
+            <p>
+              Energy comes primarily from thermonuclear reactions, but gravitational contraction also contributes — explained by the <strong>Virial Theorem</strong>, which for a star in hydrostatic equilibrium states $2K+\Omega=0$ (kinetic/thermal energy $K$, gravitational potential energy $\Omega<0$). Hence $K=-\Omega/2>0$ and total energy $U=K+\Omega=\Omega/2<0$.
+            </p>
+            <div class="p-6 bg-indigo-500/5 border border-indigo-500/20 rounded-2xl space-y-2">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">The Negative Heat Capacity of Gravitating Gas</span>
+              <p class="text-sm">
+                When a star contracts, $\Omega$ becomes more negative. Half the released gravitational energy heats the gas ($K$ increases, $T$ rises); the other half is radiated away ($U$ becomes more negative). <strong>Any loss of total energy causes the star to contract, which simultaneously heats it up</strong> — the opposite of everyday cooling intuition.
+              </p>
+            </div>
+            <p>
+              The luminosity gravity alone can supply is $L=\frac{1}{2}|d\Omega/dt|$, and with $|\Omega|\approx GM^2/R$, the timescale over which contraction can power the star is the <strong>Kelvin–Helmholtz timescale</strong>:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$t_{KH} = \frac{1}{2}\frac{GM^2}{LR}$$
+            </div>
+            <p class="text-sm">
+              For the Sun, $t_{KH}\approx5\times10^{14}\text{ s}\approx1.5\times10^7$ yr — 300&times; shorter than the Sun's known age of $4.5$ Gyr. This mismatch was the historical proof that gravity alone cannot power the main sequence; thermonuclear fusion must dominate instead.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: $t_{KH}$ Is Not Obsolete</span>
+              </div>
+              <p class="text-sm">
+                Once nuclear fusion is understood, it is tempting to file $t_{KH}$ away as a historical curiosity. It is not: $t_{KH}$ remains the <strong>operative timescale</strong> for pre-main-sequence gravitational contraction, and for any evolutionary phase where nuclear burning is temporarily unavailable (e.g., between shell flashes, or contracting toward a new burning stage).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Equation 5: Radiative Gradient, Convection & the Schwarzschild Criterion</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Combining the radiation-pressure gradient $\frac{dP_\text{rad}}{dr}=\frac{4}{3}aT^3\frac{dT}{dr}$ with the opacity-driven flux relation $\frac{dP_\text{rad}}{dr}=-\frac{\kappa\rho}{c}F_\text{rad}$ (where $F_\text{rad}=L(r)/4\pi r^2$) gives the <strong>radiative temperature gradient</strong>:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\left.\frac{dT}{dr}\right|_\text{rad} = -\frac{3\kappa\rho}{4ac}\frac{L(r)}{4\pi r^2 T^3}$$
+            </div>
+            <p>
+              Energy is transported by three mechanisms: <strong>radiation</strong> (always operating, photon diffusion), <strong>convection</strong> (bulk gas motion — crucially, this <em>mixes</em> and homogenizes chemical composition wherever it operates), and <strong>conduction</strong> (efficient only in degenerate gas, where long electron mean free paths make it important; negligible elsewhere).
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Schwarzschild Criterion</h3>
+            <p>
+              A gas parcel displaced adiabatically outward compares its temperature to its new surroundings: if the parcel arrives hotter (lower density, buoyant) it keeps rising &rarr; convection; if cooler (denser) it sinks back &rarr; no convection. This depends on which gradient is steeper:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 my-4">
+              $$\left|\frac{dT}{dr}\right|_\text{rad} > \left|\frac{dT}{dr}\right|_\text{ad} \implies \text{CONVECTION}$$
+            </div>
+            <p>
+              In practice this is expressed via the logarithmic gradient $\nabla\equiv d\log T/d\log P$. For a monatomic ideal gas ($\gamma=c_P/c_V=5/3$):
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\nabla_\text{ad} = \frac{\gamma-1}{\gamma} = \frac{2}{5} = 0.4 \qquad\qquad \nabla_\text{rad}>\nabla_\text{ad}\implies\text{CONVECTION}$$
+            </div>
+            <p class="text-sm">
+              Two independent physical triggers can push $\nabla_\text{rad}$ above threshold: (1) <strong>high opacity</strong> — e.g., the He second-ionization opacity hump at $T\sim40{,}000$ K, which triggers the outer convection zone in solar-type stars; or (2) <strong>high energy flux</strong> — e.g., CNO burning concentrated in a small, hot core, which triggers core convection in massive stars.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Equation 6: Opacity & Kramers' Laws</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              <strong>Opacity</strong> $\kappa(\rho,T)$ (cm$^2$ g$^{-1}$) measures resistance to the passage of radiation, driven by four electron-photon interactions: <strong>bound-bound</strong> (spectral lines, negligible in the fully ionized interior), <strong>bound-free</strong> (photoionization, dominant at $10^4$–$10^6$ K), <strong>free-free</strong> (inverse bremsstrahlung, dominant in the hot, fully ionized interior), and <strong>electron scattering</strong> (Thomson/Compton, dominant at the highest temperatures).
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$\kappa_{BF}\propto10^{25}Z(1+X)\frac{\rho}{T^{3.5}}\qquad \kappa_{FF}\propto10^{22}(X+Y)(1+X)\frac{\rho}{T^{3.5}}\qquad \kappa_E\propto0.2(1+X)$$
+            </div>
+            <p class="text-sm">
+              $\kappa_{BF}$ depends on metallicity $Z$ because, where BF dominates, H and He are already fully ionized — only metals retain bound electrons. Both $\kappa_{BF}$ and $\kappa_{FF}$ scale as $\rho\,T^{-3.5}$: more absorbers at higher density, but hotter photons penetrate more easily. $\kappa_E$ has <strong>no</strong> density or temperature dependence — it is the "floor" opacity set purely by free-electron density.
+            </p>
+            <p>
+              On a $\log\kappa$ vs. $\log T$ plot: opacity rises sharply near $T\approx10{,}000$ K (hydrogen ionization), declines as $\kappa\propto\rho T^{-3.5}$ through the Kramers regime, bulges upward again near $T\approx40{,}000$ K (the He$^+\to$He$^{2+}$ <strong>second-ionization hump</strong>), then flattens to the constant electron-scattering floor at very high $T$.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: The He-Hump Is a Deviation, Not Part of the Kramers Trend</span>
+              </div>
+              <p class="text-sm">
+                The $T\sim40{,}000$ K opacity bump is a deviation <em>from</em> the smooth $T^{-3.5}$ Kramers decline, caused by a distinct physical process (He second ionization) — it is not simply "more Kramers opacity." Its importance is structural: it is what triggers stellar outer convection zones at that temperature.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Thermonuclear Fusion I: The Coulomb Barrier, Binding Energy, PP & CNO</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              All nuclei carry positive charge and repel each other electrostatically — the <strong>Coulomb barrier</strong>. Classically, overcoming it would require $T\sim10^{10}$ K; quantum <strong>tunneling</strong> allows fusion at the much lower stellar core temperatures ($10^7$–$10^9$ K) actually reached, given sufficient density and temperature ($\frac{1}{2}mv^2\approx kT$).
+            </p>
+            <p>
+              Nuclear stability is measured by the <strong>binding energy</strong> $E_B(Z,A)=\{Zm_p+(A-Z)m_n-m_\text{nucl}\}c^2$. The binding energy per nucleon rises steeply from hydrogen, peaks at $A\approx56$ (the iron group), then declines slowly. Consequently:
+            </p>
+            <div class="p-6 bg-indigo-950 text-white rounded-2xl text-center font-bold my-4">
+              THERMONUCLEAR FUSION RELEASES ENERGY ONLY UP TO IRON
+            </div>
+            <p class="text-sm">
+              Once a stellar core is iron, no further fusion can generate energy — the core must collapse. This single fact is the hinge on which every high-mass late-evolution lecture in this course turns.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Proton-Proton (PP) Chains — $T\approx1.4\times10^7$ K</h3>
+            <p>
+              The PP chains convert $4\,\text{H}^1\to\text{He}^4+2e^++2\nu_e$ (net $+26.2$ MeV in the dominant PP-I branch). The very first step, $\text{H}^1+\text{H}^1\to\text{H}^2+e^++\nu$, requires a proton to $\beta^+$-decay into a neutron inside the collision — an event so improbable it has an effective timescale of $\sim1.4\times10^9$ yr.
+            </p>
+            <div class="p-6 bg-rose-500/5 border-2 border-dashed border-rose-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-500"></i>
+                <span class="text-xs uppercase font-extrabold text-rose-500">Exam Trap: $\beta^+$ (Proton) vs. $\beta^-$ (Free Neutron) Decay</span>
+              </div>
+              <p class="text-sm">
+                Do not confuse the two. Free-proton $\beta^+$ decay is essentially impossible (it requires energy input) and only proceeds with tiny probability <em>inside</em> a proton-proton collision — this throttles the entire PP chain and is precisely why the Sun is long-lived. Free-<strong>neutron</strong> $\beta^-$ decay ($n\to p^++e^-+\bar\nu$), by contrast, is spontaneous and fast ($t_{1/2}\approx800$ s $\approx13$ min) — this is why free neutrons essentially never exist in nature except when freshly produced.
+              </p>
+            </div>
+            <p class="text-sm">
+              PP-I (69% in the Sun) completes via $\text{He}^3+\text{He}^3\to\text{He}^4+2\text{H}^1$. PP-II and the rare PP-III (via Be$^7$, Li$^7$/B$^8$) route through beryllium and lithium; PP-III's B$^8$ decay produces the high-energy neutrinos central to the historic "solar neutrino problem."
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The CNO Cycle — $T\approx1.8\times10^7$ K</h3>
+            <p>
+              The CNO cycle burns hydrogen using pre-existing C, N, O as <strong>catalysts</strong> — it does not create them. The closed loop $\text{C}^{12}\to\text{N}^{13}\to\text{C}^{13}\to\text{N}^{14}\to\text{O}^{15}\to\text{N}^{15}\to\text{C}^{12}+\text{He}^4$ regenerates C$^{12}$ each cycle. The slow branch is rate-limited by $\text{N}^{14}+\text{H}^1$, so <strong>N-14 accumulates</strong> at the expense of C and O — an observationally testable prediction.
+            </p>
+            <p class="text-sm">
+              CNO's temperature sensitivity ($\epsilon_{CN}\propto T_6^{13-20}$) is far steeper than PP's ($\epsilon_{pp}\propto T_6^{3.5-6}$): PP dominates cooler cores, CNO rapidly overtakes hotter (more massive-star) cores, concentrating energy generation and driving core convection.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: CNO Catalyzes — It Does Not Create</span>
+              </div>
+              <p class="text-sm">
+                A common error is treating CNO as a source of new carbon/nitrogen/oxygen. It is not — net CNO abundance is unchanged over a full cycle; the only lasting compositional signature is N-14 <em>accumulation</em> from the slow-branch bottleneck.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">11</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Thermonuclear Fusion II: Triple-Alpha, Advanced Burning & Neutron-Capture</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              After core hydrogen is exhausted, contraction heats the core until helium ignites at $T\approx1.5\times10^8$ K via the <strong>triple-alpha process</strong>: $\text{He}^4+\text{He}^4\leftrightarrow\text{Be}^8$ (a fleeting equilibrium, $\text{Be}^8$ lifetime $\sim10^{-17}$ s), followed by $\text{Be}^8+\text{He}^4\to\text{C}^{12}+\gamma$.
+            </p>
+            <div class="p-6 bg-rose-500/5 border-2 border-dashed border-rose-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-500"></i>
+                <span class="text-xs uppercase font-extrabold text-rose-500">Exam Trap: The Hoyle Resonance Is Not Optional Detail</span>
+              </div>
+              <p class="text-sm">
+                The second step only proceeds efficiently because of a precisely-tuned nuclear resonance in C$^{12}$ (the <strong>Hoyle state</strong>, predicted by Fred Hoyle before its 1957 experimental discovery). Without this fine-tuned coincidence, carbon — and by extension, life — would not form in stars in any appreciable quantity.
+              </p>
+            </div>
+            <p>
+              In non-degenerate massive-star cores, successive burning stages ignite at ever-higher temperatures: carbon ($5$–$6\times10^8$ K), neon ($1.2$–$1.9\times10^9$ K), oxygen ($1.5$–$2.6\times10^9$ K), and finally silicon ($2.3\times10^9$ K) — the last dominated by <strong>photo-disintegration</strong>, which runs the alpha-capture chain backwards and forwards simultaneously in equilibrium, building up iron-group nuclei ($A\approx56$).
+            </p>
+            <p class="text-sm">
+              Alpha-capture reactions (C$^{12}\to$O$^{16}\to$Ne$^{20}\to\cdots\to$Ni$^{56}\to$Fe$^{56}$) build the <strong>alpha elements</strong> (O, Ne, Mg, Si, S, Ar, Ca) — the observed [$\alpha$/Fe] ratio in stellar atmospheres distinguishes core-collapse-SN-enriched populations (high [$\alpha$/Fe]) from Type Ia-enriched ones (lower [$\alpha$/Fe]).
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Beyond Iron: Neutron Capture</h3>
+            <p>
+              Elements heavier than iron cannot form by fusion (which would consume, not release, energy past $A\approx56$) — only by <strong>neutron capture</strong>, $(Z,A)+n\to(Z,A+1)$, followed by possible $\beta^-$ decay to $(Z+1,A+1)$.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase font-extrabold text-indigo-500">s-process (slow)</span>
+                <p class="mt-2 text-sm">Capture rate slower than $\beta^-$ decay — one neutron captured, then decay, walking the valley of stability.</p>
+              </div>
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase font-extrabold text-indigo-500">r-process (rapid)</span>
+                <p class="mt-2 text-sm">Capture rate faster than decay — multiple neutrons captured before decay, reaching far off the valley of stability; needs an explosive neutron flux (supernovae, neutron-star mergers).</p>
+              </div>
+            </div>
+            <p class="text-sm">
+              At extreme temperatures, <strong>photo-disintegration</strong> ($\text{Fe}^{56}+\gamma\to13\,\text{He}^4+4n$) becomes strongly endothermic and triggers iron-core collapse, while <strong>neutrino losses</strong> (plasma, photoneutrino, pair-annihilation processes) bypass radiative diffusion entirely — negligible for the Sun, but dominant and dramatically accelerating in advanced burning: a star that burns hydrogen for billions of years can complete silicon burning in days.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 12 -->
+        <section id="sec-12" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">12</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Stellar Atmosphere: Optical Depth, $T_e$ & Spectral Lines</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The seven structural equations fix $L$; to complete the H-R diagram, one still needs the surface temperature $T_e$, obtained by modeling the thin outer <strong>stellar atmosphere</strong>. There, the natural coordinate is <strong>optical depth</strong> $\tau_\lambda(z)=\int_0^z\kappa_\lambda\rho\,dz$ rather than physical depth.
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$T^4 = \frac{3}{4}T_e^4\left(\tau_v+\frac{2}{3}\right)$$
+            </div>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: $T_e$ Is Defined at $\tau_v=2/3$, Not $\tau=0$ or $\tau=1$</span>
+              </div>
+              <p class="text-sm">
+                The effective temperature is precisely the temperature of the atmospheric layer where $\tau_v=2/3$ — the depth from which photons can most directly escape. This is the number that goes onto the H-R diagram ($L=4\pi R^2\sigma T_e^4$; for the Sun, $T_e=5770$ K), and the exact fraction is a testable detail, not a rounding choice.
+              </p>
+            </div>
+            <p>
+              In the low-density atmosphere, temperature governs the spectrum through two equations: the <strong>Saha equation</strong> (ionization equilibrium between successive ionization states) and the <strong>Boltzmann equation</strong> (excitation-level population within a state):
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-xs border border-slate-200 dark:border-slate-800 my-4 space-y-2">
+              <div>$$\log\frac{N_{j+1}}{N_j}=-0.176-\log P_e+\log\frac{U_{j+1}(T)}{U_j(T)}+2.5\log T-\frac{5040}{T}\chi_i$$</div>
+              <div>$$\frac{N_{ji}}{N_j}=\frac{g_i}{U_j(T)}10^{-\chi_i(5040/T)}$$</div>
+            </div>
+            <p class="text-sm">
+              Together these fix the observed <strong>spectral classification</strong> (O, B, A, F, G, K, M — hottest to coolest, tracking ionization/excitation state with temperature): O ($>30{,}000$ K, He II), B (He I, emerging H), A ($7500$–$10{,}000$ K, strongest Balmer lines), F/G (ionized-metal lines, solar-type), K/M ($<5000$ K, neutral-metal and molecular TiO bands).
+            </p>
+            <p>
+              Spectral lines also encode kinematics via the <strong>Doppler shift</strong>, $\Delta\lambda/\lambda_0=v_r/c$, and line strength via the <strong>equivalent width</strong> $W=\int\frac{F_c-F_\lambda}{F_c}d\lambda$, which tracks only the number of "active" absorbing atoms $N_a$ — not the total elemental abundance.
+            </p>
+            <div class="p-6 bg-rose-500/5 border-2 border-dashed border-rose-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-rose-500"></i>
+                <span class="text-xs uppercase font-extrabold text-rose-500">Exam Trap: $N_a\neq N_\text{TOT}$ — Two Corrections Are Required</span>
+              </div>
+              <p class="text-sm">
+                The <strong>curve of growth</strong> ($\log W$ vs. $\log N_a$, with linear, flat/saturated, and square-root/damping regimes) gives only $N_a$. To reach the total abundance $N_\text{TOT}$, both a Boltzmann (excitation) correction and a Saha (ionization) correction must be applied — skipping either yields a wrong abundance. The final result is expressed in the double-normalized <strong>square bracket notation</strong>:
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2 border border-slate-100 dark:border-slate-900 text-center">
+                $$\left[\frac{El}{\text{H}}\right]=\log\left(\frac{El}{\text{H}}\right)_*-\log\left(\frac{El}{\text{H}}\right)_\odot$$
+              </div>
+              <p class="text-sm">[Fe/H] is the standard metallicity proxy used throughout this course.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 13 -->
+        <section id="sec-13" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">13</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Helium Problem & Big Bang Nucleosynthesis</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Integrating stellar helium production over the age of the universe accounts for only a few percent of the observed helium. Yet even the <strong>oldest, most metal-poor stars</strong> in the Galaxy show a helium mass fraction of $Y\approx0.24$ — far more than stars alone could have made. This is the <strong>Helium Problem</strong>, resolved by <strong>Big Bang Nucleosynthesis (BBN)</strong>: most primordial helium formed in the first $\sim15$ minutes after the Big Bang, when free neutrons (impossible to sustain in stars) were thermally abundant.
+            </p>
+            <p class="text-sm">
+              The BBN chain runs $n+p\to\text{H}^2+\gamma$, $\text{H}^2+\text{H}^2\to\text{He}^3+n$, $\text{He}^3+n\to\text{H}^3+p$, $\text{H}^2+\text{H}^3\to\text{He}^4+n$, producing a primordial abundance $Y_p=0.24$ — a major confirmation of the Big Bang model.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: The A=5 / A=8 Bottleneck Stops BBN, Not Time or Temperature</span>
+              </div>
+              <p class="text-sm">
+                BBN halts at helium (plus trace Li, Be) because <strong>no stable nucleus exists at mass number $A=5$ or $A=8$</strong> — He$^4$+H$^1$ would need $A=5$ (unstable); He$^4$+He$^4$ gives Be$^8$, which decays in $10^{-17}$ s. This — not a lack of time or temperature in the early universe — is why the chain cannot bridge to carbon. Stars circumvent the same gap only via the transient triple-alpha Be$^8$ equilibrium at much higher stellar core temperatures and densities, aided by the Hoyle resonance (Section 11).
+              </p>
+            </div>
+            <p class="text-sm">
+              The cosmic abundance pattern therefore has three distinct origins: H and He from the Big Bang; C through the iron group from stellar thermonuclear fusion; and everything beyond iron from neutron-capture (s-process in AGB stars, r-process in neutron-star mergers/supernovae).
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 14 -->
+        <section id="sec-14" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-md">14</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Sun as the Reference Star</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Every stellar mass, luminosity, radius, and age in this course is expressed in <strong>solar units</strong> — the Sun is the calibration anchor of stellar astrophysics.
+            </p>
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr><th class="px-4 py-3">Parameter</th><th class="px-4 py-3">Value</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Radius $R_\odot$</td><td class="px-4 py-3 font-mono">$7\times10^{10}$ cm</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Mass $M_\odot$</td><td class="px-4 py-3 font-mono">$2\times10^{33}$ g</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Luminosity $L_\odot$</td><td class="px-4 py-3 font-mono">$4\times10^{33}$ erg s$^{-1}$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Composition</td><td class="px-4 py-3 font-mono">$X{=}0.70, Y{=}0.28, Z{=}0.02$</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Surface temp. $T_e$</td><td class="px-4 py-3 font-mono">5770 K</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Central temp. $T_c$</td><td class="px-4 py-3 font-mono">$\approx1.6\times10^7$ K</td></tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30"><td class="px-4 py-3">Age</td><td class="px-4 py-3 font-mono">4.5 Gyr</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-sm">
+              These numbers do real work throughout the course: $T/\rho^{2/3}\approx3.4\times10^5\gg10^5$ confirms the solar core is a perfect (not degenerate) gas; $t_{KH}\approx1.5\times10^7$ yr $\ll$ solar age proves fusion, not gravity, powers the main sequence; and $(X,Y,Z)_\odot$ anchors the [El/H] abundance scale used for every other star in the Galaxy.
+            </p>
+          </div>
+        </section>
+
+        <!-- ACTIVE RECALL MASTERCLASS QUIZ -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-indigo-500/10 text-indigo-500 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall & Focus Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of key physics concepts from the slides.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
+
+            <!-- Question 1 -->
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">On the H-R diagram, which direction does the temperature axis increase?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Leftward — hot stars on the left, cool stars on the right.</button>
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) Rightward, like a normal temperature axis.</button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! The H-R diagram's temperature axis runs backwards — a classic exam trap.</p>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does degenerate electron pressure destroy thermoregulation?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Degenerate pressure depends on density only, not temperature, so heating causes no compensating expansion.</button>
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) Degenerate gas conducts heat away too quickly for any pressure change to matter.</button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! With $P=k_1\rho^{5/3}$ or $k_2\rho^{4/3}$, a temperature rise produces no expansion — enabling thermonuclear runaway.</p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What made the Kelvin-Helmholtz timescale insufficient to explain the Sun's power source?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $t_{KH}\approx1.5\times10^7$ yr is far shorter than the Sun's known 4.5 Gyr age.</button>
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) $t_{KH}$ predicted an age far longer than 4.5 Gyr.</button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Gravity alone could only power the Sun for ~15 Myr — proof that fusion must dominate.</p>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the rate-limiting step of the PP chain, and why is it so slow?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $p+p\to d+e^++\nu$ — a $\beta^+$ decay inside a collision, nearly forbidden for a free proton.</button>
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) $\text{He}^3+\text{He}^3\to\text{He}^4+2p$, slowed by the high Coulomb barrier of He-He collisions.</button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! This weak-interaction bottleneck ($t_{1/2}\sim1.4\times10^9$ yr) is what throttles the Sun's fusion rate and makes it long-lived.</p>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Does the CNO cycle create new carbon, nitrogen, and oxygen?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Yes, that is its main product besides helium.</button>
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) No — C, N, O act only as catalysts; N-14 accumulates from the slow-branch bottleneck.</button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! The CNO cycle is catalytic — net CNO abundance is unchanged, except for N-14 buildup.</p>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why is the Hoyle resonance in Carbon-12 so critical to stellar nucleosynthesis?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Without it, the fleeting Be-8 intermediate could not efficiently capture a third alpha particle to form carbon.</button>
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) It lowers the ignition temperature of helium burning to below $10^7$ K.</button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! This fine-tuned nuclear coincidence is why carbon (and life) can form in stars at all.</p>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why do fusion reactions stop generating net energy at iron?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) The binding energy per nucleon peaks at $A\approx56$ — fusing beyond iron requires energy input, not release.</button>
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) Iron nuclei are too large to tunnel through the Coulomb barrier at any stellar temperature.</button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Iron is the most tightly bound nucleus — beyond it, elements form only via neutron capture.</p>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What distinguishes the s-process from the r-process of neutron capture?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) s-process: capture slower than beta decay, walks the valley of stability; r-process: capture faster than decay, reaches far off it.</button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) s-process occurs only in supernovae; r-process occurs only in AGB stars.</button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! It is the relative rate of neutron capture vs. beta decay that defines the two processes (the site association is the reverse of option B).</p>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">At what optical depth is the effective temperature $T_e$ defined?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $\tau_v = 2/3$.</button>
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) $\tau_v = 0$, the very top of the atmosphere.</button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! $T^4=\frac{3}{4}T_e^4(\tau_v+2/3)$ defines $T_e$ precisely at $\tau_v=2/3$.</p>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Does equivalent width $W$ directly measure an element's total abundance?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Yes, $W$ is directly proportional to $N_\text{TOT}$.</button>
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) No — $W$ tracks only the "active" absorbers $N_a$; Boltzmann and Saha corrections are both needed to reach $N_\text{TOT}$.</button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Skipping either correction gives a wrong abundance.</p>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 11</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does Big Bang Nucleosynthesis stop at helium (plus trace Li/Be)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(11, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) No stable nucleus exists at mass number $A=5$ or $A=8$, blocking the bridge to carbon.</button>
+                <button onclick="checkQuiz(11, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) The early universe simply did not last long enough for further reactions.</button>
+              </div>
+              <p id="q11-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! The A=5/A=8 bottleneck, not insufficient time, halts BBN — stars only bridge it later via the triple-alpha process.</p>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-indigo-500">Question 12</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What confirms that the solar core is a perfect gas rather than degenerate?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(12, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $T/\rho^{2/3}\approx3.4\times10^5$, which is greater than the $10^5$ degeneracy threshold.</button>
+                <button onclick="checkQuiz(12, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) The Sun's luminosity is too low for degenerate matter to exist anywhere inside it.</button>
+              </div>
+              <p id="q12-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! With $T=1.6\times10^7$ K and $\rho\approx160$ g/cm$^3$, the solar core sits safely above the electron-degeneracy threshold.</p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-indigo-500 font-bold">0 / 12 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const playIcon = document.getElementById('timer-icon-play');
+      const pauseIcon = document.getElementById('timer-icon-pause');
+      if (timerRunning) {
+        clearInterval(timerId);
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        timerRunning = true;
+      }
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText =
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = Math.max(0, dashOffset);
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-indigo-50/50', 'dark:bg-indigo-900/20', 'text-indigo-600', 'dark:text-indigo-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-indigo-50/50', 'dark:bg-indigo-900/20', 'text-indigo-600', 'dark:text-indigo-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 12 Correct`;
+    }
+  </script>
+</body>
+</html>

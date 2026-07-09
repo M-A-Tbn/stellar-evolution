@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>White Dwarf Physics & Stellar Cooling - 30-Min Masterclass</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons for premium visual depth -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf6e8;
+      color: #433422;
+    }
+    .theme-sepia .card-bg {
+      background-color: #f4ebd0;
+      border-color: #e6d3a8;
+    }
+    .theme-sepia .text-muted {
+      color: #705e47;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d2b48c;
+    }
+
+    /* Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #e2e8f0;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #a855f7;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #334155;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-purple-500/10 text-purple-500 rounded-lg">
+          <i data-lucide="shield-alert" class="w-6 h-6 animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">White Dwarf Physics <span class="text-purple-500">Part V</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Masterclass Course (Prof. F. R. Ferraro)</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-purple-500/10 text-purple-600 dark:text-purple-400 px-3 py-1.5 rounded-lg border border-purple-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-purple-800 dark:hover:text-purple-200">
+            <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-purple-600 dark:text-purple-400 font-semibold bg-purple-50/50 dark:bg-purple-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-purple-500 text-white text-xs">1</span>
+              <span class="truncate">AGB Termination & PN</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
+              <span class="truncate">Microphysics of Degeneracy</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
+              <span class="truncate">The Mass-Radius Scaling</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
+              <span class="truncate">Chandrasekhar Derivation</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
+              <span class="truncate">WD Internal Structure</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
+              <span class="truncate">Thermodynamics of Cooling</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
+              <span class="truncate">Mestel's Cooling Theory</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
+              <span class="truncate">Crystallization microphysics</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
+              <span class="truncate">Stellar Atmosphere Types</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
+              <span class="truncate">Observational CMD Diagnostics</span>
+            </a>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">11</span>
+              <span class="truncate">WD Cosmochronology & Anomalies</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-purple-500 text-white text-xs"><i data-lucide="award" class="w-3 h-3"></i></span>
+              <span class="truncate font-semibold">Active Recall Mastery Test</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-purple-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-purple-400"></i>
+            <h4 class="font-bold text-sm text-purple-200 uppercase tracking-wider">WD Critical Scales</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-slate-300">
+            <div class="flex justify-between border-b border-purple-900 pb-1.5">
+              <span>Chandrasekhar Limit:</span>
+              <span class="text-purple-300">$M_{\text{Ch}} \approx 1.4 M_\odot$</span>
+            </div>
+            <div class="flex justify-between border-b border-purple-900 pb-1.5">
+              <span>Non-Rel EOS:</span>
+              <span class="text-purple-300">$P \propto \rho^{5/3}$</span>
+            </div>
+            <div class="flex justify-between border-b border-purple-900 pb-1.5">
+              <span>Mass-Radius Link:</span>
+              <span class="text-purple-300">$R \propto M^{-1/3}$</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>Crystallization Index:</span>
+              <span class="text-purple-300">$\Gamma \approx 178$</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+        
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-slate-100 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="shield-alert" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-purple-500/10 text-purple-500 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics core course</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              White Dwarf Structures, Electron Degeneracy, & Thermal cooling
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive study companion covering slide lecture series "25.WhiteDwarfs.pdf" verbatim, detailing quantum degeneracy statistics, Mestel's cooling derivations, Crystallization parameters, and Chandrasekhar limits.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">AGB Termination, Severe Mass Loss, & Planetary Nebulae</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              For stars with initial masses below $M < M^{\text{up}} \approx 8 M_\odot$, the central temperature never reaches the threshold required to ignite stable Carbon burning ($\approx 5 \times 10^8 \text{ K}$). Therefore, the development of a highly degenerate Carbon-Oxygen (C-O) core marks the absolute ending point of their nuclear life.
+            </p>
+            <p>
+              The final transition from the Asymptotic Giant Branch (AGB) is driven by a catastrophic, high-efficiency mass-loss event known as the <strong>Superwind Phase</strong>:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <!-- Stellar Wind Panel -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">AGB Radiative Dust-Driven Wind</span>
+                <p class="mt-2 text-sm">The stellar envelope expands dramatically, dropping surface gravity to loose levels:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2.5 border border-slate-100 dark:border-slate-900 text-center">
+                  $$\log g \approx -0.5 \quad \text{[cgs]}$$
+                </div>
+                <p class="text-sm">
+                  At temperatures around $T \approx 1000\text{--}1500 \text{ K}$, elements like Carbon and Silicates condense into dust grains. Radiation pressure pushes these grains outward, and gas-drag coupling ejects the entire convective envelope into space.
+                </p>
+              </div>
+
+              <!-- Mass Loss Rates -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">Superwind Mass-Loss Rates</span>
+                <p class="mt-2 text-sm">During the final thermal pulse cycles, mass loss reaches astronomical scales:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2.5 border border-slate-100 dark:border-slate-900 text-center text-rose-500 font-bold">
+                  $$\dot{M}_{\text{superwind}} \approx 10^{-4} \text{ to } 10^{-5} M_\odot / \text{year}$$
+                </div>
+                <p class="text-sm">
+                  This rate is over nine orders of magnitude larger than the Solar wind ($\dot{M}_\odot \approx 4 \times 10^{-14} M_\odot / \text{yr}$), stripping the stellar envelope in less than $10^5 \text{ years}$.
+                </p>
+              </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Planetary Nebulae Phase (PN)</h3>
+            <p>
+              As the hot, degenerate C-O core is exposed ($T_{\text{eff}} > 30,000\text{ K}$), it emits intense ultraviolet radiation that ionizes the expanding, previously ejected envelope. The fast stellar wind ($\approx 1000\text{--}3000\text{ km/s}$) collides with the slower AGB wind envelope ($\approx 10\text{--}30\text{ km/s}$), producing the shock-heated, glowing gas structures observed as <strong>Planetary Nebulae</strong>.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Microphysics of Electron Degeneracy</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              White Dwarfs are held up against gravitational collapse entirely by <strong>electron degeneracy pressure</strong>, a quantum mechanical phenomenon described by Fermi-Dirac statistics and the Pauli Exclusion Principle.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Derivation of degenerate Equations of State</h3>
+            <p>
+              According to quantum mechanics, the phase space volume occupied by a single particle is limited to $h^3$. The density of available quantum states in momentum space $p$ is:
+              $$g(p) dp = \frac{2}{h^3} 4\pi p^2 dp$$
+              where the factor of $2$ accounts for the two possible electron spin states ($s = \pm 1/2$).
+            </p>
+            <p>
+              In a completely degenerate state ($T \to 0$), electrons pack tightly into the lowest available energy levels, filling all states up to a maximum momentum known as the <strong>Fermi Momentum ($p_F$)</strong>:
+              $$n_e = \int_{0}^{p_F} \frac{8\pi p^2}{h^3} dp = \frac{8\pi p_F^3}{3h^3} \implies p_F = \left(\frac{3h^3 n_e}{8\pi}\right)^{1/3} = (3\pi^2 \hbar^3 n_e)^{1/3}$$
+              where the electron number density $n_e$ is related to mass density $\rho$ by:
+              $$n_e = \frac{\rho}{\mu_e m_H}$$
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <!-- Non-Rel -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">1. Non-Relativistic Degeneracy</span>
+                <p class="mt-2 text-sm">For moderate densities, electron velocity is far below $c$ ($v = p/m_e$):</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2 border border-slate-100 dark:border-slate-900 text-center">
+                  $$P = \frac{1}{3}\int_0^{p_F} v p \, g(p) dp = \frac{1}{3}\int_0^{p_F} \frac{p^2}{m_e} \frac{8\pi p^2}{h^3} dp$$
+                </div>
+                <p class="text-sm">Integrating yields the non-relativistic equation of state:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-sm my-2 border border-slate-100 dark:border-slate-900 text-center text-blue-500 font-bold">
+                  $$P_{\text{NR}} = \frac{h^2}{5m_e}\left(\frac{3}{8\pi}\right)^{2/3} n_e^{5/3} \implies P_{\text{NR}} \propto \rho^{5/3}$$
+                </div>
+              </div>
+
+              <!-- Relativistic -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">2. Relativistic Degeneracy</span>
+                <p class="mt-2 text-sm">At extreme densities, electron velocities approach the speed of light ($v \approx c$):</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2 border border-slate-100 dark:border-slate-900 text-center">
+                  $$P = \frac{1}{3}\int_0^{p_F} c p \, g(p) dp = \frac{1}{3}\int_0^{p_F} c p \frac{8\pi p^2}{h^3} dp$$
+                </div>
+                <p class="text-sm">Integrating yields the relativistic equation of state:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-sm my-2 border border-slate-100 dark:border-slate-900 text-center text-rose-500 font-bold">
+                  $$P_{\text{ER}} = \frac{hc}{4}\left(\frac{3}{8\pi}\right)^{1/3} n_e^{4/3} \implies P_{\text{ER}} \propto \rho^{4/3}$$
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Mass-Radius Scaling Relation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Using hydrostatic equilibrium and the degenerate equation of state, we can derive the fundamental mass-radius relation for White Dwarfs. This relation reveals a striking, counter-intuitive result: <strong>more massive White Dwarfs are physically smaller</strong>.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Scaling Derivation</h3>
+            <p>From the equation of hydrostatic equilibrium:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{dP}{dr} = -\frac{GM_r\rho}{r^2} \implies \frac{P}{R} \sim \frac{G M^2}{R^5} \implies P \sim \frac{G M^2}{R^4}$$
+            </div>
+            <p>The average density of the star scales with its mass and radius as:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\rho \sim \frac{M}{R^3}$$
+            </div>
+            <p>Substituting this density scaling into the non-relativistic equation of state ($P \propto \rho^{5/3}$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-purple-600 dark:text-purple-400 font-bold">
+              $$\left(\frac{M}{R^3}\right)^{5/3} \sim \frac{G M^2}{R^4} \implies \frac{M^{5/3}}{R^5} \sim \frac{G M^2}{R^4}$$
+            </div>
+            <p>Solving for the radius $R$ as a function of mass $M$ yields:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-purple-500/30 text-purple-600 dark:text-purple-400 font-extrabold my-4">
+              $$R \propto M^{-1/3}$$
+            </div>
+
+            <!-- Inline SVG Diagram: Mass-Radius Curve -->
+            <div class="flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200/50 dark:border-slate-800/50">
+              <svg viewBox="0 0 600 240" class="w-full max-w-lg h-auto">
+                <!-- Axes -->
+                <line x1="60" y1="200" x2="550" y2="200" class="stroke-slate-500 stroke-2"/>
+                <line x1="60" y1="200" x2="60" y2="30" class="stroke-slate-500 stroke-2"/>
+                <text x="540" y="220" text-anchor="end" class="fill-slate-500 text-xs font-mono">Mass ($M/M_\odot$)</text>
+                <text x="50" y="40" text-anchor="end" class="fill-slate-500 text-xs font-mono" transform="rotate(-90, 50, 40)">Radius ($R$)</text>
+                
+                <!-- Mass-Radius curve -->
+                <path d="M 65,50 Q 150,110 350,195 T 450,200" class="stroke-purple-500 stroke-3 fill-none"/>
+                
+                <!-- Limit line (Chandrasekhar) -->
+                <line x1="450" y1="200" x2="450" y2="30" class="stroke-rose-500 stroke-1 stroke-dashed"/>
+                <text x="455" y="50" class="fill-rose-500 text-xs font-mono font-bold">Chandrasekhar Limit (1.4 M☉)</text>
+                
+                <!-- Density scaling text inside graph -->
+                <g transform="translate(180, 70)">
+                  <rect x="0" y="0" width="160" height="40" rx="5" class="fill-slate-50 dark:fill-slate-900 stroke-slate-200 dark:stroke-slate-800 stroke-1"/>
+                  <text x="10" y="18" class="fill-slate-900 dark:fill-white text-[10px] font-bold">Non-Relativistic: R ∝ M⁻¹/³</text>
+                  <text x="10" y="32" class="fill-slate-500 text-[9px]">Relativistic: R → 0 as M → M_Ch</text>
+                </g>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 1: White Dwarf Mass-Radius relation showing critical drop at 1.4 M☉.</span>
+            </div>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500">Core Physical Consequence: Density vs. Mass</span>
+              <p class="text-sm">
+                Combining the relations $R \propto M^{-1/3}$ and $\rho \propto M R^{-3}$ reveals how density scales with mass:
+              </p>
+              <p class="font-bold text-center text-sm font-mono my-2 text-amber-600 dark:text-amber-400">
+                $$\rho \propto M \cdot (M^{-1/3})^{-3} \implies \rho \propto M^2$$
+              </p>
+              <p class="text-sm">
+                This shows that **adding mass to a White Dwarf significantly compresses it, dramatically increasing its central density**. This compression pushes the stellar gas into relativistic territory.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Chandrasekhar Mass Limit Derivation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As a White Dwarf becomes more massive, its internal density rises. This forces its electrons into relativistic speeds, shifting the equation of state from $P \propto \rho^{5/3}$ toward $P \propto \rho^{4/3}$.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Derivation of the Limit</h3>
+            <p>Substituting the extreme relativistic equation of state ($P \propto \rho^{4/3}$) into our hydrostatic balance relation:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\left(\frac{M}{R^3}\right)^{4/3} \sim \frac{G M^2}{R^4} \implies \frac{M^{4/3}}{R^4} \sim \frac{G M^2}{R^4}$$
+            </div>
+            <p>Notice that the radius $R$ cancels out completely on both sides of the equation:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-blue-600 dark:text-blue-400 font-bold">
+              $$M^{4/3} \sim G M^2 \implies M^{2/3} \sim \frac{1}{G}$$
+            </div>
+            <p>This reveals that under relativistic conditions, hydrostatic equilibrium can only be maintained at a single, unique mass value, independent of radius: the <strong>Chandrasekhar Mass ($M_{\text{Ch}}$)</strong>.</p>
+            <p>Performing a rigorous integration using the Lane-Emden equation for a polytrope of index $n=3$ yields:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-rose-500/30 text-rose-600 dark:text-rose-400 font-extrabold my-4">
+              $$M_{\text{Ch}} = \frac{\omega_3^0}{4\pi}\left( \frac{hc}{G} \right)^{3/2} \left( \frac{1}{\mu_e m_H} \right)^2 \approx 1.4 M_\odot$$
+            </div>
+
+            <div class="bg-rose-500/5 border border-rose-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500 font-mono">The Physical Limit of Stellar Equilibrium</span>
+              <p class="text-sm">
+                If a degenerate C-O core exceeds this $1.4 M_\odot$ limit, degeneracy pressure can no longer support the star.
+              </p>
+              <p class="text-sm font-bold">
+                This triggers an immediate, catastrophic gravitational collapse. In binary systems, mass transfer that pushes a White Dwarf past this limit triggers a carbon-detonation explosion, observed as a Type Ia Supernova.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">White Dwarf Internal Structure</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              White Dwarfs possess a highly stratified, layered internal structure, reflecting their evolutionary history and the physics of degenerate matter:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+              <!-- Degenerate Core -->
+              <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-purple-500">1. Degenerate Core</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  Contains $\approx 99\%$ of the star's total mass, composed of a mixture of Carbon and Oxygen ions immersed in a sea of degenerate electrons.
+                </p>
+              </div>
+              <!-- Helium Envelope -->
+              <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-indigo-500">2. Helium Layer</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  A thin, non-degenerate layer of Helium directly surrounding the core, typically containing $\approx 10^{-2} M_\odot$.
+                </p>
+              </div>
+              <!-- Hydrogen Outer layer -->
+              <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-blue-500">3. Hydrogen Atmosphere</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  The outermost insulating boundary layer, consisting of a very thin sheet of Hydrogen with a mass of $\approx 10^{-4} M_\odot$.
+                </p>
+              </div>
+            </div>
+
+            <!-- Inline SVG Diagram: Layered Structure -->
+            <div class="flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200/50 dark:border-slate-800/50">
+              <svg viewBox="0 0 600 240" class="w-full max-w-lg h-auto">
+                <!-- Outer Envelope H -->
+                <circle cx="300" cy="120" r="95" class="fill-blue-500/10 stroke-blue-500 stroke-2"/>
+                <!-- He Shell -->
+                <circle cx="300" cy="120" r="75" class="fill-indigo-500/20 stroke-indigo-500 stroke-1 stroke-dashed"/>
+                <!-- Degenerate Core -->
+                <circle cx="300" cy="120" r="55" class="fill-purple-500/30 stroke-purple-500 stroke-2"/>
+                
+                <!-- Text Callouts -->
+                <line x1="300" y1="120" x2="480" y2="40" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="490" y="45" class="fill-purple-600 dark:fill-purple-400 text-xs font-bold font-mono">Degenerate C-O Core (99% mass, Isothermal)</text>
+                
+                <line x1="365" y1="165" x2="480" y2="190" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="490" y="195" class="fill-indigo-600 dark:fill-indigo-400 text-xs font-bold font-mono">Thin Helium Shell (~10⁻² M☉)</text>
+                
+                <line x1="385" y1="85" x2="480" y2="115" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <text x="490" y="120" class="fill-blue-600 dark:fill-blue-400 text-xs font-bold font-mono">Insulating H-Atmosphere (~10⁻⁴ M☉)</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 2: Layered structural anatomy of a standard cooling White Dwarf.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Thermodynamics of White Dwarf Cooling</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              White Dwarfs have no internal sources of nuclear fusion. They cool by radiating away their stored thermal energy into the cold vacuum of space.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Split Role of Electrons and Ions</h3>
+            <p>
+              The thermodynamic cooling of a White Dwarf is governed by a distinct division of labor between its electrons and ions:
+            </p>
+            <ul class="list-disc list-inside space-y-3">
+              <li>
+                <strong>The Degenerate Electrons (Heat Conductors):</strong> 
+                Because degenerate electrons have incredibly long mean free paths, their thermal conductivity is extremely high ($K_{\text{cond}} \gg K_{\text{rad}}$). This makes the entire degenerate core virtually <strong>isothermal</strong> ($T(r) = T_c \approx \text{const}$).
+              </li>
+              <li>
+                <strong>The Non-Degenerate Ions (Heat Reservoir):</strong> 
+                Since the degenerate electrons are locked in their lowest quantum states, they cannot transfer heat or cool down. Instead, the star's thermal energy reservoir is stored entirely in the kinetic energy of its non-degenerate Carbon and Oxygen ions:
+                $$U_i = \frac{3}{2} N_i k_B T_c = \frac{3}{2} \frac{M}{\mu_{\text{ion}} m_H} k_B T_c$$
+              </li>
+              <li>
+                <strong>The Outer Atmosphere (Insulating Blanket):</strong> 
+                The thin, non-degenerate outermost layers of Hydrogen and Helium have high opacity, acting as a thick insulating blanket that controls the rate at which heat can escape from the core.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Analytical Proof of Mestel's Cooling Theory</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Mestel's cooling theory describes how a White Dwarf's luminosity decays over time by modeling the rate of heat transport through its thin outer radiative envelope.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">1. Modeling the Radiative Envelope</h3>
+            <p>We assume the outer envelope is thin, radiative, and non-degenerate, with opacity described by Kramers' law:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\kappa = \kappa_0 \rho T^{-3.5}$$
+            </div>
+            <p>Integrating the equations of radiative transport and hydrostatic equilibrium yields the pressure and temperature profiles of the envelope:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$P(r) = \left( \frac{2}{8.5} \frac{g k_B}{\kappa_0 \mu m_H} \frac{M}{L} \right)^{1/2} T(r)^{4.25} \implies \rho(r) \propto \left(\frac{M}{L}\right)^{1/2} T(r)^{3.25}$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">2. Defining the Degeneracy Boundary</h3>
+            <p>At the boundary between the non-degenerate envelope and the degenerate core, the ideal gas pressure must equal the non-relativistic degenerate electron pressure:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{k_B \rho_{\text{bd}} T_{\text{bd}}}{\mu_e m_H} \approx C_{\text{NR}} \rho_{\text{bd}}^{5/3} \implies \rho_{\text{bd}} \propto T_{\text{bd}}^{1.5}$$
+            </div>
+            <p>Equating this boundary density $\rho_{\text{bd}}$ to our envelope density profile at the boundary radius ($T_{\text{bd}} \approx T_c$, since the core is isothermal):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-blue-600 dark:text-blue-400">
+              $$T_c^{1.5} \propto \left(\frac{M}{L}\right)^{1/2} T_c^{3.25} \implies L \propto M T_c^{3.5}$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">3. Deriving Luminosity Decay Over Time</h3>
+            <p>Since the thermal energy is stored in the ions ($U \propto M T_c$), the stellar luminosity is equal to the rate of energy loss:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$L = -\frac{dU}{dt} \propto -M \frac{dT_c}{dt}$$
+            </div>
+            <p>Substituting our relation for $L$ ($L \propto M T_c^{3.5}$) into the cooling equation:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$-M \frac{dT_c}{dt} \propto M T_c^{3.5} \implies \frac{dT_c}{dt} \propto -T_c^{3.5}$$
+            </div>
+            <p>Integrating this differential equation from $t = 0$ to $t$:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\int T_c^{-3.5} dT_c \propto -\int dt \implies T_c^{-2.5} \propto t \implies T_c(t) \propto t^{-0.4}$$
+            </div>
+            <p>Finally, substituting $T_c(t)$ back into our luminosity equation ($L \propto T_c^{3.5}$) gives <strong>Mestel's Cooling Law</strong>:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-purple-500/30 text-purple-600 dark:text-purple-400 font-extrabold my-4">
+              $$L(t) \propto t^{-7/5} = t^{-1.4} \implies t_{\text{cool}} \propto L^{-5/7}$$
+            </div>
+            <p class="text-sm">
+              Mestel's Law shows that as a White Dwarf cools, its luminosity drops rapidly at first ($L \propto t^{-1.4}$), but its cooling rate slows down over time as the core's thermal energy is depleted.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Microphysics of Core Crystallization</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As a White Dwarf's core cools and its temperature drops below $T_c < 10^7\text{ K}$, the electrostatic potential energy between its ions begins to exceed their thermal kinetic energy. This triggers a phase transition called <strong>crystallization</strong>.
+            </p>
+
+            <div class="p-6 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-4">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-purple-500 block">The Plasma Parameter ($\Gamma$)</span>
+              <p class="text-sm">
+                The state of the ion plasma is characterized by the dimensionless parameter $\Gamma$, defined as the ratio of Coulomb energy to thermal kinetic energy:
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center font-mono text-base border border-slate-100 dark:border-slate-900">
+                $$\Gamma = \frac{E_{\text{Coulomb}}}{E_{\text{Thermal}}} = \frac{Z^2 e^2}{a_i k_B T_c}$$
+              </div>
+              <p class="text-sm">
+                where $Z$ is the atomic number of the ions ($Z = 6$ for Carbon, $Z = 8$ for Oxygen), and $a_i = \left(\frac{3}{4\pi n_i}\right)^{1/3}$ is the average spacing between ions.
+              </p>
+              <ul class="list-disc list-inside text-sm space-y-2 pl-2">
+                <li><strong>$\Gamma \ll 1$:</strong> Weakly coupled, ideal gaseous plasma.</li>
+                <li><strong>$\Gamma \approx 1$:</strong> Strongly coupled liquid state.</li>
+                <li><strong>$\Gamma \ge 178$:</strong> The electrostatic forces freeze the ions into a solid, body-centered cubic (BCC) crystal lattice.</li>
+              </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono">Thermodynamic Cooling Delay: Core Fractionation</h3>
+            <p>
+              Crystallization slows the cooling of a White Dwarf through two primary mechanisms, keeping it brighter for longer:
+            </p>
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+              <li>
+                <strong>Latent Heat:</strong> 
+                The phase transition from liquid to solid releases latent heat, providing an additional energy source of $\approx 0.77 k_B$ per ion.
+              </li>
+              <li>
+                <strong>Gravitational Settling (Fractionation):</strong> 
+                Because Oxygen has a higher charge-to-mass ratio than Carbon, Oxygen freezes first and sinks to the center of the core, displacing lighter Carbon upward. This chemical separation releases gravitational potential energy, slowing down the star's cooling rate by several gigayears.
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Spectral Classification & Atmospheric Composition</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Although White Dwarf cores are composed of Carbon and Oxygen, their strong surface gravity ($\log g \approx 8$) drives rapid chemical settlement. Heavier elements sink to the bottom, leaving only the lightest elements visible at the surface.
+            </p>
+            <p>White Dwarfs are classified into distinct spectral types based on their atmospheric composition:</p>
+
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th class="px-4 py-3">Spectral Class</th>
+                    <th class="px-4 py-3">Atmospheric Composition</th>
+                    <th class="px-4 py-3">Key Spectral Signatures</th>
+                    <th class="px-4 py-3">Approximate Fraction</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">DA</td>
+                    <td class="px-4 py-3">Pure Hydrogen Envelope</td>
+                    <td class="px-4 py-3">Strong, broad Lyman & Balmer absorption lines</td>
+                    <td class="px-4 py-3">~ 80%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">DB</td>
+                    <td class="px-4 py-3">Pure Helium Envelope ($1.5 \times 10^4\text{ K} < T < 3 \times 10^4\text{ K}$)</td>
+                    <td class="px-4 py-3">Neutral Helium (He I) absorption features</td>
+                    <td class="px-4 py-3">~ 15%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">DO</td>
+                    <td class="px-4 py-3">Hot Helium Envelope ($T > 4.5 \times 10^4\text{ K}$)</td>
+                    <td class="px-4 py-3">Ionized Helium (He II) spectral lines</td>
+                    <td class="px-4 py-3">~ 1%</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">DQ</td>
+                    <td class="px-4 py-3">Carbon-rich Atmosphere</td>
+                    <td class="px-4 py-3">Atomic or molecular Carbon lines (Swan Bands)</td>
+                    <td class="px-4 py-3">~ Rare</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">DC</td>
+                    <td class="px-4 py-3">Featureless / Continuous ($T_{\text{eff}}$ too cool, or line strengths below detection threshold)</td>
+                    <td class="px-4 py-3">No absorption lines resolvable at any wavelength — a smooth, "blank" continuum</td>
+                    <td class="px-4 py-3">~ 14%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="bg-slate-500/5 border border-slate-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-slate-500">The DC Class: Absence of Evidence, Not Evidence of Absence</span>
+              <p class="text-sm">
+                A <strong>DC</strong> white dwarf is not a distinct atmospheric composition — it is simply a WD, of either H- or He-rich makeup, whose surface is too cool ($T_{\text{eff}} \lesssim 5{,}000\text{ K}$) or whose residual line strengths have dropped below spectroscopic detectability. Roughly <strong>14%</strong> of the observed WD population falls into this featureless class, meaning the true DA:DB split is somewhat obscured at the faint, cool end of the cooling sequence — precisely where WD cosmochronology (Section 11) does its most important work.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Observational CMD cooling Diagnostics</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In theoretical Hertzsprung-Russell diagrams ($\log T_{\text{eff}} - \log L$), the cooling track of a White Dwarf is a simple straight line because its radius remains nearly constant:
+              $$\log L = 4 \log T_{\text{eff}} + \text{const}$$
+            </p>
+            <p>
+              However, in observational Color-Magnitude Diagrams (such as $V$ vs $B-V$), this cooling track curves significantly. This curvature is driven by changes in the atmosphere's opacity:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-sm pl-2">
+              <li>
+                As the surface temperature cools, the dominant opacity sources in the atmosphere change. This alters the bolometric corrections, bending the cooling track.
+              </li>
+              <li>
+                <strong>Hydrogen-line blanketing</strong> and <strong>Collision-Induced Absorption (CIA)</strong> from molecular hydrogen ($\text{H}_2$) suppress the red and infrared flux of very cool WDs, shifting their colors back toward the blue at late times.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">11</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The White Dwarf Luminosity Function & The Slow-Cooling Anomaly</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Because Mestel's cooling law gives a one-to-one map between a White Dwarf's luminosity and its elapsed cooling time, a whole <em>population</em> of WDs can be turned into a clock. This observational application is called the <strong>White Dwarf Luminosity Function (WDLF)</strong> — the number density of WDs as a function of luminosity (or absolute magnitude) in a cluster or field population.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The WDLF as a Cosmic Chronometer</h3>
+            <p>
+              As a stellar population ages, its faintest, coolest, longest-cooling White Dwarfs pile up at progressively lower luminosities. Because no WD can be older than the population itself, the WDLF has a sharp <strong>faint-end cutoff</strong> — the luminosity of the very first WDs the population ever produced. Converting that cutoff luminosity into a cooling time via the same scaling that falls out of Mestel's Law:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-purple-500/30 text-purple-600 dark:text-purple-400 font-extrabold my-4">
+              $$t_{\text{cool}} = 8.8 \times 10^6 \left(\frac{M}{M_\odot}\right)^{5/7} \left(\frac{L}{L_\odot}\right)^{-5/7} \ \text{yr}$$
+            </div>
+            <p class="text-sm">
+              gives a direct age estimate for the population — a genuine "cosmic chronometer," independent of main-sequence stellar-evolution models entirely.
+            </p>
+
+            <!-- Inline SVG Diagram: WDLF cutoff -->
+            <div class="flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200/50 dark:border-slate-800/50">
+              <svg viewBox="0 0 600 240" class="w-full max-w-lg h-auto">
+                <line x1="60" y1="200" x2="550" y2="200" class="stroke-slate-500 stroke-2"/>
+                <line x1="60" y1="200" x2="60" y2="30" class="stroke-slate-500 stroke-2"/>
+                <text x="540" y="220" text-anchor="end" class="fill-slate-500 text-xs font-mono">Increasing Luminosity →</text>
+                <text x="50" y="40" text-anchor="end" class="fill-slate-500 text-xs font-mono" transform="rotate(-90, 50, 40)">Number Density</text>
+
+                <!-- WDLF curve: rises then drops sharply at the faint-end cutoff -->
+                <path d="M 90,190 C 150,150 220,60 300,55 C 380,52 420,70 440,110 C 455,140 465,175 470,195" class="stroke-purple-500 stroke-3 fill-none"/>
+
+                <!-- Cutoff marker -->
+                <line x1="470" y1="200" x2="470" y2="30" class="stroke-rose-500 stroke-1 stroke-dashed"/>
+                <text x="478" y="50" class="fill-rose-500 text-xs font-mono font-bold">Faint-end cutoff</text>
+                <text x="478" y="66" class="fill-rose-500 text-xs font-mono">→ Population age</text>
+
+                <g transform="translate(100, 55)">
+                  <rect x="0" y="0" width="170" height="30" rx="5" class="fill-slate-50 dark:fill-slate-900 stroke-slate-200 dark:stroke-slate-800 stroke-1"/>
+                  <text x="10" y="20" class="fill-slate-900 dark:fill-white text-[10px] font-bold">Oldest WDs pile up here</text>
+                </g>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 3: Schematic WDLF — the faint-end cutoff marks the coolest (oldest) White Dwarfs the population has produced.</span>
+            </div>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500">Caveat: WD Chronometry vs. Main-Sequence Turnoff Dating</span>
+              <p class="text-sm">
+                Despite its elegance, WDLF dating is <strong>systematically less precise</strong> than dating a cluster from its main-sequence turnoff (MS-TO): the WDLF cutoff is shallow and depends sensitively on the cooling models used, whereas MS-TO age depends on the much steeper, better-calibrated main-sequence evolutionary timescale.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Chen et al. (2021) Slowly-Cooling White Dwarf Anomaly</h3>
+            <p>
+              A direct challenge to naive WD chronometry came from comparing "twin" globular clusters — pairs matched in age and metallicity but differing in <strong>Horizontal Branch (HB) morphology</strong> (i.e. how many stars populate the hot, blue end of the HB). Clusters with a pronounced <strong>blue-HB</strong> population were found to host an excess of anomalously bright, slowly-cooling White Dwarfs relative to the standard Mestel prediction.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">The Progenitor Link: E-HB Stars</span>
+                <p class="mt-2 text-sm">
+                  Blue/extreme Horizontal Branch (E-HB) stars lose almost their entire envelope on the RGB. As a result, they <strong>skip the AGB phase — and its Third Dredge-Up — entirely</strong>, jumping directly from the HB to the WD cooling track.
+                </p>
+              </div>
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">The Physical Consequence</span>
+                <p class="mt-2 text-sm">
+                  Skipping the AGB lets these WDs retain a <strong>residual Hydrogen envelope thicker than $10^{-4}\,M_{\text{WD}}$</strong> — thick enough to sustain stable residual H-burning at the surface, which acts as an extra heat source and <strong>slows the cooling rate</strong> below the canonical Mestel curve.
+                </p>
+              </div>
+            </div>
+
+            <p class="text-sm">
+              The evidence trail was cross-checked observationally: blue-HB clusters exhibit a measurably <strong>lower ratio of AGB stars to HB stars ($N_{\text{AGB}}/N_{\text{HB}}$)</strong> than red-HB clusters of the same age — direct confirmation that the missing AGB stars are the progenitors of the excess bright WDs. Cooling models that mix a standard population with a fraction of these H-burning "slow coolers" successfully reproduce the observed WDLF shape.
+            </p>
+
+            <div class="bg-rose-500/5 border border-rose-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">Exam Trap: Chronometry Bias</span>
+              <p class="text-sm">
+                If a cluster's WD population secretly contains slow-cooling, thick-H-envelope White Dwarfs and this is <strong>not corrected for</strong>, the WDLF-derived age comes out <strong>systematically too young</strong> — the anomalously bright "old" WDs mimic the luminosity of a genuinely younger population. This is on top of WDLF dating already being intrinsically less precise than MS-TO dating even in the idealized, non-anomalous case.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ACTIVE RECALL MASTERCLASS QUIZ -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-purple-500/10 text-purple-500 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall & Focus Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of key physics concepts from the slides.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
+            
+            <!-- Question 1 -->
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical mechanism that drives dust-driven mass loss in stars at the tip of the Asymptotic Giant Branch (AGB)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Low surface gravity allows dust condensation; radiation pressure then ejects the dust grains, which drag the gas along with them.
+                </button>
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Rapid stellar rotation generates strong centrifugal forces that eject gas from the equator, forming dust shells.
+                </button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The combination of very low surface gravity, dust condensation, and radiation pressure drives the rapid mass loss of the superwind phase.
+              </p>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical mass-radius relation for a non-relativistic electron degenerate White Dwarf?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) $R \propto M^{1/3}$ (more massive White Dwarfs are physically larger).
+                </button>
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) $R \propto M^{-1/3}$ (more massive White Dwarfs are physically smaller).
+                </button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The non-relativistic equation of state ($P \propto \rho^{5/3}$) demands that radius decreases as mass increases: $R \propto M^{-1/3}$.
+              </p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does the radius completely cancel out of the hydrostatic equation under extreme relativistic electron degeneracy?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The relativistic pressure scales as $\rho^{4/3}$, which has the exact same radius dependence as the gravitational pressure scaling.
+                </button>
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Relativistic velocities cause length contraction, reducing the physical radius to zero.
+                </button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Because the pressure ($P \propto M^{4/3}/R^4$) and hydrostatic weight ($W \propto M^2/R^4$) have the same $1/R^4$ dependence, the radius cancels out, establishing a single limiting mass.
+              </p>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical division of labor between electrons and ions in a cooling White Dwarf?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Degenerate electrons conduct heat efficiently, keeping the core isothermal, while non-degenerate ions act as the thermal energy reservoir.
+                </button>
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Degenerate electrons store the thermal energy, while non-degenerate ions conduct it to the surface.
+                </button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Electrons are locked in their degenerate states and conduct heat efficiently, while the non-degenerate carbon-oxygen ions store the thermal energy reservoir.
+              </p>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does Mestel's cooling theory relate the cooling timescale ($t$) of a White Dwarf to its luminosity ($L$)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The cooling time is directly proportional to luminosity ($t \propto L$).
+                </button>
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) The cooling time scales with luminosity as $t \propto L^{-5/7}$.
+                </button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Mestel's cooling derivation yields $t \propto L^{-5/7}$ (or $L \propto t^{-1.4}$), which describes how the cooling rate slows as the star's thermal energy is depleted.
+              </p>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What threshold of the plasma parameter ($\Gamma$) triggers crystallization in a White Dwarf's core?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) When the thermal energy exceeds Coulomb forces ($\Gamma \approx 1$).
+                </button>
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) When the Coulomb energy of the ions dominates over their thermal kinetic energy at $\Gamma \ge 178$.
+                </button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! When $\Gamma = E_{\text{Coulomb}}/E_{\text{Thermal}} \ge 178$, the core ions freeze into a solid body-centered cubic (BCC) crystal lattice.
+              </p>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does core crystallization delay the cooling of a White Dwarf?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Through the release of latent heat and gravitational potential energy from carbon-oxygen fractionation.
+                </button>
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) By stopping electron conduction, which traps heat inside the core.
+                </button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Both the release of latent heat and the sinking of heavier Oxygen (gravitational settling/fractionation) release energy, delaying cooling.
+              </p>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why are only Hydrogen (DA) or Helium (DB/DO) lines visible in most White Dwarf spectra?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Strong surface gravity ($\log g \approx 8$) drives rapid chemical settlement, causing heavier elements to sink and leaving only the lightest elements at the surface.
+                </button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Core convection mixes carbon and oxygen, but they are immediately burned into helium and hydrogen.
+                </button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! High surface gravity separates the atmosphere by mass, sinking carbon and oxygen and leaving only hydrogen or helium visible at the surface.
+              </p>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the primary core composition of a standard White Dwarf born from a star with an initial mass of $1 M_\odot$?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Pure iron and nickel.
+                </button>
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) A degenerate mixture of Carbon and Oxygen.
+                </button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Stars with $M < 8 M_\odot$ end their nuclear lives after core Helium burning, leaving behind a degenerate Carbon-Oxygen (C-O) core.
+              </p>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does a White Dwarf's cooling track curve in an observational CMD, unlike in a theoretical H-R diagram?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Changes in atmospheric opacity alter bolometric corrections and molecular absorption features as the star cools.
+                </button>
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Relativistic degeneracy forces the physical radius of the star to shrink over time.
+                </button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! While a White Dwarf cools at a nearly constant radius (appearing as a straight line in theoretical HR diagrams), shifts in atmospheric opacity and molecular absorption bend its track in observational color-magnitude space.
+              </p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-purple-500 font-bold">0 / 10 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (timerRunning) {
+        clearInterval(timerId);
+        btn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        btn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = true;
+      }
+      lucide.createIcons();
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+      
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = Math.max(0, dashOffset);
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-purple-50/50', 'dark:bg-purple-900/20', 'text-purple-600', 'dark:text-purple-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-purple-50/50', 'dark:bg-purple-900/20', 'text-purple-600', 'dark:text-purple-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+      
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 10 Correct`;
+    }
+  </script>
+</body>
+</html>
