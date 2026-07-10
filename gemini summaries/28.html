@@ -27,121 +27,90 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
-    /* Custom Eye-Friendly Blue-Green & Mint Theme */
-    body {
-      background-color: #f1f9f6; /* Very soft light sage/mint */
-      color: #1e2d24; /* Dark forest slate for reading comfort */
-    }
-    .card-bg {
-      background-color: #ffffff;
-      border-color: #d1ebd9;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    .text-muted {
-      color: #4a6152;
-    }
-    .border-mint-accent {
-      border-color: #a3e2c9;
-    }
-
-    /* Deep Dark Blue-Green/Teal Mode */
-    .dark body {
-      background-color: #0b1411; /* Extremely dark ocean slate-green */
-      color: #e2f0e9;
-    }
-    .dark .card-bg {
-      background-color: #111d19;
-      border-color: #1c322b;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-    }
-    .dark .text-muted {
-      color: #a4bcae;
-    }
-
-    /* Warm Earthy Sepia/Olive Option */
-    .theme-sepia body {
-      background-color: #f5eedc; /* Soft warm parchment */
-      color: #382c16;
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf3e4;
+      color: #43331f;
     }
     .theme-sepia .card-bg {
-      background-color: #eae1cc;
-      border-color: #d8cbab;
+      background-color: #f5e8cf;
+      border-color: #e4cd9c;
     }
     .theme-sepia .text-muted {
-      color: #6a5e44;
+      color: #6e5b3f;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d0ae76;
     }
 
-    /* Circular Progress Tracker Ring Styling */
+    /* Progress Tracker Ring Styling */
     .circle-bg {
       fill: none;
-      stroke: #d1ebd9;
+      stroke: #fed7aa;
     }
     .circle-progress {
       fill: none;
-      stroke: #10b981; /* Emerald Green */
+      stroke: #ea580c;
       stroke-linecap: round;
       transition: stroke-dashoffset 0.35s;
       transform: rotate(-90deg);
       transform-origin: 50% 50%;
     }
     .dark .circle-bg {
-      stroke: #1c322b;
-    }
-    .theme-sepia .circle-bg {
-      stroke: #d8cbab;
+      stroke: #7c2d12;
     }
   </style>
 </head>
-<body class="font-sans transition-colors duration-300 min-h-screen">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
 
   <!-- TOP HUD / PROGRESS BAR -->
-  <header class="sticky top-0 z-50 w-full bg-white/90 dark:bg-[#111d19]/90 backdrop-blur-md border-b border-[#d1ebd9] dark:border-[#1c322b] transition-colors">
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
+        <div class="p-2 bg-orange-500/10 text-orange-500 rounded-lg">
           <i data-lucide="zap" class="w-6 h-6 animate-pulse"></i>
         </div>
         <div>
-          <h1 class="text-sm sm:text-base font-bold tracking-tight text-emerald-950 dark:text-emerald-100">Massive Star Evolution <span class="text-emerald-600 dark:text-emerald-400">Part IV & V</span></h1>
-          <p class="text-xs text-slate-500 dark:text-emerald-500/80 font-medium font-mono">Exam Masterclass (Prof. F. R. Ferraro)</p>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Massive Star Evolution <span class="text-orange-500">Part IV & V</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Exam Masterclass (Prof. F. R. Ferraro)</p>
         </div>
       </div>
       
       <!-- Quick Actions / Theme / Timer HUD -->
       <div class="flex items-center space-x-2 sm:space-x-4">
         <!-- Text Size Buttons -->
-        <div class="hidden md:flex items-center bg-emerald-100/50 dark:bg-emerald-950/40 rounded-lg p-1 space-x-1">
-          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-[#111d19]">A-</button>
-          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-[#111d19] shadow-sm">A</button>
-          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-[#111d19]">A+</button>
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
         </div>
 
         <!-- 3-Way Theme Switcher -->
-        <div class="flex items-center bg-emerald-100/50 dark:bg-emerald-950/40 rounded-lg p-1 space-x-1">
-          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400" title="Light Theme">
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
             <i data-lucide="sun" class="w-4 h-4"></i>
           </button>
-          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-[#111d19] text-emerald-600 dark:text-emerald-400" title="Dark Theme">
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
             <i data-lucide="moon" class="w-4 h-4"></i>
           </button>
-          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400" title="Sepia Eye-Saver">
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
             <i data-lucide="book-open" class="w-4 h-4"></i>
           </button>
         </div>
 
         <!-- 30min visual Study countdown -->
-        <div class="flex items-center space-x-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs sm:text-sm font-semibold">
+        <div class="flex items-center space-x-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-lg border border-orange-500/20 text-xs sm:text-sm font-semibold">
           <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
           <span id="timer-display">30:00</span>
-          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-emerald-800 dark:hover:text-emerald-200">
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-orange-800 dark:hover:text-orange-200">
             <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
           </button>
         </div>
       </div>
     </div>
     <!-- Linear Reading Progress Bar -->
-    <div class="w-full bg-emerald-100 dark:bg-[#1c322b] h-1">
-      <div id="reading-progress-bar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-1 w-0 transition-all duration-100"></div>
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-orange-500 to-amber-500 h-1 w-0 transition-all duration-100"></div>
     </div>
   </header>
 
@@ -153,89 +122,89 @@
       <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
         
         <!-- Table of Contents -->
-        <div class="bg-white dark:bg-[#111d19] rounded-2xl border border-emerald-100 dark:border-[#1c322b] p-5 shadow-sm card-bg">
-          <h3 class="text-xs font-semibold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase mb-4">Study Navigation</h3>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
           <nav class="space-y-1 text-xs">
-            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50/50 dark:bg-emerald-950/30">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-600 text-white text-xs">1</span>
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-orange-600 dark:text-orange-400 font-semibold bg-orange-50/50 dark:bg-orange-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-orange-500 text-white text-xs">1</span>
               <span class="truncate">Regime & Transition Masses</span>
             </a>
-            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">2</span>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
               <span class="truncate">Weakly Degenerate Carbon Ignition</span>
             </a>
-            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">3</span>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
               <span class="truncate">Super-AGB Phase & Dredge-Out</span>
             </a>
-            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">4</span>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
               <span class="truncate">ONeMg White Dwarf vs. EC-SN</span>
             </a>
-            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">5</span>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
               <span class="truncate">Advanced Core Fusions ($M > 11 M_\odot$)</span>
             </a>
-            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">6</span>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
               <span class="truncate">Neutrino Energy Loss Mechanisms</span>
             </a>
-            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">7</span>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
               <span class="truncate">Pre-SN Structure: The Onion Core</span>
             </a>
-            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">8</span>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
               <span class="truncate">Iron Core Collapse & URCA Physics</span>
             </a>
-            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">9</span>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
               <span class="truncate">Core Rebound, Shockwaves & Neutrinos</span>
             </a>
-            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">10</span>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
               <span class="truncate">Explosive Nucleosynthesis & Light Curves</span>
             </a>
-            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">11</span>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">11</span>
               <span class="truncate">Assembling the Galactic Bulge</span>
             </a>
-            <a href="#sec-12" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">12</span>
+            <a href="#sec-12" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">12</span>
               <span class="truncate">Neutron Stars & Mass-Radius Scaling</span>
             </a>
-            <a href="#sec-13" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">13</span>
+            <a href="#sec-13" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">13</span>
               <span class="truncate">Pulsars, headlight effects & light cylinder</span>
             </a>
-            <a href="#sec-14" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">14</span>
+            <a href="#sec-14" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">14</span>
               <span class="truncate">Recycled Pulsars & Black Widows</span>
             </a>
-            <a href="#sec-15" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">15</span>
+            <a href="#sec-15" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">15</span>
               <span class="truncate">Magnetospheric Math & Alfven Limits</span>
             </a>
-            <a href="#sec-16" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">16</span>
+            <a href="#sec-16" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">16</span>
               <span class="truncate">Pulsar Distances via Dispersion Measure</span>
             </a>
-            <a href="#sec-17" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">17</span>
+            <a href="#sec-17" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">17</span>
               <span class="truncate">Spindown Age & the Recycled-Pulsar Trap</span>
             </a>
-            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-600 text-white text-xs"><i data-lucide="award" class="w-3.5 h-3.5"></i></span>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-orange-500 text-white text-xs"><i data-lucide="award" class="w-3.5 h-3.5"></i></span>
               <span class="truncate font-semibold">Masterclass Test</span>
             </a>
           </nav>
         </div>
 
         <!-- Session Progress Card -->
-        <div class="bg-white dark:bg-[#111d19] rounded-2xl border border-emerald-100 dark:border-[#1c322b] p-5 shadow-sm card-bg flex items-center justify-between">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
           <div class="space-y-1">
-            <h4 class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Session Progress</h4>
-            <p id="progress-reading-percent" class="text-2xl font-black text-emerald-950 dark:text-white">0%</p>
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
             <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
           </div>
           <!-- Ring indicator -->
@@ -251,8 +220,8 @@
         
         <!-- SECTION 1 -->
         <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-emerald-100 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">01</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">01</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Mass Limits & Post-He Burning Transitions</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -266,22 +235,22 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
               <!-- Lower Range -->
-              <div class="p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-[#1c322b]">
-                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">1. Low Mass ($M < 7\text{--}8 M_\odot$)</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-orange-500">1. Low Mass ($M < 7\text{--}8 M_\odot$)</span>
                 <p class="text-xs mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
                   Upon central Helium exhaustion, the newly formed Carbon-Oxygen (C-O) core contracts and quickly enters a state of high electron degeneracy. This concludes its core thermonuclear history. It ends as a degenerate **Carbon-Oxygen White Dwarf (CO-WD)**.
                 </p>
               </div>
               <!-- Intermediate range -->
-              <div class="p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-[#1c322b]">
-                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">2. Intermediate ($7 M_\odot < M < 9\text{--}11 M_\odot$)</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-amber-600">2. Intermediate ($7 M_\odot < M < 9\text{--}11 M_\odot$)</span>
                 <p class="text-xs mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
                   Often referred to as the <strong>Super-AGB (SAGB)</strong> mass range. These stars develop a mildly degenerate Carbon-Oxygen core. They possess enough gravitational potential energy to ignite Carbon burning, converting the core into Oxygen, Neon, and Magnesium (ONeMg).
                 </p>
               </div>
               <!-- High Mass range -->
-              <div class="p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-[#1c322b]">
-                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">3. High Mass ($M > 11 M_\odot$)</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-orange-500">3. High Mass ($M > 11 M_\odot$)</span>
                 <p class="text-xs mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
                   The core never becomes degenerate during its nuclear burning phases. The star easily reaches the high temperatures required to ignite Carbon, Neon, Oxygen, and Silicon burning, ultimately forming a degenerate Iron core and ending as a **Type II Core-Collapse Supernova**.
                 </p>
@@ -292,8 +261,8 @@
 
         <!-- SECTION 2 -->
         <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-emerald-100 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">02</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">02</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Microphysics of Carbon Ignition & Flame Propagation</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -317,8 +286,8 @@
               </li>
             </ol>
 
-            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-4">
-              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400 block mb-2">The Primary Carbon Fusion Reactions</span>
+            <div class="bg-orange-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-4">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-orange-500 dark:text-orange-400 block mb-2">The Primary Carbon Fusion Reactions</span>
               <p class="text-xs sm:text-sm">
                 The fusion of Carbon-12 nuclei proceeds through several nuclear channels, dominated by alpha ($\alpha$) and proton ($p$) emission:
                 $$^{12}\text{C} + ^{12}\text{C} \longrightarrow \begin{cases} 
@@ -334,8 +303,8 @@
 
         <!-- SECTION 3 -->
         <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-emerald-100 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">03</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">03</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Super-AGB (SAGB) Phase & Core Dredge-Out</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -364,8 +333,8 @@
 
         <!-- SECTION 4 -->
         <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-emerald-100 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">04</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">04</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">ONeMg White Dwarf vs. Electron-Capture Supernova</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -375,28 +344,28 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
               <!-- O-Ne WD Case -->
-              <div class="p-6 bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-[#1c322b] rounded-2xl card-bg space-y-3">
-                <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400">Case A: O-Ne White Dwarf (High Mass Loss)</span>
+              <div class="p-6 bg-white dark:bg-[#111d19] border border-slate-200 dark:border-[#1c322b] rounded-2xl card-bg space-y-3">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-orange-500">Case A: O-Ne White Dwarf (High Mass Loss)</span>
                 <p class="text-sm">
                   If stellar winds strip the outer envelope before the O-Ne-Mg core reaches the Chandrasekhar mass ($M_{\text{Ch}} \approx 1.4 M_\odot$), the star escapes a core-collapse explosion.
                 </p>
                 <p class="text-sm">
                   The ONe degenerate core settles onto a cooling track, forming an <strong>O-Ne White Dwarf</strong> (typical mass $\approx 1.0\text{--}1.2 M_\odot$).
                 </p>
-                <div class="bg-emerald-500/5 dark:bg-[#111d19] p-3 rounded-lg border border-emerald-100 dark:border-[#1c322b] text-xs">
+                <div class="bg-orange-500/5 dark:bg-[#111d19] p-3 rounded-lg border border-slate-200 dark:border-[#1c322b] text-xs">
                   <strong>Cooling Timescale Note:</strong> O-Ne White Dwarfs cool faster than C-O White Dwarfs. Because Oxygen and Neon have higher atomic weights ($A_{\text{O}} = 16, A_{\text{Ne}} = 20$), an O-Ne core contains fewer ions than a C-O core of the same mass. This reduced ion count stores less thermal energy, leading to a smaller "heat reservoir" ($U = \frac{3}{2} N_{\text{ion}} k_B T_c$) and more rapid cooling.
                 </div>
               </div>
 
               <!-- EC-SN Case -->
-              <div class="p-6 bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-[#1c322b] rounded-2xl card-bg space-y-3">
-                <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400">Case B: Electron-Capture Supernova (Low Mass Loss)</span>
+              <div class="p-6 bg-white dark:bg-[#111d19] border border-slate-200 dark:border-[#1c322b] rounded-2xl card-bg space-y-3">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-amber-600">Case B: Electron-Capture Supernova (Low Mass Loss)</span>
                 <p class="text-sm">
                   If the envelope remains intact and the degenerate O-Ne-Mg core grows to near the Chandrasekhar limit ($M_{\text{core}} \approx 1.37 M_\odot$), the high central density triggers <strong>electron capture</strong> reactions:
                   $$e^- + \text{ }^{24}\text{Mg} \longrightarrow \text{ }^{24}\text{Na} + \nu_e$$
                   $$e^- + \text{ }^{20}\text{Ne} \longrightarrow \text{ }^{20}\text{F} + \nu_e$$
                 </p>
-                <p class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                <p class="text-sm font-semibold text-orange-500 dark:text-orange-400">
                   Because degenerate electrons supply the pressure supporting the core, capturing free electrons reduces this support. This triggers a catastrophic core collapse, resulting in an <strong>Electron-Capture Supernova (EC-SN)</strong> and leaving behind a Neutron Star.
                 </p>
               </div>
@@ -406,8 +375,8 @@
 
         <!-- SECTION 5 -->
         <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-emerald-100 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">05</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">05</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Advanced Core Fusion Stages in Massive Stars ($M > 11 M_\odot$)</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -415,9 +384,9 @@
               In stars with initial masses above $11 M_\odot$, the core never becomes degenerate. Instead, the star undergoes a continuous cycle of core contraction, heating, and stable ignition of increasingly heavy fuels:
             </p>
 
-            <div class="overflow-x-auto border border-emerald-100 dark:border-[#1c322b] rounded-2xl my-6">
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
               <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
-                <thead class="text-xs uppercase bg-emerald-50 dark:bg-emerald-950 text-slate-700 dark:text-slate-200">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200">
                   <tr>
                     <th class="px-4 py-3">Core Stage</th>
                     <th class="px-4 py-3">Ignition Temp ($10^9\text{ K}$)</th>
@@ -425,27 +394,27 @@
                     <th class="px-4 py-3">Key Reactions & Products</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-emerald-50/50 dark:divide-slate-800 font-medium">
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600 dark:text-emerald-400">Carbon Burn</td>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500 dark:text-orange-400">Carbon Burn</td>
                     <td class="px-4 py-3">$\approx 0.8$</td>
                     <td class="px-4 py-3">$10^3 \text{ years}$</td>
                     <td class="px-4 py-3">$^{12}\text{C} + ^{12}\text{C} \to ^{20}\text{Ne} + \alpha$</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600 dark:text-emerald-400">Neon Burn</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500 dark:text-orange-400">Neon Burn</td>
                     <td class="px-4 py-3">$\approx 1.6$</td>
                     <td class="px-4 py-3">$3 \text{ years}$</td>
                     <td class="px-4 py-3">$^{20}\text{Ne}(\gamma, \alpha)^{16}\text{O}$, $^{20}\text{Ne}(\alpha, \gamma)^{24}\text{Mg}$</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600 dark:text-emerald-400">Oxygen Burn</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500 dark:text-orange-400">Oxygen Burn</td>
                     <td class="px-4 py-3">$\approx 2.0$</td>
                     <td class="px-4 py-3">$0.8 \text{ years}$</td>
                     <td class="px-4 py-3">$^{16}\text{O} + ^{16}\text{O} \to ^{28}\text{Si} + \alpha$</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600 dark:text-emerald-400">Silicon Burn</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500 dark:text-orange-400">Silicon Burn</td>
                     <td class="px-4 py-3">$\approx 3.5$</td>
                     <td class="px-4 py-3">$7 \text{ days}$</td>
                     <td class="px-4 py-3">Photodisintegration & $\alpha$-captures to $^{56}\text{Ni}$</td>
@@ -472,7 +441,7 @@
         <!-- SECTION 6 -->
         <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">06</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">06</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Neutrino Energy Loss Mechanics</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -485,16 +454,16 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
               <!-- Photoneutrinos -->
-              <div class="p-5 rounded-2xl bg-slate-50 dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">1. Photoneutrino Process</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-mono font-bold text-orange-500">1. Photoneutrino Process</span>
                 <p class="text-xs mt-2 text-slate-500">
                   An electron absorbs a high-energy photon and re-emits a neutrino-antineutrino pair:
                   $$e^- + \gamma \longrightarrow e^- + \nu + \bar{\nu}$$
                 </p>
               </div>
               <!-- Pair Annihilation -->
-              <div class="p-5 rounded-2xl bg-slate-50 dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">2. Pair Annihilation</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-mono font-bold text-amber-600">2. Pair Annihilation</span>
                 <p class="text-xs mt-2 text-slate-500">
                   At $T \ge 10^9 \text{ K}$, gamma-ray photons produce electron-positron pairs in thermal equilibrium:
                   $$\gamma + \gamma \rightleftharpoons e^- + e^+$$
@@ -503,8 +472,8 @@
                 </p>
               </div>
               <!-- Plasma process -->
-              <div class="p-5 rounded-2xl bg-slate-50 dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">3. Plasma-Neutrino Process</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-mono font-bold text-orange-500">3. Plasma-Neutrino Process</span>
                 <p class="text-xs mt-2 text-slate-500">
                   In highly dense core plasma, electromagnetic waves undergo collective oscillations, behaving as massive quasi-particles called plasmons ($\gamma_{\text{pl}}$). These plasmons can decay directly into a neutrino pair:
                   $$\gamma_{\text{pl}} \longrightarrow \nu + \bar{\nu}$$
@@ -527,7 +496,7 @@
         <!-- SECTION 7 -->
         <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">07</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">07</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Pre-Supernova Structure: The Onion Core</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -536,15 +505,15 @@
             </p>
 
             <!-- Custom Clean SVG of Onion Shell Core -->
-            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-emerald-100 dark:border-slate-800">
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800">
               <svg viewBox="0 0 600 320" class="w-full max-w-xl h-auto">
-                <!-- Concentric Shell circles (Teal & Emerald theme) -->
-                <circle cx="300" cy="160" r="140" class="fill-none stroke-emerald-500/20 stroke-[8px]"/>
-                <circle cx="300" cy="160" r="120" class="fill-none stroke-emerald-500/40 stroke-[8px]"/>
-                <circle cx="300" cy="160" r="100" class="fill-none stroke-emerald-500/30 stroke-[8px]"/>
-                <circle cx="300" cy="160" r="80" class="fill-none stroke-emerald-500/50 stroke-[8px]"/>
-                <circle cx="300" cy="160" r="60" class="fill-none stroke-emerald-600 stroke-[8px]"/>
-                <circle cx="300" cy="160" r="40" class="fill-none stroke-teal-700 stroke-[8px]"/>
+                <!-- Concentric Shell circles (Orange & Amber theme) -->
+                <circle cx="300" cy="160" r="140" class="fill-none stroke-orange-500/10 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="120" class="fill-none stroke-orange-500/20 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="100" class="fill-none stroke-amber-500/15 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="80" class="fill-none stroke-amber-500/25 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="60" class="fill-none stroke-orange-600 stroke-[8px]"/>
+                <circle cx="300" cy="160" r="40" class="fill-none stroke-amber-600 stroke-[8px]"/>
                 <circle cx="300" cy="160" r="20" class="fill-slate-700 dark:fill-slate-800"/>
 
                 <!-- Labeling arrows and notes -->
@@ -554,23 +523,23 @@
 
                 <!-- Si shell -->
                 <line x1="300" y1="120" x2="170" y2="100" class="stroke-slate-400 stroke-1 stroke-dashed"/>
-                <text x="160" y="95" text-anchor="middle" class="fill-teal-700 dark:fill-teal-400 text-[10px] font-mono">2. Silicon Shell</text>
+                <text x="160" y="95" text-anchor="middle" class="fill-amber-600 dark:fill-amber-400 text-[10px] font-mono">2. Silicon Shell</text>
 
                 <!-- O shell -->
                 <line x1="300" y1="100" x2="150" y2="130" class="stroke-slate-400 stroke-1 stroke-dashed"/>
-                <text x="140" y="125" text-anchor="middle" class="fill-emerald-700 dark:fill-emerald-400 text-[10px] font-mono">3. Oxygen-Neon Shell</text>
+                <text x="140" y="125" text-anchor="middle" class="fill-orange-600 dark:fill-orange-400 text-[10px] font-mono">3. Oxygen-Neon Shell</text>
 
                 <!-- C shell -->
                 <line x1="300" y1="80" x2="150" y2="160" class="stroke-slate-400 stroke-1 stroke-dashed"/>
-                <text x="140" y="155" text-anchor="middle" class="fill-emerald-600 dark:fill-emerald-500 text-[10px] font-mono">4. Carbon Shell</text>
+                <text x="140" y="155" text-anchor="middle" class="fill-amber-500 dark:fill-amber-400 text-[10px] font-mono">4. Carbon Shell</text>
 
                 <!-- He shell -->
                 <line x1="300" y1="60" x2="430" y2="100" class="stroke-slate-400 stroke-1 stroke-dashed"/>
-                <text x="440" y="95" text-anchor="start" class="fill-teal-600 text-[10px] font-mono">5. Helium Shell</text>
+                <text x="440" y="95" text-anchor="start" class="fill-orange-500 text-[10px] font-mono">5. Helium Shell</text>
 
                 <!-- H shell -->
                 <line x1="300" y1="40" x2="430" y2="130" class="stroke-slate-400 stroke-1 stroke-dashed"/>
-                <text x="440" y="125" text-anchor="start" class="fill-teal-500 text-[10px] font-mono">6. Hydrogen Shell</text>
+                <text x="440" y="125" text-anchor="start" class="fill-amber-500 text-[10px] font-mono">6. Hydrogen Shell</text>
 
                 <!-- Envelope -->
                 <line x1="300" y1="20" x2="430" y2="160" class="stroke-slate-400 stroke-1 stroke-dashed"/>
@@ -584,7 +553,7 @@
         <!-- SECTION 8 -->
         <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">08</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">08</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Iron Core Collapse & The URCA Process</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -595,7 +564,7 @@
               Under these extreme conditions, two catastrophic physical processes destabilize the core, triggering a rapid gravitational collapse:
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">1. Photodisintegration (Endothermic Destruction)</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">1. Photodisintegration (Endothermic Destruction)</h3>
             <p>
               The highly energetic thermal photon field inside the core begins to break iron nuclei apart:
               $$\text{Reaction I: } \quad ^{56}\text{Fe} + \gamma \longrightarrow 13 \alpha + 4n \quad (\Delta Q = -124.4 \text{ MeV})$$
@@ -605,7 +574,7 @@
               Because these photodisintegration reactions are highly endothermic (absorbing energy), they remove thermal energy from the core, lowering the pressure and accelerating the gravitational collapse.
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">2. The URCA Process & Electron Capture</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">2. The URCA Process & Electron Capture</h3>
             <p>
               As the density rises, the Fermi energy ($E_F$) of degenerate electrons exceeds the threshold energy needed for proton-to-neutron conversion. This triggers rapid electron capture reactions on iron-group nuclei and free protons:
               $$\text{Electron capture: } \quad e^- + \text{ }^{56}\text{Fe} \longrightarrow \text{ }^{56}\text{Mn} + \nu_e$$
@@ -625,7 +594,7 @@
         <!-- SECTION 9 -->
         <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">09</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">09</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Core Rebound, Shockwaves, & Neutrino Trapping</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -637,7 +606,7 @@
               At this density, the nucleons are packed tightly together, and the **short-range strong nuclear force** becomes highly repulsive. This sudden stiffening of nuclear matter halts the collapse of the inner $\approx 0.7 M_\odot$ of the core, causing it to **bounce** outward.
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">The Revived Shockwave: Neutrino-Driven Delay Mechanism</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">The Revived Shockwave: Neutrino-Driven Delay Mechanism</h3>
             <p>
               The supersonic impact of the infalling outer core layers on the rebounding inner core generates a powerful **shockwave**. 
             </p>
@@ -664,7 +633,7 @@
         <!-- SECTION 10 -->
         <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">10</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">10</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Explosive Nucleosynthesis, r-Process, & Supernova Taxonomy</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -690,26 +659,26 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 my-6 text-xs">
-              <div class="p-4 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">Type Ia SNe</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase">Type Ia SNe</span>
                 <p class="mt-2 text-slate-500">
                   **No Hydrogen**, but displays strong **Silicon** lines. Originates from the thermonuclear explosion of a white dwarf.
                 </p>
               </div>
-              <div class="p-4 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">Type Ib SNe</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase">Type Ib SNe</span>
                 <p class="mt-2 text-slate-500">
                   **No Hydrogen**, **No Silicon**, but displays strong **Helium** lines. Represents a massive star that lost its hydrogen envelope.
                 </p>
               </div>
-              <div class="p-4 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">Type Ic SNe</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase">Type Ic SNe</span>
                 <p class="mt-2 text-slate-500">
                   **No Hydrogen**, **No Silicon**, **No Helium** lines. Originates from a massive star stripped of both its hydrogen and helium envelopes.
                 </p>
               </div>
-              <div class="p-4 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">Type II SNe</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase">Type II SNe</span>
                 <p class="mt-2 text-slate-500">
                   Displays strong, prominent **Hydrogen** ($\text{H}\alpha$) lines. Driven by core-collapse inside stars with intact hydrogen envelopes.
                 </p>
@@ -721,7 +690,7 @@
         <!-- SECTION 11 -->
         <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">11</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">11</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Assembling the Galactic Bulge: Fossil Fragments</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -733,8 +702,8 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
-              <div class="p-5 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase font-mono block mb-2">Terzan 5 & Liller 1</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase font-mono block mb-2">Terzan 5 & Liller 1</span>
                 <p class="text-xs leading-relaxed text-slate-500">
                   Unlike standard globular clusters, which are coeval (single-age populations), Terzan 5 and Liller 1 host **multi-iron, multi-age sub-populations**:
                 </p>
@@ -743,8 +712,8 @@
                   <li>A much **younger component** ($\approx 3\text{-}4 \text{ Gyr}$ in Terzan 5, and $\approx 1\text{-}2 \text{ Gyr}$ in Liller 1) representing later, localized starburst episodes fueled by retained gas.</li>
                 </ul>
               </div>
-              <div class="p-5 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg flex flex-col justify-center">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase font-mono block mb-2">The Chemical DNA Pattern</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg flex flex-col justify-center">
+                <span class="font-bold text-orange-500 uppercase font-mono block mb-2">The Chemical DNA Pattern</span>
                 <p class="text-xs leading-relaxed text-slate-500">
                   The $[\alpha/\text{Fe}]$ vs. $[\text{Fe/H}]$ patterns in the bulge and these clusters act as a "chemical DNA." 
                 </p>
@@ -759,7 +728,7 @@
         <!-- SECTION 12 -->
         <section id="sec-12" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">12</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">12</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Neutron Stars & Mass-Radius Scaling</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -775,7 +744,7 @@
               $$M \approx \left(\frac{15.2 \text{ km}}{R}\right)^3 M_\odot$$
             </p>
 
-            <div class="p-6 bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-[#1c322b] rounded-2xl card-bg">
+            <div class="p-6 bg-white dark:bg-[#111d19] border border-slate-200 dark:border-[#1c322b] rounded-2xl card-bg">
               <h4 class="font-bold text-slate-950 dark:text-white">The Oppenheimer-Volkoff Mass Limit</h4>
               <p class="text-sm mt-2 text-slate-500">
                 Just as the Chandrasekhar limit restricts white dwarf masses, the **Oppenheimer-Volkoff (TOV) Limit** defines the maximum mass that degenerate neutrons can support:
@@ -789,7 +758,7 @@
         <!-- SECTION 13 -->
         <section id="sec-13" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">13</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">13</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Pulsar Physics & Relativistic হেডলাইট head-light Effect</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -798,7 +767,7 @@
               $$P_{\text{NS}} \sim P_{\text{WD}} \left(\frac{R_{\text{NS}}}{R_{\text{WD}}}\right)^2 \sim 10^{-3} \text{ s} \quad \text{and} \quad B_{\text{NS}} \sim B_{\text{WD}} \left(\frac{R_{\text{WD}}}{R_{\text{NS}}}\right)^2 \sim 10^{12}\text{--}10^{14} \text{ G}$$
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">The Relativistic head-light Effect (Beaming)</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">The Relativistic head-light Effect (Beaming)</h3>
             <p>
               Pulsars emit coherent radiation in extremely narrow cones from their magnetic poles. This beaming is caused by special relativity. 
             </p>
@@ -822,7 +791,7 @@
         <!-- SECTION 14 -->
         <section id="sec-14" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">14</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">14</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Recycled Millisecond Pulsars (MSPs) & Black Widows</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -834,7 +803,7 @@
               $$\tau_{\text{char}} = \frac{P}{\dot{P}} \sim 10^9\text{--}10^{10} \text{ years}$$
             </p>
 
-            <div class="p-6 bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-[#1c322b] rounded-2xl card-bg">
+            <div class="p-6 bg-white dark:bg-[#111d19] border border-slate-200 dark:border-[#1c322b] rounded-2xl card-bg">
               <h4 class="font-bold text-slate-950 dark:text-white">The Black Widow Pulsar Scenario</h4>
               <p class="text-sm mt-2 text-slate-500">
                 Some millisecond pulsars are observed as completely isolated stars. This is explained by the **Black Widow** scenario:
@@ -852,7 +821,7 @@
         <!-- SECTION 15 -->
         <section id="sec-15" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">15</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">15</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Mathematical Derivation of the Alfvén Boundary & Pulsar Spin-Up</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4 font-serif">
@@ -909,7 +878,7 @@
             <p>
               Substituting $r_d = \alpha r_a$ and expanding using the Alfvén Radius expression yields the final **Spin-Up Equation**:
             </p>
-            <div class="bg-emerald-150/10 dark:bg-[#111d19] p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-extrabold my-4">
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
               $$\frac{\dot{P}}{P} = -\frac{P \alpha}{2\pi I} \left( \frac{B_s^2 R^6 G^3 M^3 \dot{M}^6}{2} \right)^{1/7}$$
             </div>
             <p class="text-xs text-slate-500 dark:text-slate-400 text-center">
@@ -921,7 +890,7 @@
         <!-- SECTION 16 -->
         <section id="sec-16" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">16</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">16</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Pulsar Distances via Dispersion Measure (DM)</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -931,8 +900,8 @@
             <p>
               The size of this frequency-dependent delay between two observing frequencies $\nu_1 > \nu_2$ is:
             </p>
-            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-4">
-              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400 block mb-2">The Dispersion Delay & the Dispersion Measure</span>
+            <div class="bg-orange-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-4">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-orange-500 dark:text-orange-400 block mb-2">The Dispersion Delay & the Dispersion Measure</span>
               <p class="text-xs sm:text-sm">
                 $$\Delta t \propto \text{DM}\left(\frac{1}{\nu_2^2}-\frac{1}{\nu_1^2}\right), \qquad \text{DM}=\int n_e\,dl$$
                 Here $n_e$ is the free-electron number density along the line of sight and the integral runs from the pulsar to the observer, so the **Dispersion Measure (DM)** is simply the column density of free electrons the pulse had to cross.
@@ -950,21 +919,21 @@
         <!-- SECTION 17 -->
         <section id="sec-17" class="study-section scroll-mt-24 space-y-4">
           <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">17</span>
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">17</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Characteristic (Spindown) Age & the Recycled-Pulsar Trap</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
             <p>
               A pulsar radiates away rotational kinetic energy as it beams radio emission and drives its surrounding wind and magnetosphere, so its spin period $P$ increases slowly with time (equivalently, $\dot P > 0$). If a pulsar is assumed to have been born spinning much faster than it spins today, and to have spun down under a steady braking law from an initial period $P_0 \ll P$, then a simple order-of-magnitude estimate of its true age can be derived from its currently observed $P$ and $\dot P$ alone:
             </p>
-            <div class="bg-emerald-150/10 dark:bg-[#111d19] p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-extrabold my-4">
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
               $$\tau = \frac{P}{\dot P}$$
             </div>
             <p>
               This is the **characteristic (spindown) age**. It requires no knowledge of the pulsar's true birth period, distance, or environment — only two numbers measured directly from the radio timing: the period and its time derivative. This is precisely what makes it attractive, and precisely why it must be handled with care.
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">Exam Trap: Why $\tau=P/\dot P$ Fails for Recycled Pulsars</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">Exam Trap: Why $\tau=P/\dot P$ Fails for Recycled Pulsars</h3>
             <p>
               Recall from Section 14 that a **recycled millisecond pulsar (MSP)** is an old, dead neutron star that has been spun back up to millisecond periods by accreting mass — and angular momentum — from an evolving binary companion. This creates an apparent paradox in the $P$–$\dot P$ diagram:
             </p>
@@ -989,9 +958,9 @@
         </section>
 
         <!-- QUIZ CHALLENGE SECTION -->
-        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-[#d1ebd9] dark:border-[#1c322b] pb-12">
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
           <div class="flex items-center space-x-3">
-            <div class="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl">
+            <div class="p-2 bg-orange-500/10 text-orange-500 rounded-xl">
               <i data-lucide="award" class="w-6 h-6"></i>
             </div>
             <div>
@@ -1000,174 +969,174 @@
             </div>
           </div>
 
-          <div class="bg-white dark:bg-[#111d19] p-6 sm:p-8 rounded-2xl border border-emerald-100 dark:border-slate-800 shadow-sm card-bg space-y-8">
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
             
             <!-- Question 1 -->
             <div class="space-y-3">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 1</span>
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 1</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the critical boundary mass $M^{\text{up}}$ separating white dwarf final states from core-collapse supernovae?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Approximately 8 M_solar (ranging between 7 and 11 M_solar depending on metallicity).
                 </button>
-                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Exactly 2.2 M_solar (which marks the Helium Flash transition).
                 </button>
               </div>
-              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q1-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! $M^{\text{up}} \approx 8 M_\odot$ is the limiting mass dividing CO white dwarf endpoints from core-collapse supernovae.
               </p>
             </div>
 
             <!-- Question 2 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 2</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 2</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does Carbon burning ignite off-center in the cores of transition stars ($7 M_\odot < M < 11 M_\odot$)?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Convective overshooting mixes fresh Carbon fuel exclusively into the outer layers.
                 </button>
-                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) High central densities and temperatures drive intense neutrino emissions that cool the innermost core.
                 </button>
               </div>
-              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q2-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Neutrino energy loss acts as a central cooling mechanism, causing the maximum temperature to occur off-center.
               </p>
             </div>
 
             <!-- Question 3 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 3</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 3</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why do Oxygen-Neon (ONe) White Dwarfs cool faster than Carbon-Oxygen (CO) White Dwarfs of the same mass?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) The higher average atomic weight of O-Ne mixtures results in fewer ions, reducing the core's total thermal energy reservoir.
                 </button>
-                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) The higher surface gravity of O-Ne White Dwarfs drives rapid heat conduction to the surface.
                 </button>
               </div>
-              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q3-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Because $U \propto N_{\text{ion}} \propto M/A$, the larger atomic weight ($A$) of O and Ne results in fewer thermal ions to store heat.
               </p>
             </div>
 
             <!-- Question 4 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 4</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 4</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What trigger initiates an Electron-Capture Supernova (EC-SN) in an SAGB star?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Free electrons are captured by Magnesium-24 and Neon-20 nuclei, reducing degeneracy pressure and causing the core to collapse.
                 </button>
-                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Photodisintegration converts Silicon into Iron-peak elements, absorbing the thermal support of the core.
                 </button>
               </div>
-              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q4-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Electron capture on $^{24}\text{Mg}$ and $^{20}\text{Ne}$ removes the degenerate electrons that support the core, triggering collapse.
               </p>
             </div>
 
             <!-- Question 5 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 5</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 5</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which burning stage has the shortest duration in a massive star ($M \approx 20 M_\odot$)?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Core Oxygen Burning, which lasts approximately 200 days.
                 </button>
-                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Core Silicon Burning, which lasts only about 7 days.
                 </button>
               </div>
-              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q5-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Due to extreme neutrino energy loss, Silicon burning is completed in only about a week.
               </p>
             </div>
 
             <!-- Question 6 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 6</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 6</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What occurs during the photodisintegration phase of core collapse?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) High-energy photons rip Iron-56 nuclei apart into alpha particles and neutrons, absorbing thermal energy and accelerating collapse.
                 </button>
-                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Free positrons annihilate with electrons to produce photons, boosting the core's expansion pressure.
                 </button>
               </div>
-              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q6-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Photodisintegration is highly endothermic, absorbing energy and accelerating core collapse.
               </p>
             </div>
 
             <!-- Question 7 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 7</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 7</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does neutrino heating revive a stalled pre-supernova shockwave?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Neutrinos annihilate with positrons behind the shock, generating high-pressure acoustic waves.
                 </button>
-                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Trapped neutrinos are absorbed by free nucleons in the gain region, depositing energy that drives the shock wave outward.
                 </button>
               </div>
-              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q7-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! This is the neutrino-driven delayed explosion mechanism.
               </p>
             </div>
 
             <!-- Question 8 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 8</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 8</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical origin of the plateau phase (Type II-P) in core-collapse light curves?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) A Hydrogen recombination front propagates inward through the expanding shell, maintaining a constant photospheric temperature.
                 </button>
-                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Rapid expansion dilutes the core's opacity, allowing thermal energy from Nickel-56 decay to escape at a constant rate.
                 </button>
               </div>
-              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q8-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Recombination ($H^+ \to H^0$) occurs at a nearly constant temperature of $\approx 5000\text{ K}$, creating the light curve plateau.
               </p>
             </div>
 
             <!-- Question 9 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 9</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 9</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical significance of the "knee" in the $[\alpha/\text{Fe}]$ vs. $[\text{Fe/H}]$ diagram?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) It flags the epoch when Type Ia Supernovae first begin contributing significantly to the chemical enrichment of the ISM.
                 </button>
-                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) It marks the density threshold where stellar winds become radiation-driven rather than dust-driven.
                 </button>
               </div>
-              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q9-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! The knee marks where the slow-onset Type Ia supernovae begin releasing vast amounts of iron, dropping the $[\alpha/\text{Fe}]$ ratio.
               </p>
             </div>
 
             <!-- Question 10 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 10</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 10</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does a slow-cooling White Dwarf (such as those discovered in cluster M13) generate its extra energy?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Through late-stage gravitational contraction of its O-Ne core.
                 </button>
-                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Through stable Hydrogen shell burning sustained at the base of a thicker-than-normal residual envelope.
                 </button>
               </div>
-              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q10-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! A thick residual hydrogen envelope ($M_H \ge 10^{-4} M_{\text{WD}}$) allows stable Hydrogen shell burning, which slows down the cooling process.
               </p>
             </div>
@@ -1175,7 +1144,7 @@
             <!-- Quiz score HUD -->
             <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
               <span class="text-slate-500">Your Active Recall Mastery Score:</span>
-              <span id="quiz-score" class="text-emerald-600 dark:text-emerald-400 font-bold">0 / 10 Correct</span>
+              <span id="quiz-score" class="text-orange-600 dark:text-orange-400 font-bold">0 / 10 Correct</span>
             </div>
           </div>
         </section>
@@ -1273,10 +1242,10 @@
       });
 
       links.forEach(link => {
-        link.classList.remove('bg-emerald-50/50', 'dark:bg-emerald-950/30', 'text-emerald-600', 'dark:text-emerald-400', 'font-semibold');
+        link.classList.remove('bg-orange-50/50', 'dark:bg-orange-900/20', 'text-orange-600', 'dark:text-orange-400', 'font-semibold');
         link.classList.add('text-slate-600', 'dark:text-slate-400');
         if (link.getAttribute('href') === `#${currentSectionId}`) {
-          link.classList.add('bg-emerald-50/50', 'dark:bg-emerald-950/30', 'text-emerald-600', 'dark:text-emerald-400', 'font-semibold');
+          link.classList.add('bg-orange-50/50', 'dark:bg-orange-900/20', 'text-orange-600', 'dark:text-orange-400', 'font-semibold');
           link.classList.remove('text-slate-600', 'dark:text-slate-400');
         }
       });
@@ -1287,7 +1256,7 @@
     function checkQuiz(qNum, isCorrect, element) {
       const parent = element.parentElement;
       Array.from(parent.children).forEach(btn => {
-        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-emerald-50/10 dark:hover:bg-slate-700 transition";
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50/10 dark:hover:bg-slate-700 transition";
       });
 
       const feedback = document.getElementById(`q${qNum}-feedback`);

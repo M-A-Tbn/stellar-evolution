@@ -27,121 +27,90 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
-    /* Custom Eye-Friendly Blue-Green & Mint Theme */
-    body {
-      background-color: #f1f9f6; /* Very soft light sage/mint */
-      color: #1e2d24; /* Dark forest slate for reading comfort */
-    }
-    .card-bg {
-      background-color: #ffffff;
-      border-color: #d1ebd9;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    }
-    .text-muted {
-      color: #4a6152;
-    }
-    .border-mint-accent {
-      border-color: #a3e2c9;
-    }
-
-    /* Deep Dark Blue-Green/Teal Mode */
-    .dark body {
-      background-color: #0b1411; /* Extremely dark ocean slate-green */
-      color: #e2f0e9;
-    }
-    .dark .card-bg {
-      background-color: #111d19;
-      border-color: #1c322b;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-    }
-    .dark .text-muted {
-      color: #a4bcae;
-    }
-
-    /* Warm Earthy Sepia/Olive Option */
-    .theme-sepia body {
-      background-color: #f5eedc; /* Soft warm parchment */
-      color: #382c16;
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf3e4;
+      color: #43331f;
     }
     .theme-sepia .card-bg {
-      background-color: #eae1cc;
-      border-color: #d8cbab;
+      background-color: #f5e8cf;
+      border-color: #e4cd9c;
     }
     .theme-sepia .text-muted {
-      color: #6a5e44;
+      color: #6e5b3f;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d0ae76;
     }
 
-    /* Circular Progress Tracker Ring Styling */
+    /* Progress Tracker Ring Styling */
     .circle-bg {
       fill: none;
-      stroke: #d1ebd9;
+      stroke: #fed7aa;
     }
     .circle-progress {
       fill: none;
-      stroke: #10b981; /* Emerald Green */
+      stroke: #ea580c;
       stroke-linecap: round;
       transition: stroke-dashoffset 0.35s;
       transform: rotate(-90deg);
       transform-origin: 50% 50%;
     }
     .dark .circle-bg {
-      stroke: #1c322b;
-    }
-    .theme-sepia .circle-bg {
-      stroke: #d8cbab;
+      stroke: #7c2d12;
     }
   </style>
 </head>
-<body class="font-sans transition-colors duration-300 min-h-screen">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
 
   <!-- TOP HUD / PROGRESS BAR -->
-  <header class="sticky top-0 z-50 w-full bg-white/90 dark:bg-[#111d19]/90 backdrop-blur-md border-b border-[#d1ebd9] dark:border-[#1c322b] transition-colors">
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-lg">
+        <div class="p-2 bg-orange-500/10 text-orange-500 rounded-lg">
           <i data-lucide="zap" class="w-6 h-6 animate-pulse"></i>
         </div>
         <div>
-          <h1 class="text-sm sm:text-base font-bold tracking-tight text-emerald-950 dark:text-emerald-100">Supernovae & Black Holes <span class="text-emerald-600 dark:text-emerald-400">Part IV & V</span></h1>
-          <p class="text-xs text-slate-500 dark:text-emerald-500/80 font-medium font-mono">Exam Masterclass (Prof. F. R. Ferraro)</p>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Supernovae & Black Holes <span class="text-orange-500">Part IV & V</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Exam Masterclass (Prof. F. R. Ferraro)</p>
         </div>
       </div>
       
       <!-- Quick Actions / Theme / Timer HUD -->
       <div class="flex items-center space-x-2 sm:space-x-4">
         <!-- Text Size Buttons -->
-        <div class="hidden md:flex items-center bg-emerald-100/50 dark:bg-emerald-950/40 rounded-lg p-1 space-x-1">
-          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-[#111d19]">A-</button>
-          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-[#111d19] shadow-sm">A</button>
-          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-[#111d19]">A+</button>
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
         </div>
 
         <!-- 3-Way Theme Switcher -->
-        <div class="flex items-center bg-emerald-100/50 dark:bg-emerald-950/40 rounded-lg p-1 space-x-1">
-          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-[#111d19] text-emerald-600 dark:text-emerald-400" title="Light Theme">
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
             <i data-lucide="sun" class="w-4 h-4"></i>
           </button>
-          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-[#111d19] text-emerald-600 dark:text-emerald-400" title="Dark Theme">
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
             <i data-lucide="moon" class="w-4 h-4"></i>
           </button>
-          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400" title="Sepia Eye-Saver">
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
             <i data-lucide="book-open" class="w-4 h-4"></i>
           </button>
         </div>
 
         <!-- 30min visual Study countdown -->
-        <div class="flex items-center space-x-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs sm:text-sm font-semibold">
+        <div class="flex items-center space-x-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-lg border border-orange-500/20 text-xs sm:text-sm font-semibold">
           <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
           <span id="timer-display">30:00</span>
-          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-emerald-800 dark:hover:text-emerald-200">
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-orange-800 dark:hover:text-orange-200">
             <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
           </button>
         </div>
       </div>
     </div>
     <!-- Linear Reading Progress Bar -->
-    <div class="w-full bg-emerald-100 dark:bg-[#1c322b] h-1">
-      <div id="reading-progress-bar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-1 w-0 transition-all duration-100"></div>
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-orange-500 to-amber-500 h-1 w-0 transition-all duration-100"></div>
     </div>
   </header>
 
@@ -153,61 +122,61 @@
       <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
         
         <!-- Table of Contents -->
-        <div class="bg-white dark:bg-[#111d19] rounded-2xl border border-emerald-100 dark:border-[#1c322b] p-5 shadow-sm card-bg">
-          <h3 class="text-xs font-semibold tracking-wider text-emerald-600 dark:text-emerald-400 uppercase mb-4">Study Navigation</h3>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
           <nav class="space-y-1 text-xs">
-            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50/50 dark:bg-emerald-950/30">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-600 text-white text-xs">1</span>
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-orange-600 dark:text-orange-400 font-semibold bg-orange-50/50 dark:bg-orange-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-orange-500 text-white text-xs">1</span>
               <span class="truncate">Type Ia SN Progenitors</span>
             </a>
-            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">2</span>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
               <span class="truncate">Explosion Mechanics & Flame</span>
             </a>
-            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">3</span>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
               <span class="truncate">Single Degenerate Regimes</span>
             </a>
-            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">4</span>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
               <span class="truncate">SNe Empirical Comparison</span>
             </a>
-            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">5</span>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
               <span class="truncate">Chemical Enrichment Matrix</span>
             </a>
-            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">6</span>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
               <span class="truncate">The $[\alpha/\text{Fe}]$ Knee & SFR</span>
             </a>
-            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">7</span>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
               <span class="truncate">Black Hole Formation</span>
             </a>
-            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">8</span>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
               <span class="truncate">Schwarzschild Metric Proofs</span>
             </a>
-            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">9</span>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
               <span class="truncate">Derivation: GW Chirp Mass</span>
             </a>
-            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-emerald-50/20 dark:hover:bg-[#111d19]/50">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 text-xs">10</span>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
               <span class="truncate">Redshift Overestimation Proof</span>
             </a>
-            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
-              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-600 text-white text-xs"><i data-lucide="award" class="w-3.5 h-3.5"></i></span>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-orange-500 text-white text-xs"><i data-lucide="award" class="w-3.5 h-3.5"></i></span>
               <span class="truncate font-semibold">Masterclass Test</span>
             </a>
           </nav>
         </div>
 
         <!-- Session Progress Card -->
-        <div class="bg-white dark:bg-[#111d19] rounded-2xl border border-emerald-100 dark:border-[#1c322b] p-5 shadow-sm card-bg flex items-center justify-between">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
           <div class="space-y-1">
-            <h4 class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Session Progress</h4>
-            <p id="progress-reading-percent" class="text-2xl font-black text-emerald-950 dark:text-white">0%</p>
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
             <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
           </div>
           <!-- Ring indicator -->
@@ -218,30 +187,30 @@
         </div>
 
         <!-- Key Physics Cheat-Sheet -->
-        <div class="bg-gradient-to-br from-emerald-900 to-teal-950 text-white rounded-2xl p-5 shadow-lg space-y-4">
+        <div class="bg-gradient-to-br from-orange-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
           <div class="flex items-center space-x-2">
-            <i data-lucide="sparkles" class="w-5 h-5 text-emerald-300"></i>
-            <h4 class="font-bold text-sm text-emerald-200 uppercase tracking-wider">SNe & BH Scales</h4>
+            <i data-lucide="sparkles" class="w-5 h-5 text-orange-400"></i>
+            <h4 class="font-bold text-sm text-orange-200 uppercase tracking-wider">SNe & BH Scales</h4>
           </div>
-          <div class="text-xs space-y-2.5 font-mono text-emerald-100">
-            <div class="flex justify-between border-b border-emerald-850 pb-1.5">
+          <div class="text-xs space-y-2.5 font-mono text-slate-300">
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
               <span>Chandrasekhar Limit:</span>
-              <span class="text-emerald-300">$M_{\text{Ch}} \approx 1.4 M_\odot$</span>
+              <span class="text-orange-300">$M_{\text{Ch}} \approx 1.4 M_\odot$</span>
             </div>
-            <div class="flex justify-between border-b border-emerald-850 pb-1.5">
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
               <span>Schwarzschild Radius:</span>
-              <span class="text-emerald-300">$R_s = \frac{2GM}{c^2}$</span>
+              <span class="text-orange-300">$R_s = \frac{2GM}{c^2}$</span>
             </div>
-            <div class="flex justify-between border-b border-emerald-850 pb-1.5">
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
               <span>Chirp Mass $M_{\text{chirp}}$:</span>
-              <span class="text-emerald-300">$\frac{(m_1 m_2)^{3/5}}{(m_1+m_2)^{1/5}}$</span>
+              <span class="text-orange-300">$\frac{(m_1 m_2)^{3/5}}{(m_1+m_2)^{1/5}}$</span>
             </div>
             <div class="flex justify-between pb-0.5">
               <span>OV Mass Limit:</span>
-              <span class="text-emerald-300">$M_{\text{OV}} \approx 2.5\text{--}3 M_\odot$*</span>
+              <span class="text-orange-300">$M_{\text{OV}} \approx 2.5\text{--}3 M_\odot$*</span>
             </div>
           </div>
-          <p class="text-[10px] text-emerald-400/70 leading-snug pt-1 border-t border-emerald-850/60">
+          <p class="text-[10px] text-orange-400/70 leading-snug pt-1 border-t border-orange-900/60">
             *Unlike $M_{\text{Ch}}$, not precisely derived — depends on the unknown supra-nuclear equation of state (range $\sim 2.0\text{--}2.7\,M_\odot$ across models).
           </p>
         </div>
@@ -251,19 +220,19 @@
       <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
         
         <!-- TITLE CONTAINER -->
-        <div class="relative bg-white dark:bg-[#111d19] rounded-3xl p-6 sm:p-10 border border-emerald-100 dark:border-[#1c322b] shadow-sm card-bg overflow-hidden">
-          <div class="absolute top-0 right-0 p-8 text-emerald-100/50 dark:text-slate-800 -z-0 opacity-10">
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-slate-100 dark:text-slate-800 -z-0 opacity-10">
             <i data-lucide="orbit" class="w-64 h-64"></i>
           </div>
           <div class="relative z-10 space-y-4">
-            <div class="inline-flex items-center space-x-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-semibold">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <div class="inline-flex items-center space-x-2 bg-orange-500/10 text-orange-500 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
               <span>Advanced Stellar Astrophysics Core Course</span>
             </div>
-            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-emerald-900 dark:text-white leading-tight">
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
               Type Ia Supernovae, Spacetime Metrics, & Black Hole Mechanics
             </h1>
-            <p class="text-sm sm:text-base text-slate-500 dark:text-emerald-500/80 leading-relaxed max-w-2xl font-serif">
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
               An exhaustive academic study text covering the mathematical formulations of General Relativity metrics, gravitational wave time-frequency calculations, and the nucleosynthetic pathways of thermonuclear explosions. Reference files: "28.SNe+NS.pdf" and related astrophysics modules.
             </p>
           </div>
@@ -271,8 +240,8 @@
 
         <!-- SECTION 1 -->
         <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">01</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">01</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Type Ia Supernovae Progenitor Scenarios</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -281,22 +250,22 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
-              <div class="p-5 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg space-y-2">
-                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">1. The Single-Degenerate Scenario</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-orange-500 dark:text-orange-400">1. The Single-Degenerate Scenario</span>
                 <p class="leading-relaxed text-xs">
                   In this classical configuration, a degenerate CO-WD is in a close binary system with a "normal" donor companion (a Main Sequence star or Red Giant). As the companion expands and fills its Roche Lobe, gas (primarily Hydrogen) flows through the inner Lagrangian point $L_1$ and builds up on the surface of the WD. 
                 </p>
-                <p class="leading-relaxed text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                <p class="leading-relaxed text-xs font-semibold text-orange-600 dark:text-orange-400">
                   When the accumulated mass drives the degenerate WD close to the Chandrasekhar mass limit ($M \to M_{\text{Ch}} \approx 1.4 M_\odot$), the central density reaches $\rho_c \approx 10^9 \text{ g/cm}^3$, raising the temperature to ignite explosive Carbon burning.
                 </p>
               </div>
 
-              <div class="p-5 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg space-y-2">
-                <span class="text-xs font-extrabold uppercase text-teal-600 dark:text-teal-400">2. The Double-Degenerate Scenario</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-amber-600 dark:text-amber-400">2. The Double-Degenerate Scenario</span>
                 <p class="leading-relaxed text-xs">
                   This scenario begins with a primordial system of two intermediate-mass stars. Through multiple Common Envelope (CE) events, the system ejects its outer gaseous layers, leaving behind two extremely close degenerate CO-WDs. 
                 </p>
-                <p class="leading-relaxed text-xs font-semibold text-teal-700 dark:text-teal-400">
+                <p class="leading-relaxed text-xs font-semibold text-amber-600 dark:text-amber-400">
                   Because their orbit is extremely tight, the continuous loss of orbital angular momentum via the emission of <strong>gravitational waves</strong> forces them to spiral inward and merge. If their combined mass exceeds $M_{\text{Ch}}$, the merged structure collapses, triggering a runaway thermonuclear explosion that completely disrupts both stars, leaving no bound remnant.
                 </p>
               </div>
@@ -306,8 +275,8 @@
 
         <!-- SECTION 2 -->
         <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">02</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">02</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Explosion Mechanics: Deflagration vs. Detonation</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -324,8 +293,8 @@
               </li>
             </ul>
 
-            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 space-y-3">
-              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">The Delayed Detonation Model (W7 Reference)</span>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500 font-mono">The Delayed Detonation Model (W7 Reference)</span>
               <p class="text-sm">
                 To match actual observed spectra, models must produce both iron-peak elements (in the core) and intermediate-mass elements (in the outer shell). The widely adopted <strong>W7 model (Nomoto et al. 1984)</strong> solves this via a <strong>delayed detonation</strong> mechanism. 
               </p>
@@ -338,8 +307,8 @@
 
         <!-- SECTION 3 -->
         <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">03</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">03</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Single-Degenerate Mass Accretion Regimes</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -348,20 +317,20 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-xs">
-              <div class="p-4 rounded-2xl bg-teal-50/50 dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800">
-                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">1. Low Accretion Rate ($\dot{M} \approx 10^{-9} M_\odot/\text{yr}$)</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase">1. Low Accretion Rate ($\dot{M} \approx 10^{-9} M_\odot/\text{yr}$)</span>
                 <p class="mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
                   Hydrogen builds up very slowly, cooling into a highly degenerate layer. This triggers unstable thermonuclear runaways at the base of the envelope, causing periodic explosive ejections of gas. This is a <strong>Classical Nova</strong>. Because most of the accreted gas is ejected, the WD mass never reaches $M_{\text{Ch}}$ over a Hubble time.
                 </p>
               </div>
-              <div class="p-4 rounded-2xl bg-teal-50/50 dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800">
-                <span class="font-bold text-teal-600 dark:text-teal-400 uppercase">2. Rapid Accretion Rate ($\dot{M} \ge 10^{-7} M_\odot/\text{yr}$)</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-amber-600 uppercase">2. Rapid Accretion Rate ($\dot{M} \ge 10^{-7} M_\odot/\text{yr}$)</span>
                 <p class="mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
                   Hydrogen is deposited faster than it can burn, causing the envelope to expand and swell. The WD develops a giant-like structure, and the entire system quickly spirals into a shared **Common Envelope (CE)** phase rather than detonating as an SN Ia.
                 </p>
               </div>
-              <div class="p-4 rounded-2xl bg-teal-50/50 dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800">
-                <span class="font-bold text-blue-500 uppercase">3. Intermediate Rate & Sub-Chandrasekhar Flashes</span>
+              <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="font-bold text-orange-500 uppercase">3. Intermediate Rate & Sub-Chandrasekhar Flashes</span>
                 <p class="mt-2 text-slate-500 dark:text-slate-400 leading-relaxed">
                   In this intermediate regime ($\dot{M} \approx 10^{-8} M_\odot/\text{yr}$), Hydrogen burns stably, forming a growing Helium layer. Under specific conditions, a $0.2 M_\odot$ Helium layer can ignite a violent flash. This outer Helium detonation drives a powerful inward shock wave that triggers a secondary Carbon detonation at the core, destroying the sub-Chandrasekhar mass WD.
                 </p>
@@ -372,8 +341,8 @@
 
         <!-- SECTION 4 -->
         <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">04</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">04</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Empirical & Physical Supernova Comparison</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -381,53 +350,53 @@
               To ace your exam, you must distinguish between empirical spectroscopic definitions and the underlying physical explosion mechanisms of supernovae:
             </p>
 
-            <div class="overflow-x-auto border border-emerald-100 dark:border-[#1c322b] rounded-2xl my-6">
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
               <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
-                <thead class="text-xs uppercase bg-emerald-50 dark:bg-emerald-950 text-slate-700 dark:text-slate-200">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200">
                   <tr>
                     <th class="px-4 py-3">Property</th>
                     <th class="px-4 py-3">Type Ia Supernovae</th>
                     <th class="px-4 py-3">Type II Supernovae</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-emerald-50/50 dark:divide-slate-800 font-medium">
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Spectroscopic Signal</td>
+                <tbody class="divide-y divide-slate-200 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Spectroscopic Signal</td>
                     <td class="px-4 py-3">**No Hydrogen**, strong **Silicon** lines</td>
                     <td class="px-4 py-3">Strong **Hydrogen** (H$\alpha$) lines</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Physical Origin</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Physical Origin</td>
                     <td class="px-4 py-3">Thermonuclear runaway of a degenerate CO-WD</td>
                     <td class="px-4 py-3">Gravitational Core-Collapse of a massive star</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Progenitor Mass Limit</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Progenitor Mass Limit</td>
                     <td class="px-4 py-3">$M_{\text{ZAMS}} < 8 M_\odot$</td>
                     <td class="px-4 py-3">$M_{\text{ZAMS}} > 8\text{--}11 M_\odot$</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Kinetic Energy</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Kinetic Energy</td>
                     <td class="px-4 py-3">$\approx 10^{51} \text{ erg} \quad (v \approx 5000\text{--}30000 \text{ km/s})$</td>
                     <td class="px-4 py-3">$\approx 10^{51} \text{ erg} \quad (v \approx 2000\text{--}30000 \text{ km/s})$</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Neutrino Emission</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Neutrino Emission</td>
                     <td class="px-4 py-3">No neutrino burst (negligible energy)</td>
                     <td class="px-4 py-3">Massive neutrino burst ($\sim 3 \times 10^{53} \text{ erg}$)</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Galactic Rate</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Galactic Rate</td>
                     <td class="px-4 py-3">$\approx 1 \text{ per } 200 \text{ years}$</td>
                     <td class="px-4 py-3">$\approx 2 \text{ per } 100 \text{ years}$</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Iron Enrichment</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Iron Enrichment</td>
                     <td class="px-4 py-3">Ejects $\approx 0.6 M_\odot$ of Iron (makes $2/3$ of Galactic Fe)</td>
                     <td class="px-4 py-3">Sinks most Iron; ejects $\approx 0.1 M_\odot$ of Fe</td>
                   </tr>
-                  <tr class="hover:bg-emerald-50/10">
-                    <td class="px-4 py-3 font-semibold text-emerald-600">Bound Remnant</td>
+                  <tr class="hover:bg-slate-50/10">
+                    <td class="px-4 py-3 font-semibold text-orange-500">Bound Remnant</td>
                     <td class="px-4 py-3">None (completely disrupted)</td>
                     <td class="px-4 py-3">Neutron Star (NS) or Black Hole (BH)</td>
                   </tr>
@@ -438,8 +407,8 @@
               Note: **Type Ib** and **Type Ic** supernovae share the core-collapse physics of Type II events, but their progenitors were stripped of their outer envelopes before exploding. Type Ib has lost its Hydrogen envelope (showing Helium lines); Type Ic has lost both its Hydrogen and Helium envelopes (showing no H or He lines).
             </p>
 
-            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 space-y-3 mt-6">
-              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">The Phillips Relation: Why SN Ia Are "Standardizable," Not Standard</span>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2 mt-6">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500 font-mono">The Phillips Relation: Why SN Ia Are "Standardizable," Not Standard</span>
               <p class="text-sm">
                 A common exam trap is calling SN Ia "standard candles" outright. On their own, individual SN Ia peak luminosities scatter too much to be used directly as distance indicators. The <strong>Phillips relation (Phillips 1993)</strong> is the empirical fix: it correlates the light-curve <strong>decline rate</strong>, $\Delta m_{15}$ (how many magnitudes the SN fades in the $15$ days following $B$-band peak), with the <strong>peak absolute magnitude</strong> — slower-declining (lower $\Delta m_{15}$) events are intrinsically brighter.
               </p>
@@ -452,8 +421,8 @@
 
         <!-- SECTION 5 -->
         <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">05</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">05</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Chemistry of the Interstellar Medium (ISM)</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -462,8 +431,8 @@
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
-              <div class="p-5 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg space-y-2">
-                <span class="font-bold text-emerald-600 uppercase font-mono block text-xs">Type II SNe (Core-Collapse) Products</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg space-y-2">
+                <span class="font-bold text-orange-500 uppercase font-mono block text-xs">Type II SNe (Core-Collapse) Products</span>
                 <ul class="list-disc list-inside text-xs space-y-1 text-slate-500 dark:text-slate-400">
                   <li>Ejects large amounts of Hydrogen and Helium.</li>
                   <li>Produces **$\alpha$-elements** ($^{16}\text{O}$, $^{20}\text{Ne}$, $^{24}\text{Mg}$, $^{28}\text{Si}$, $^{32}\text{S}$, $^{40}\text{Ca}$, $^{48}\text{Ti}$) via alpha-capture chains.</li>
@@ -471,8 +440,8 @@
                 </ul>
               </div>
 
-              <div class="p-5 rounded-2xl bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 card-bg space-y-2">
-                <span class="font-bold text-teal-600 uppercase font-mono block text-xs">Type Ia SNe (Thermonuclear) Products</span>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg space-y-2">
+                <span class="font-bold text-amber-600 uppercase font-mono block text-xs">Type Ia SNe (Thermonuclear) Products</span>
                 <ul class="list-disc list-inside text-xs space-y-1 text-slate-500 dark:text-slate-400">
                   <li>Complete thermonuclear combustion incinerates the CO core.</li>
                   <li>Produces mostly **iron-peak elements** ($^{56}\text{Ni}$ decaying to $^{56}\text{Co}$ and stable $^{56}\text{Fe}$).</li>
@@ -485,8 +454,8 @@
 
         <!-- SECTION 6 -->
         <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">06</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">06</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The $[\alpha/\text{Fe}]$ vs. $[\text{Fe/H}]$ Diagram & The Knee</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -502,7 +471,7 @@
               </li>
             </ul>
 
-            <h3 class="text-base font-bold text-slate-950 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">The Star Formation Rate (SFR) Scaling Effect</h3>
+            <h3 class="text-base font-bold text-slate-950 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">The Star Formation Rate (SFR) Scaling Effect</h3>
             <p>
               The position of this knee depends directly on the **Star Formation Rate (SFR)** of the environment:
             </p>
@@ -519,8 +488,8 @@
 
         <!-- SECTION 7 -->
         <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">07</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">07</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Black Hole Progenitors & Compactness Limits</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -542,7 +511,7 @@
               where $R(M)$ is the radius containing a specific mass $M$ (typically evaluated at $M = 2.5 M_\odot$, $\xi_{2.5}$).
             </p>
 
-            <div class="p-6 bg-white dark:bg-[#111d19] border border-emerald-100 dark:border-slate-800 rounded-2xl card-bg">
+            <div class="p-6 bg-white dark:bg-[#111d19] border border-slate-200 dark:border-slate-800 rounded-2xl card-bg">
               <h4 class="font-bold text-slate-950 dark:text-white">Explosion Success vs. Failed SNe</h4>
               <p class="text-sm mt-2">
                 A star's compactness determines its explosion mechanism:
@@ -564,15 +533,15 @@
 
         <!-- SECTION 8 -->
         <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">08</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">08</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Schwarzschild Metric: Spacetime Curvature Proofs</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
             <p>
               To describe the extreme curvature of spacetime surrounding a spherical mass $M$, we transition from flat Minkowski spacetime to General Relativity using the **Schwarzschild Metric**:
             </p>
-            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-emerald-100 dark:border-emerald-950 text-emerald-600 dark:text-emerald-400 font-bold my-4">
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-orange-600 dark:text-orange-400 font-bold my-4">
               $$ds^2 = \left(1 - \frac{2GM}{rc^2}\right)c^2 dt^2 - \frac{dr^2}{1 - \frac{2GM}{rc^2}} - r^2 d\theta^2 - r^2 \sin^2\theta d\phi^2$$
             </div>
             <p class="text-sm">
@@ -580,21 +549,21 @@
               $$R_s = \frac{2GM}{c^2} \approx 3 \times \left( \frac{M}{M_\odot} \right) \text{ km}$$
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">1. Proper Distance Perturbation ($dL$)</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">1. Proper Distance Perturbation ($dL$)</h3>
             <p>
               Consider a simultaneous measurement ($dt = 0$) along a radial line ($d\theta = d\phi = 0$). The proper distance $dL$ between two coordinates $r_1$ and $r_2$ is:
               $$dL = \frac{dr}{\sqrt{1 - \frac{R_s}{r}}} > dr$$
               Because of the curvature of space, the physical distance $dL$ is always **larger** than the coordinate difference $dr$. This behaves like a topographic map with elevation lines: the physical distance up a hill is always greater than the horizontal distance on a flat map.
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">2. Gravitational Time Dilation ($d\tau$)</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">2. Gravitational Time Dilation ($d\tau$)</h3>
             <p>
               For an observer at a fixed spatial coordinate ($dr = d\theta = d\phi = 0$), the proper time interval $d\tau$ measured by their clock is related to the coordinate time $dt$ (measured by an observer at infinity) by:
               $$d\tau = dt \sqrt{1 - \frac{R_s}{r}}$$
               As $r \to R_s$, the term $\sqrt{1 - R_s/r} \to 0$, meaning proper time slows to a complete stop relative to an observer at infinity ($d\tau \ll dt$). From our rest frame, **nothing ever happens at the event horizon ($R_s$)**.
             </p>
 
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-emerald-600 dark:text-emerald-400">3. The Freezing of Light Speed ($dr/dt$)</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-orange-500 dark:text-orange-400">3. The Freezing of Light Speed ($dr/dt$)</h3>
             <p>
               Since light travels along null geodesics ($ds^2 = 0$), we can solve for the apparent radial speed of light ($dr/dt$) as measured by an observer at infinity:
               $$0 = \left(1 - \frac{R_s}{r}\right) c^2 dt^2 - \frac{dr^2}{1 - \frac{R_s}{r}} \implies \frac{dr}{dt} = c \left(1 - \frac{R_s}{r}\right)$$
@@ -605,8 +574,8 @@
 
         <!-- SECTION 9 -->
         <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">09</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">09</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Strict Derivation: Gravitational Wave Chirp Mass</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
@@ -616,53 +585,53 @@
 
             <h3 class="text-base font-bold text-slate-950 dark:text-white mt-4">Step 1: System Energy and Kepler's Third Law</h3>
             <p>The total mechanical energy of a circular binary system is:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$E_{\text{tot}} = -\frac{G M \mu}{2R} \quad \text{where } M = m_1 + m_2 \text{ (total mass), and } \mu = \frac{m_1 m_2}{M} \text{ (reduced mass)}$$
             </div>
             <p>From Kepler's Third Law, the orbital angular velocity $\omega_s$ relates to the separation $R$ by:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$\omega_s = \frac{(GM)^{1/2}}{R^{3/2}} \implies R = \left( \frac{GM}{\omega_s^2} \right)^{1/3}$$
             </div>
 
             <h3 class="text-base font-bold text-slate-950 dark:text-white mt-4">Step 2: Differentiating Energy with Respect to Time</h3>
             <p>Differentiating the total energy equation with respect to time yields:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$\frac{dE_{\text{tot}}}{dt} = \frac{GM\mu}{2R^2} \dot{R} = \frac{GM\mu}{2R} \left( \frac{\dot{R}}{R} \right)$$
             </div>
             <p>By differentiating Kepler's relation ($\frac{\dot{\omega}_s}{\omega_s} = -\frac{3}{2}\frac{\dot{R}}{R}$), we can substitute $\frac{\dot{R}}{R} = -\frac{2}{3} \frac{\dot{\omega}_s}{\omega_s}$ into the energy change rate:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b] text-emerald-600 dark:text-emerald-400">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800 text-orange-600 dark:text-orange-400">
               $$\frac{dE_{\text{tot}}}{dt} = -\frac{GM\mu}{3R} \frac{\dot{\omega}_s}{\omega_s}$$
             </div>
 
             <h3 class="text-base font-bold text-slate-950 dark:text-white mt-4">Step 3: Equating to Gravitational Wave Luminosity</h3>
             <p>In General Relativity, the rate of energy loss to gravitational waves (luminosity $L$) is described by the quadrupole formula:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$-\frac{dE_{\text{tot}}}{dt} = L_{\text{gw}} = \frac{32}{5} \frac{G}{c^5} \left( \mu R^2 \omega_s^3 \right)^2 = \frac{32G}{5c^5} \mu^2 R^4 \omega_s^6$$
             </div>
             <p>Equating our two expressions for energy loss ($-\frac{dE_{\text{tot}}}{dt} = L_{\text{gw}}$):</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$\frac{GM\mu}{3R} \frac{\dot{\omega}_s}{\omega_s} = \frac{32G}{5c^5} \mu^2 R^4 \omega_s^6 \implies \dot{\omega}_s = \frac{96}{5c^5} G \mu R^5 \omega_s^7 \left( \frac{1}{M} \right)$$
             </div>
             <p>Substituting the radius $R = (GM/\omega_s^2)^{1/3}$ into the equation:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$\dot{\omega}_s = \frac{96}{5c^5} G \mu \left( \frac{GM}{\omega_s^2} \right)^{5/3} \omega_s^7 \left( \frac{1}{M} \right) = \frac{96}{5} \frac{G^{5/3} \omega_s^{11/3}}{c^5} \mu M^{2/3}$$
             </div>
 
             <h3 class="text-base font-bold text-slate-950 dark:text-white mt-4">Step 4: Grouping Mass Terms and Defining Chirp Mass ($M_{\text{chirp}}$)</h3>
             <p>To isolate the mass terms, we raise both sides to the third power:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$\dot{\omega}_s^3 = \left( \frac{96}{5} \right)^3 \frac{G^5 \omega_s^{11}}{c^{15}} \left( \mu^3 M^2 \right)$$
             </div>
             <p>This allows us to define a unique mass combination, the **Chirp Mass ($M_{\text{chirp}}$)**:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-sm text-center border border-emerald-100 dark:border-[#1c322b] text-emerald-600 dark:text-emerald-400 font-bold">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-sm text-center border border-slate-200 dark:border-slate-800 text-orange-600 dark:text-orange-400 font-bold">
               $$M_{\text{chirp}} = \left( \mu^3 M^2 \right)^{1/5} = \frac{(m_1 m_2)^{3/5}}{(m_1 + m_2)^{1/5}}$$
             </div>
             <p>Rewriting the derivative in terms of Chirp Mass:</p>
-            <div class="bg-slate-50 dark:bg-[#111d19] p-3 rounded-lg font-mono text-xs text-center border border-emerald-100 dark:border-[#1c322b]">
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg font-mono text-xs text-center border border-slate-200 dark:border-slate-800">
               $$M_{\text{chirp}}^5 = \left( \frac{5}{96} \right)^3 \frac{c^{15}}{G^5} \omega_s^{-11} \dot{\omega}_s^3$$
             </div>
             <p>Finally, we convert the orbital angular velocity $\omega_s$ to the observed gravitational wave frequency $\nu_{\text{gw}}$ ($\omega_s = \pi \nu_{\text{gw}}$):</p>
-            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-extrabold my-4">
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-amber-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
               $$M_{\text{chirp}} = \frac{c^3}{G} \left[ \frac{5}{96} \pi^{-8/3} \nu_{\text{gw}}^{-11/3} \dot{\nu}_{\text{gw}} \right]^{3/5}$$
             </div>
             <p class="text-sm">
@@ -673,8 +642,8 @@
 
         <!-- SECTION 10 -->
         <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
-          <div class="flex items-center space-x-3 border-b border-[#d1ebd9] dark:border-[#1c322b] pb-2">
-            <span class="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-[#1c322b] text-emerald-600 dark:text-emerald-400 rounded-md">10</span>
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">10</span>
             <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Redshift Overestimation Proof</h2>
           </div>
           <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4 font-serif">
@@ -696,7 +665,7 @@
               $$\implies M_{\text{chirp}}^{\text{det}} \propto (1+z)^{11/5} (1+z)^{-6/5} \left[ \left( \nu_{\text{gw}}^s \right)^{-11/5} \left( \dot{\nu}_{\text{gw}}^s \right)^{3/5} \right]$$
               $$\implies M_{\text{chirp}}^{\text{det}} \propto (1+z)^{5/5} \left[ \left( \nu_{\text{gw}}^s \right)^{-11/5} \left( \dot{\nu}_{\text{gw}}^s \right)^{3/5} \right]$$
             </p>
-            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-emerald-500/30 text-emerald-700 dark:text-emerald-400 font-extrabold my-4">
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-amber-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
               $$M_{\text{chirp}}^{\text{det}} = (1+z) M_{\text{chirp}}^s$$
             </div>
             <p class="text-sm font-sans font-semibold">
@@ -706,9 +675,9 @@
         </section>
 
         <!-- QUIZ CHALLENGE SECTION -->
-        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-[#d1ebd9] dark:border-[#1c322b] pb-12">
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
           <div class="flex items-center space-x-3">
-            <div class="p-2 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl">
+            <div class="p-2 bg-orange-500/10 text-orange-500 rounded-xl">
               <i data-lucide="award" class="w-6 h-6"></i>
             </div>
             <div>
@@ -717,174 +686,174 @@
             </div>
           </div>
 
-          <div class="bg-white dark:bg-[#111d19] p-6 sm:p-8 rounded-2xl border border-emerald-100 dark:border-slate-800 shadow-sm card-bg space-y-8">
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
             
             <!-- Question 1 -->
             <div class="space-y-3">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 1</span>
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 1</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">In the single-degenerate scenario, what describes the behavior of a low accretion rate ($\dot{M} \approx 10^{-9} M_\odot/\text{yr}$)?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Hydrogen build-up is slow and degenerate, triggering periodic Nova explosions that eject the gas, preventing the WD from growing.
                 </button>
-                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Hydrogen burns stably at the surface, rapidly increasing the WD mass past the Chandrasekhar limit.
                 </button>
               </div>
-              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q1-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Low accretion rates trigger degenerate Hydrogen flashes (Classical Novae), ejecting the accreted material and stalling the WD's growth.
               </p>
             </div>
 
             <!-- Question 2 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 2</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 2</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does a full detonation wave (supersonic flame) in an SN Ia fail to explain observed spectra?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Supersonic shocks produce only light elements, failing to create any Iron-peak elements.
                 </button>
-                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) It directly incinerates the entire WD into Iron-peak Nickel-56, leaving no intermediate-mass elements like Silicon or Sulphur.
                 </button>
               </div>
-              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q2-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Standard SN Ia spectra display strong Silicon lines, which requires a combined deflagration-detonation (delayed detonation) model to produce both Fe-peak and intermediate-mass elements.
               </p>
             </div>
 
             <!-- Question 3 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 3</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 3</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What determines the height of the high $[\alpha/\text{Fe}]$ plateau at early stages in the $[\alpha/\text{Fe}]$ vs. $[\text{Fe/H}]$ diagram?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) The Initial Mass Function (IMF), which dictates the fraction of massive stars that explode as Type II SNe.
                 </button>
-                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) The local Star Formation Rate (SFR), which regulates how fast metals can mix.
                 </button>
               </div>
-              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q3-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! The IMF governs the proportion of massive stars, setting the height of the early $[\alpha/\text{Fe}]$ plateau.
               </p>
             </div>
 
             <!-- Question 4 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 4</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 4</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does an environment with a very high Star Formation Rate (like the Galactic Bulge) shift its "knee" to higher metallicity?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Rapid star formation suppresses all Type Ia Supernovae, preventing any decline.
                 </button>
-                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Efficient star formation allows multiple generations of SNe II to enrich the ISM with metals before SNe Ia begin to contribute significantly.
                 </button>
               </div>
-              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q4-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! High SFR environments produce several generations of core-collapse events, raising the overall metallicity ($[\text{Fe/H}]$) of the gas before slow-onset SNe Ia can explode.
               </p>
             </div>
 
             <!-- Question 5 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 5</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 5</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does proper radial distance ($dL$) relate to coordinate distance ($dr$) near a Schwarzschild black hole?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) Space curvature stretches radial distance, making dL > dr.
                 </button>
-                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) Gravitational compression shrinks proper distance, making dL < dr.
                 </button>
               </div>
-              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q5-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! The metric factor $1/\sqrt{1-R_s/r}$ stretches spatial intervals, making the proper distance $dL$ larger than the coordinate interval $dr$.
               </p>
             </div>
 
             <!-- Question 6 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 6</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 6</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What happens to the apparent speed of light ($dr/dt$) as measured by a distant observer as it approaches $R_s$?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) The strong gravitational pull accelerates the light to infinite speeds.
                 </button>
-                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) The coordinate speed of light drops to zero, appearing frozen in time at the horizon.
                 </button>
               </div>
-              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q6-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! While a local observer measures $c$, a distant observer sees the coordinate speed of light decrease to zero, frozen at the event horizon.
               </p>
             </div>
 
             <!-- Question 7 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-slate-850">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 7</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 7</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical significance of the "Chirp Mass" in binary mergers?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) It is a specific mass combination that can be directly derived from a gravitational wave's frequency and frequency derivative.
                 </button>
-                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) It is the maximum stable mass limit of a binary system before direct collapse.
                 </button>
               </div>
-              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q7-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! The Chirp Mass $M_{\text{chirp}} = \frac{c^3}{G}[\frac{5}{96}\pi^{-8/3}\nu_{\text{gw}}^{-11/3}\dot{\nu}_{\text{gw}}]^{3/5}$ is the first key parameter read from gravitational waves.
               </p>
             </div>
 
             <!-- Question 8 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-[#1c322b]">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 8</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 8</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does cosmological expansion affect the masses of merging binary systems derived on Earth?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) It makes the detected mass scale appear smaller by a factor of $(1+z)$.
                 </button>
-                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) It redshift-stretches time intervals, causing detected masses to be overestimated by a factor of $(1+z)$.
                 </button>
               </div>
-              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q8-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! Because time dilation stretches intervals ($\Delta t^{\text{det}} = (1+z)\Delta t^s$), the Earth-derived mass is larger by $(1+z)$ and must be scaled down.
               </p>
             </div>
 
             <!-- Question 9 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-[#1c322b]">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 9</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 9</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What defines a "Kilonova" (such as GW170817)?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) The merger of two neutron stars, producing a gravitational wave signal, a short GRB, and a radioactive r-process transient.
                 </button>
-                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) A thermonuclear helium envelope flash on a sub-Chandrasekhar white dwarf.
                 </button>
               </div>
-              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q9-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! NS-NS mergers (like GW170817) produce multi-messenger transients powered by the radioactive decay of heavy r-process elements.
               </p>
             </div>
 
             <!-- Question 10 -->
-            <div class="space-y-3 pt-6 border-t border-emerald-50/50 dark:border-[#1c322b]">
-              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">Question 10</span>
+            <div class="space-y-3 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500 font-mono">Question 10</span>
               <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Under what condition can a binary system survive a supernova explosion and remain gravitationally bound?</p>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   A) The companion star must absorb at least 90% of the shockwave's thermal energy.
                 </button>
-                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-emerald-100 dark:border-slate-800 hover:bg-emerald-50/20 dark:hover:bg-slate-800 transition">
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
                   B) The ejected mass ($\delta m$) must be less than half of the total initial mass of the system.
                 </button>
               </div>
-              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+              <p id="q10-feedback" class="hidden text-xs text-orange-500 dark:text-orange-400 font-medium pt-1">
                 Correct! If $\delta m < \frac{M_1+M_2}{2}$ (less than half of the total mass is lost), the total energy of the system remains negative ($E' < 0$), keeping it bound.
               </p>
             </div>
@@ -892,7 +861,7 @@
             <!-- Quiz score HUD -->
             <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
               <span class="text-slate-500">Your Active Recall Mastery Score:</span>
-              <span id="quiz-score" class="text-emerald-600 dark:text-emerald-400 font-bold">0 / 10 Correct</span>
+              <span id="quiz-score" class="text-orange-600 dark:text-orange-400 font-bold">0 / 10 Correct</span>
             </div>
           </div>
         </section>
@@ -990,10 +959,10 @@
       });
 
       links.forEach(link => {
-        link.classList.remove('bg-emerald-50/50', 'dark:bg-emerald-950/30', 'text-emerald-600', 'dark:text-emerald-400', 'font-semibold');
+        link.classList.remove('bg-orange-50/50', 'dark:bg-orange-900/20', 'text-orange-600', 'dark:text-orange-400', 'font-semibold');
         link.classList.add('text-slate-600', 'dark:text-slate-400');
         if (link.getAttribute('href') === `#${currentSectionId}`) {
-          link.classList.add('bg-emerald-50/50', 'dark:bg-emerald-950/30', 'text-emerald-600', 'dark:text-emerald-400', 'font-semibold');
+          link.classList.add('bg-orange-50/50', 'dark:bg-orange-900/20', 'text-orange-600', 'dark:text-orange-400', 'font-semibold');
           link.classList.remove('text-slate-600', 'dark:text-slate-400');
         }
       });
@@ -1004,7 +973,7 @@
     function checkQuiz(qNum, isCorrect, element) {
       const parent = element.parentElement;
       Array.from(parent.children).forEach(btn => {
-        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-[#d1ebd9]/20 dark:hover:bg-slate-700 transition";
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
       });
 
       const feedback = document.getElementById(`q${qNum}-feedback`);
