@@ -119,6 +119,17 @@ MathJax = { tex:{ inlineMath:[['$','$']], displayMath:[['$$','$$']], processEsca
     .navrow button:disabled{ opacity:.32; cursor:default; }
     .navrow .counter{ align-self:center; font-size:.76rem; color:var(--text-dim); }
     .intro-hero{ font-size:2.4rem; text-align:center; margin:4px 0 2px; }
+    .review{ margin-top:16px; border-top:1px solid var(--border-light); padding-top:6px; text-align:left; }
+    .review h4{ font-family:'Space Grotesk',sans-serif; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--sym); margin:15px 0 7px; }
+    .review ul{ margin:0 0 6px; padding-left:17px; }
+    .review li{ font-family:'Source Serif 4',serif; font-size:.92rem; color:var(--text-main); margin:0 0 6px; line-height:1.5; }
+    .review li b{ color:#ffe9a8; }
+    .review .keq{ background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-left:3px solid var(--sym); border-radius:8px; padding:8px 13px; margin:0 0 8px; overflow-x:auto; }
+    .review .keq .en{ display:block; font-family:'Space Grotesk',sans-serif; font-size:.76rem; color:var(--text-dim); margin-top:4px; }
+    .review .tl{ display:flex; flex-wrap:wrap; gap:5px; margin:0 0 6px; font-family:'Space Grotesk',sans-serif; font-size:.74rem; color:var(--text-dim); }
+    .review .tl span{ background:rgba(255,255,255,0.04); border:1px solid var(--border-light); border-radius:6px; padding:3px 8px; }
+    .review .tl b{ color:var(--text-main); }
+    .review .trap{ color:#ffcf9a; }
     .cmp-note{ font-size:.9rem; color:var(--text-main); font-family:'Source Serif 4',serif; line-height:1.6; }
     .cmp-list{ list-style:none; padding:0; margin:14px 0 0; }
     .cmp-list li{ display:flex; align-items:center; gap:9px; padding:7px 2px; border-bottom:1px solid var(--border-light); font-size:.86rem; cursor:pointer; }
@@ -225,6 +236,18 @@ function fmtL(e){ const v=Math.pow(10,e); if(v>=1000) return v.toLocaleString('e
 const MASSES = [
 {
   id:'m0_05', M:'0.05', name:'Brown Dwarf', tag:'0.05 M☉', dot:'#b0763f', group:'Sub-stellar',
+  review:`<div class="review">
+    <h4>Key thresholds</h4>
+    <div class="keq">$$M \\gtrsim 0.08\\,M_\\odot$$<span class="en">Hydrogen-burning minimum mass — below it the core never reaches ~10⁷ K, because electron degeneracy halts contraction first.</span></div>
+    <div class="keq">$$M \\gtrsim 0.013\\,M_\\odot\\ (\\sim13\\,M_{\\rm Jup})$$<span class="en">Deuterium-burning minimum mass — the only fusion a brown dwarf ever achieves.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>A brown dwarf is a <b>failed star</b>: degeneracy pressure stops the collapse before hydrogen can ignite.</li>
+      <li>It never joins the main sequence — it just <b>cools indefinitely</b> through the L → T → Y spectral classes.</li>
+      <li>Structurally it resembles a "warm giant planet," supported by <b>electron degeneracy pressure</b> ($P\\propto\\rho^{5/3}$).</li>
+      <li class="trap">Trap: deuterium burning is real fusion, but it is brief and cannot sustain the object — do not call it a main-sequence star.</li>
+    </ul>
+  </div>`,
   meta:'Below the 0.08 M☉ limit — a failed star; fuses only deuterium, then cools forever',
   view:{ tL:3.62, tR:3.28, lTop:-1.6, lBot:-5.2 },
   intro:`Below about 0.08 M☉ an object can never make its core hot enough to sustain hydrogen fusion — it is a failed star. A 0.05 M☉ brown dwarf briefly fuses deuterium, then contracts and cools indefinitely, drifting off the cool, faint edge of the diagram.`,
@@ -251,6 +274,17 @@ const MASSES = [
 },
 {
   id:'m0_2', M:'0.2', name:'M Dwarf', tag:'0.2 M☉', dot:'#e88a44', group:'Low mass',
+  review:`<div class="review">
+    <h4>Key relation</h4>
+    <div class="keq">$$t_{MS}\\propto \\frac{M}{L}\\propto M^{-2.5}$$<span class="en">Because $L\\propto M^{\\sim3.5}$ on the lower MS, halving the mass multiplies the lifetime enormously — trillions of years for 0.2 M☉.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li><b>Fully convective:</b> the whole star is mixed, so it burns <b>almost all</b> its hydrogen, not just the central few percent.</li>
+      <li>The <b>longest-lived</b> stars — none has yet left the main sequence in the entire age of the universe.</li>
+      <li>Ends directly as a <b>helium white dwarf</b>: the core never becomes hot enough to ignite helium, so there is no red-giant branch and no helium flash.</li>
+      <li>By number, M dwarfs are the <b>most common stars</b> in the Galaxy.</li>
+    </ul>
+  </div>`,
   meta:'≈ trillions of years on the main sequence — the longest-lived stars of all',
   view:{ tL:3.95, tR:3.42, lTop:-0.8, lBot:-3.4 },
   intro:`A 0.2 M☉ red dwarf is the most common kind of star in the Galaxy and the longest-lived: fully convective and extraordinarily frugal, it burns hydrogen for trillions of years before eventually fading to a helium white dwarf.`,
@@ -277,6 +311,17 @@ const MASSES = [
 },
 {
   id:'m0_5', M:'0.5', name:'Red Dwarf', tag:'0.5 M☉', dot:'#f4a94c', group:'Low mass',
+  review:`<div class="review">
+    <h4>Timeline</h4>
+    <div class="tl"><span>MS <b>~80 Gyr</b></span><span>→ He WD (theoretical)</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li><b>Fully convective</b> → uses nearly all its hydrogen; MS lifetime ~80 Gyr, about six times the present age of the universe.</li>
+      <li><b>No helium flash, no giant branch:</b> a 0.5 M☉ helium core can never reach the 10⁸ K needed for the triple-alpha reaction.</li>
+      <li>Fate is a <b>helium white dwarf</b> — but purely theoretical, since none has had time to get there.</li>
+      <li class="trap">Trap: the standard $t_{MS}\\approx10^{10}M^{-3}$ yr <i>underestimates</i> low-mass lifetimes, because full mixing supplies extra fuel.</li>
+    </ul>
+  </div>`,
   meta:'≈ 80 Gyr on the main sequence · ends as a Helium white dwarf',
   view:{ tL:3.80, tR:3.46, lTop:0.6, lBot:-2.2 },
   intro:`A 0.5 M☉ red dwarf is fully convective and burns hydrogen so frugally that its main-sequence lifetime — about 80 billion years — exceeds the current age of the universe roughly six times over. Every such star ever born is still on the main sequence.`,
@@ -305,6 +350,17 @@ const MASSES = [
 },
 {
   id:'m0_8', M:'0.8', name:'Old Halo Star', tag:'0.8 M☉', dot:'#f3c05a', group:'Low mass',
+  review:`<div class="review">
+    <h4>Key equations</h4>
+    <div class="keq">$$t_{MS}\\cong 10^{10}\\,M^{-3}\\ \\text{yr}\\approx 20\\text{–}25\\ \\text{Gyr}$$<span class="en">Its long lifetime is why 0.8 M☉ stars set the age of the oldest globular clusters (the MS turnoff).</span></div>
+    <div class="keq">$$P\\propto\\rho^{5/3}$$<span class="en">The degenerate helium core has temperature-independent pressure → runaway helium flash at the RGB tip.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Same qualitative path as the Sun, but slower — the oldest halo/globular-cluster stars are only <b>now</b> reaching the red-giant branch.</li>
+      <li>Its evolutionary stages (turnoff, RGB, <b>horizontal branch</b>, AGB) are exactly what populate a globular cluster's colour–magnitude diagram.</li>
+      <li>Helium flash in a degenerate core; ends as a low-mass (~0.5 M☉) <b>CO white dwarf</b>.</li>
+    </ul>
+  </div>`,
   meta:'~25 Gyr main sequence · Red Giant · Helium flash · CO white dwarf',
   view:{ tL:3.97, tR:3.44, lTop:4.1, lBot:-2.0 },
   intro:`A 0.8 M☉ star follows the same path as the Sun but more slowly — its ~25 Gyr main sequence means the oldest such stars, in the Galaxy's halo and globular clusters, are only now reaching the red-giant branch.`,
@@ -354,6 +410,20 @@ const MASSES = [
 },
 {
   id:'m1_0', M:'1.0', name:'The Sun', tag:'1.0 M☉', dot:'#f5d76e', group:'Low mass',
+  review:`<div class="review">
+    <h4>Timeline (non-linear)</h4>
+    <div class="tl"><span>MS <b>~10 Gyr</b></span><span>RGB <b>~10⁸ yr</b></span><span>HB <b>~10⁸ yr</b></span><span>AGB <b>~10⁶ yr</b></span><span>PN <b>~10⁴ yr</b></span><span>WD <b>∞</b></span></div>
+    <h4>Key equations</h4>
+    <div class="keq">$$t_{MS}\\cong 10^{10}M^{-3}\\ \\text{yr};\\quad \\mu=\\frac{1}{2X+\\tfrac34 Y+\\tfrac12 Z}$$<span class="en">MS lifetime; the core–envelope mean-molecular-weight jump that drives red-giant expansion.</span></div>
+    <div class="keq">$$P\\propto\\rho^{5/3};\\qquad L=4\\pi R^2\\sigma T_{\\rm eff}^4$$<span class="en">Degeneracy (→ hidden He flash) and Stefan–Boltzmann (→ RGB climb and the slope-4 WD cooling track).</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Hydrogen burns by the <b>pp-chain</b> (not CNO); the core is <b>radiative</b>, so there is no main-sequence hook.</li>
+      <li>The <b>helium flash is hidden</b>: all its energy lifts degeneracy, so the surface never brightens. The RGB tip is a <b>standard candle</b>.</li>
+      <li>Ends as a <b>CO white dwarf</b> (~0.6 M☉), safely below the Chandrasekhar limit of 1.44 M☉.</li>
+      <li class="trap">Trap: the main sequence is ~99.99% of the star's life — the later phases only look large on a compressed timeline.</li>
+    </ul>
+  </div>`,
   meta:'~10 Gyr main sequence · Red Giant · Helium flash · CO white dwarf',
   view:{ tL:3.99, tR:3.46, lTop:4.2, lBot:-1.9 },
   intro:`A 1 M☉ star like the Sun: ten quiet billion years of hydrogen burning, a red-giant expansion, a hidden helium flash, a horizontal-branch second act, a thermally-pulsing AGB, a planetary nebula, and an all-but-eternal fade as a carbon–oxygen white dwarf.`,
@@ -421,6 +491,17 @@ const MASSES = [
 },
 {
   id:'m1_5', M:'1.5', name:'F-type Star', tag:'1.5 M☉', dot:'#fbe6b0', group:'Low mass',
+  review:`<div class="review">
+    <h4>Key idea</h4>
+    <div class="keq">$$\\epsilon_{\\rm CNO}\\propto T^{\\sim17},\\quad \\epsilon_{pp}\\propto T^{\\sim4}$$<span class="en">Above ~1.2 M☉ the steeply temperature-sensitive CNO cycle dominates → a convective core → the main-sequence hook.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Marks the pp→<b>CNO</b> transition: a small <b>convective core</b> appears, giving a gentle <b>main-sequence hook</b> at core-H exhaustion.</li>
+      <li>Still low-mass enough to build a <b>degenerate helium core</b> → it <b>does</b> undergo a helium flash.</li>
+      <li>Ends as a ~0.6 M☉ <b>CO white dwarf</b>.</li>
+      <li class="trap">Trap: the hook is caused by the shrinking <i>convective</i> core, not by any change in fuel supply.</li>
+    </ul>
+  </div>`,
   meta:'Weak MS hook · Red Giant · Helium flash · CO white dwarf',
   view:{ tL:3.99, tR:3.46, lTop:4.1, lBot:-1.4 },
   intro:`At 1.5 M☉ the CNO cycle takes over from the pp-chain, giving the star a small convective core and a gentle main-sequence hook. It still develops a degenerate helium core and undergoes a helium flash before ending as a CO white dwarf.`,
@@ -470,6 +551,16 @@ const MASSES = [
 },
 {
   id:'m2_25', M:'2.25', name:'Marginal Flash', tag:'2.25 M☉', dot:'#f0a84b', group:'Low mass',
+  review:`<div class="review">
+    <h4>The boundary</h4>
+    <div class="keq">$$M_{\\rm HeF}\\approx 2.2\\,M_\\odot$$<span class="en">Below this the helium core is degenerate at ignition (flash); above it helium ignites quietly. 2.25 M☉ sits right on the fence.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Right at the <b>helium-flash boundary</b>: it flashes only marginally, wasting little energy on lifting degeneracy.</li>
+      <li>Above ~2.2 M☉, helium ignites <b>quietly (non-degenerately)</b> — the flash disappears entirely.</li>
+      <li>Convective core → clear <b>MS hook</b>; short RGB; ends as a ~0.65 M☉ <b>CO white dwarf</b>.</li>
+    </ul>
+  </div>`,
   meta:'MS hook · Red Giant · marginal Helium flash · CO white dwarf',
   view:{ tL:4.0, tR:3.46, lTop:4.0, lBot:-0.9 },
   intro:`At about 2.25 M☉ a star sits right at the boundary where the helium flash fades away. It has a convective core (so its main sequence ends with a hook), climbs a shorter red-giant branch, and ignites helium only marginally degenerately before a horizontal-branch phase, AGB, and a CO white dwarf.`,
@@ -526,6 +617,16 @@ const MASSES = [
 },
 {
   id:'m3_0', M:'3.0', name:'Small Blue Loop', tag:'3.0 M☉', dot:'#9ec9ff', group:'Intermediate',
+  review:`<div class="review">
+    <h4>Cepheid standard candle</h4>
+    <div class="keq">$$M_V = -2.81\\log P - 1.43$$<span class="en">The Cepheid period–luminosity (Leavitt) relation: longer-period Cepheids are more luminous — a rung of the cosmic distance ladder.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Intermediate mass: helium ignites <b>quietly (no flash)</b> because the core stays non-degenerate.</li>
+      <li>Core-helium burning drives a <b>blue loop</b> across the <b>instability strip</b> → the star pulsates as a <b>Cepheid</b> via the κ-mechanism (partial He ionisation).</li>
+      <li>Crosses the fast <b>Hertzsprung gap</b>, then AGB → ~0.7 M☉ <b>CO white dwarf</b>.</li>
+    </ul>
+  </div>`,
   meta:'MS hook · quiet He ignition · blue loop · CO white dwarf',
   view:{ tL:4.2, tR:3.46, lTop:3.7, lBot:-0.8 },
   intro:`A 3 M☉ star ignites helium quietly (no flash) and makes a modest blue loop across the Cepheid instability strip before the AGB and a CO white dwarf — a scaled-down version of the classic intermediate-mass story.`,
@@ -575,6 +676,17 @@ const MASSES = [
 },
 {
   id:'m5_0', M:'5.0', name:'Blue Loop', tag:'5.0 M☉', dot:'#7fd0ff', group:'Intermediate',
+  review:`<div class="review">
+    <h4>Key physics</h4>
+    <div class="keq">$$3\\,{}^{4}\\text{He}\\to{}^{12}\\text{C}\\ (\\text{triple-}\\alpha),\\quad {}^{12}\\text{C}+\\alpha\\to{}^{16}\\text{O}$$<span class="en">Quiet, self-regulating core-helium burning (no flash) — the engine of the blue loop.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>The <b>classic Cepheid progenitor</b>: a pronounced blue loop carries it across the instability strip, potentially crossing it more than once.</li>
+      <li>Helium ignites <b>quietly</b> (non-degenerate core) — <b>no helium flash</b>.</li>
+      <li>The <b>Hertzsprung gap</b> is crossed so fast that few stars are ever seen there.</li>
+      <li>Ends as a relatively massive ~0.9 M☉ <b>CO white dwarf</b>.</li>
+    </ul>
+  </div>`,
   meta:'MS hook · Cepheid blue loops · AGB · CO white dwarf',
   view:{ tL:4.35, tR:3.46, lTop:4.4, lBot:-0.6 },
   intro:`A 5 M☉ star ignites helium quietly (no flash — its core never becomes degenerate) and executes a dramatic blue loop that carries it back and forth across the Cepheid instability strip, pulsating as a Cepheid variable, before an AGB phase and a CO white dwarf.`,
@@ -624,6 +736,16 @@ const MASSES = [
 },
 {
   id:'m8_0', M:'8.0', name:'Super-AGB', tag:'8.0 M☉', dot:'#ffb066', group:'Intermediate',
+  review:`<div class="review">
+    <h4>The great divide</h4>
+    <div class="keq">$$M_{\\rm Ch}=1.44\\,M_\\odot$$<span class="en">If the degenerate O–Ne core reaches the Chandrasekhar mass before winds strip the envelope, it collapses instead of surviving as a white dwarf.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>~8 M☉ is the <b>boundary between white-dwarf and supernova fates</b> — the single most examined dividing line in stellar evolution.</li>
+      <li>Carbon ignites <b>off-centre</b> on the super-AGB, building an <b>O–Ne–Mg core</b>; the core is too light to ignite neon.</li>
+      <li><b>Forked outcome:</b> a rare <b>O–Ne white dwarf</b> (if winds win the race) or an <b>electron-capture supernova → neutron star</b> (if the core reaches $M_{\\rm Ch}$).</li>
+    </ul>
+  </div>`,
   meta:'The borderline: super-AGB · off-centre carbon burning · O–Ne white dwarf (or e-capture SN)',
   view:{ tL:4.5, tR:3.46, lTop:4.7, lBot:-0.6 },
   intro:`Around 8 M☉ lies the great divide between stars that die as white dwarfs and those that explode. This star ignites carbon off-centre on a super-AGB but cannot burn further — ending either as a rare oxygen–neon white dwarf or, if a little heavier, as an electron-capture supernova.`,
@@ -663,6 +785,17 @@ const MASSES = [
 },
 {
   id:'m9', M:'9', name:'Electron-Capture Boundary', tag:'9 M☉', dot:'#ff9f5a', group:'Massive',
+  review:`<div class="review">
+    <h4>Electron capture</h4>
+    <div class="keq">$$e^- + {}^{20}\\text{Ne}\\to{}^{20}\\text{F}+\\nu_e$$<span class="en">Electron capture onto neon/magnesium removes the degenerate electrons that supported the core → sudden collapse.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Sits just above the super-AGB limit: builds a <b>degenerate O–Ne core</b> that cannot burn further.</li>
+      <li>Most likely fate is an <b>electron-capture supernova</b> leaving a <b>neutron star</b>; only the lightest such stars escape as O–Ne white dwarfs.</li>
+      <li>Marks the <b>white-dwarf ↔ supernova divide</b> (~8–10 M☉).</li>
+      <li class="trap">Trap: this collapse is triggered by <i>electron capture</i>, not by iron photodisintegration (that comes at higher masses).</li>
+    </ul>
+  </div>`,
   meta:'Quiet He ignition · wide blue loop · forked ending (O–Ne WD or electron-capture SN)',
   view:{ tL:4.55, tR:3.46, lTop:5.1, lBot:3.2 },
   intro:`A 9 M☉ star sits just above the super-AGB boundary. After a wide blue loop it develops a degenerate oxygen–neon core and most likely ends its life in an electron-capture supernova, leaving a neutron star — though the lowest-mass such stars may still just manage an O–Ne white dwarf.`,
@@ -702,6 +835,17 @@ const MASSES = [
 },
 {
   id:'m15', M:'15', name:'Red Supergiant', tag:'15 M☉', dot:'#ff6b5a', group:'Massive',
+  review:`<div class="review">
+    <h4>Core collapse</h4>
+    <div class="keq">$$\\gamma + {}^{56}\\text{Fe}\\to 13\\,{}^{4}\\text{He}+4n$$<span class="en">Photodisintegration of iron plus electron capture removes support in milliseconds, and the core collapses to nuclear density and rebounds.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>A short life (~11 Myr) ending as a <b>red supergiant</b> large enough to engulf the inner planets.</li>
+      <li>Advanced burning stages build an iron core; <b>silicon burning lasts ~1 day</b>.</li>
+      <li>Core collapse in <b>&lt;1 s</b> → <b>Type II supernova</b> → <b>neutron star</b>. The classic core-collapse progenitor.</li>
+      <li class="trap">Trap: the supernova energy comes overwhelmingly from <b>neutrinos</b> (~99%), not from the visible light.</li>
+    </ul>
+  </div>`,
   meta:'Red supergiant · onion-shell burning · core collapse → neutron star',
   view:{ tL:4.65, tR:3.46, lTop:5.5, lBot:3.6 },
   intro:`A 15 M☉ star burns bright and dies young. After a short main sequence it becomes a red supergiant, burns heavier and heavier elements in nested shells, builds an iron core — and then collapses, exploding as a Type II supernova and leaving a neutron star. No white dwarf, ever.`,
@@ -736,6 +880,18 @@ const MASSES = [
 },
 {
   id:'m12', M:'12', name:'Core-Collapse → NS', tag:'12 M☉', dot:'#ff7e5a', group:'Massive',
+  review:`<div class="review">
+    <h4>Why iron ends it</h4>
+    <div class="keq">$$^{56}\\text{Fe}:\\ \\text{max binding energy per nucleon}$$<span class="en">Fusion beyond iron consumes energy rather than releasing it, so the iron core has no way to support itself.</span></div>
+    <h4>Timeline (accelerating)</h4>
+    <div class="tl"><span>MS <b>~16 Myr</b></span><span>He <b>~10⁶ yr</b></span><span>C <b>~10³ yr</b></span><span>O <b>~yr</b></span><span>Si <b>~1 day</b></span><span>collapse <b>&lt;1 s</b></span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Builds an <b>onion-shell structure</b> (H, He, C, Ne, O, Si) around an inert iron core; each stage burns faster than the last.</li>
+      <li>The iron core exceeds $M_{\\rm Ch}$ and <b>collapses in under a second</b> → <b>Type II supernova</b> → <b>neutron star</b> (~1.4 M☉).</li>
+      <li><b>No white dwarf</b> — massive stars never take the white-dwarf path.</li>
+    </ul>
+  </div>`,
   meta:'Red supergiant · onion-shell burning · core collapse → neutron star',
   view:{ tL:4.6, tR:3.46, lTop:5.3, lBot:3.4 },
   intro:`A 12 M☉ star is a classic core-collapse progenitor: a short life, a red-supergiant phase, nested shell burning to an iron core, and a Type II supernova leaving a neutron star.`,
@@ -770,6 +926,16 @@ const MASSES = [
 },
 {
   id:'m20', M:'20', name:'Core-Collapse → BH', tag:'20 M☉', dot:'#e0836a', group:'Massive',
+  review:`<div class="review">
+    <h4>Neutron star vs black hole</h4>
+    <div class="keq">$$M_{\\rm remnant} \\gtrsim 2\\text{–}3\\,M_\\odot \\Rightarrow \\text{black hole}$$<span class="en">If the collapsing core exceeds the Tolman–Oppenheimer–Volkoff limit, neutron degeneracy fails and a black hole forms.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>Sits near the <b>neutron-star / black-hole divide</b>; strong winds strip much of the envelope first.</li>
+      <li>The iron core collapses <b>past the neutron-star limit</b> → <b>black hole</b>.</li>
+      <li>The supernova may be <b>dim or partly "failed"</b> if much of the star falls back into the hole.</li>
+    </ul>
+  </div>`,
   meta:'Supergiant · strong winds · core collapse → black hole (or neutron star)',
   view:{ tL:4.7, tR:3.46, lTop:5.6, lBot:4.3 },
   intro:`A 20 M☉ star lives fast, loses mass to strong winds, and — sitting near the neutron-star/black-hole divide — most likely collapses to a black hole after a supergiant phase and iron-core formation.`,
@@ -804,6 +970,17 @@ const MASSES = [
 },
 {
   id:'m25', M:'25', name:'Wolf–Rayet → Black Hole', tag:'25 M☉', dot:'#c9a6ff', group:'Massive',
+  review:`<div class="review">
+    <h4>Radiation-driven winds</h4>
+    <div class="keq">$$L_{\\rm Edd}=\\frac{4\\pi G M c}{\\kappa}$$<span class="en">Near the Eddington luminosity, radiation pressure nearly overwhelms gravity — driving the fierce winds that strip the hydrogen envelope.</span></div>
+    <h4>Exam essentials</h4>
+    <ul>
+      <li>So luminous it <b>strips its own envelope</b> via winds, exposing the hot He/C/O core as a <b>Wolf–Rayet star</b> (the blueward hook).</li>
+      <li>Sits close to the <b>Eddington limit</b> throughout its later life.</li>
+      <li>Collapses <b>directly to a black hole</b>, often with a faint or <b>failed</b> supernova.</li>
+      <li class="trap">Trap: the redward excursion is brief — heavy mass loss quickly sends the track back to the <i>blue</i>, unlike a lower-mass red supergiant.</li>
+    </ul>
+  </div>`,
   meta:'Red excursion · Wolf–Rayet wind stripping · core collapse → black hole',
   view:{ tL:4.8, tR:3.46, lTop:5.8, lBot:4.5 },
   intro:`A 25 M☉ star is so luminous that its own radiation-driven winds tear off its outer layers. After a brief red excursion it is stripped bare into a hot Wolf–Rayet star, then collapses — likely straight into a black hole, often without a bright supernova.`,
@@ -964,7 +1141,8 @@ function render(key){
     inner=`<div class="intro-hero">✦</div>
       <h2 style="text-align:center;margin-top:0;">${esc(activeMass.tag)} — ${esc(activeMass.name)}</h2>
       <p style="text-align:center;">${activeMass.intro}</p>
-      <p class="note" style="text-align:center;">Click any numbered point or connecting leg on the diagram — or press <b>Next&nbsp;→</b> to walk the whole life in order.</p>`;
+      <p class="note" style="text-align:center;">Click any numbered point or connecting leg on the diagram — or press <b>Next&nbsp;→</b> to walk the whole life in order.</p>
+      ${activeMass.review||''}`;
   } else if(d.type==='point'){
     inner=`<span class="badge">Point ${d.n} · a star, frozen in time</span>
       <h2>${esc(d.name)}</h2><p class="ph-sub">${esc(d.sub||'')}</p>
