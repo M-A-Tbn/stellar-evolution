@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stellar Evolution Atlas — Interactive HR Paths</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<script>
+MathJax = { tex:{ inlineMath:[['$','$']], displayMath:[['$$','$$']], processEscapes:true }, options:{ skipHtmlTags:['script','noscript','style','textarea','pre'] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<style>
+    :root{
+        --bg-deep:#05060d; --bg-outer:#0a0e1c; --card-bg:rgba(16,19,31,0.7);
+        --border-light:rgba(255,255,255,0.1); --text-main:#e9e7f2; --text-dim:#a6a7c2; --sym:#f5d76e;
+    }
+    *{ box-sizing:border-box; }
+    body{
+        background:
+            radial-gradient(1000px 800px at 80% 0%, rgba(245,215,110,0.05), transparent 60%),
+            radial-gradient(900px 600px at 15% 100%, rgba(120,120,220,0.06), transparent 60%),
+            linear-gradient(160deg, var(--bg-deep), var(--bg-outer));
+        background-color:var(--bg-outer); color:var(--text-main);
+        font-family:'Space Grotesk',sans-serif; margin:0; min-height:100vh;
+    }
+    .wrap{ max-width:1600px; margin:0 auto; padding:32px 22px 80px; }
+    h1{ font-family:'Source Serif 4',serif; font-size:clamp(1.8rem,3.4vw,2.7rem); font-weight:700; text-align:center; margin:0 0 8px; text-shadow:0 2px 15px rgba(245,215,110,0.2); }
+    h1 .sym{ color:var(--sym); }
+    .lead{ text-align:center; color:var(--text-dim); max-width:74ch; margin:0 auto 22px; font-size:1rem; line-height:1.55; }
+
+    /* three columns: mass rail | diagram | panel */
+    .layout{ display:grid; grid-template-columns:150px minmax(0,1.3fr) minmax(320px,0.8fr); gap:22px; align-items:start; }
+    @media (max-width:1200px){ .layout{ grid-template-columns:1fr; } .masslist{ flex-direction:row !important; flex-wrap:wrap; position:static !important; } }
+
+    /* mass selector rail */
+    .masslist{ display:flex; flex-direction:column; gap:6px; position:sticky; top:20px; }
+    .masslist .mtitle{ font-size:.68rem; letter-spacing:.16em; text-transform:uppercase; color:var(--text-dim); margin:0 2px 4px; }
+    .mbtn{ font-family:'Space Grotesk',sans-serif; text-align:left; font-size:.86rem; font-weight:600; color:var(--text-dim);
+        background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-radius:10px; padding:8px 11px; cursor:pointer; transition:.15s; display:flex; align-items:center; gap:8px; }
+    .mbtn:hover{ color:var(--text-main); border-color:rgba(255,255,255,0.25); }
+    .mbtn.on{ color:#0a0e1c; background:var(--sym); border-color:var(--sym); }
+    .mbtn .dotc{ width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 6px currentColor; }
+    .mbtn small{ font-weight:400; opacity:.75; }
+    .mbtn.compare{ margin-top:6px; background:rgba(120,180,255,0.08); border-color:rgba(120,180,255,0.25); color:#bcd6ff; }
+    .mbtn.compare.on{ background:#8fb7ff; color:#0a0e1c; border-color:#8fb7ff; }
+
+    .card{ background:var(--card-bg); border:1px solid var(--border-light); border-radius:22px; padding:22px; box-shadow:0 30px 70px rgba(0,0,0,0.7), inset 0 0 0 1px rgba(255,255,255,0.04); backdrop-filter:blur(16px); position:relative; overflow:hidden; }
+    .hr-diagram{ width:100%; height:auto; display:block; touch-action:manipulation; }
+    .card-head{ display:flex; justify-content:space-between; align-items:baseline; margin:0 4px 8px; gap:12px; flex-wrap:wrap; }
+    .card-head .mname{ font-family:'Source Serif 4',serif; font-size:1.3rem; font-weight:700; }
+    .card-head .mmeta{ font-size:.82rem; color:var(--text-dim); }
+    .hint{ display:flex; align-items:center; gap:8px; color:var(--text-dim); font-size:.82rem; margin:0 4px 10px; }
+    .hint .dot{ width:8px; height:8px; border-radius:50%; background:var(--sym); box-shadow:0 0 10px rgba(245,215,110,0.5); flex:none; }
+
+    /* SVG element classes */
+    .grid-line{ stroke:rgba(255,255,255,0.05); stroke-width:1; }
+    .axis-line{ stroke:rgba(255,255,255,0.15); stroke-width:2; stroke-linecap:round; }
+    .tick-text{ fill:var(--text-dim); font-size:13px; }
+    .axis-label{ fill:var(--text-main); font-size:15px; font-weight:600; letter-spacing:.5px; }
+    .zams-band{ fill:none; stroke:rgba(160,170,255,0.1); stroke-width:20; stroke-linecap:round; }
+    .zams-core{ fill:none; stroke:rgba(170,180,255,0.45); stroke-width:2.4; stroke-dasharray:6 8; stroke-linecap:round; }
+    .zams-label{ fill:#8b93c8; font-size:14px; font-weight:700; letter-spacing:2px; }
+    .strip{ fill:rgba(120,180,255,0.045); stroke:rgba(120,180,255,0.12); stroke-width:1; }
+    .strip-label{ fill:rgba(150,190,255,0.4); font-size:12px; font-style:italic; }
+    .hayashi-line{ fill:none; stroke:#e8907a; stroke-width:2.2; stroke-dasharray:8 6; opacity:.55; stroke-linecap:round; }
+    .hayashi-label{ fill:#e8907a; font-size:12px; font-style:italic; opacity:.75; }
+
+    .seg{ fill:none; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; transition:stroke-width .25s, opacity .25s; }
+    .seg-recessive{ stroke-width:2.5; stroke-dasharray:6 8; opacity:.42; }
+    .seg-hit{ fill:none; stroke:transparent; stroke-width:28; stroke-linecap:round; cursor:pointer; }
+    .seg.active{ stroke-width:8; opacity:1; }
+    .seg-recessive.active{ stroke-width:5; stroke-dasharray:none; opacity:1; }
+
+    .node{ cursor:pointer; outline:none; }
+    .pt{ fill:#fff; stroke:var(--pc); stroke-width:3.4; filter:drop-shadow(0 0 7px var(--pc)); transition:all .3s cubic-bezier(.175,.885,.32,1.275); }
+    .node:hover .pt,.node:focus .pt{ stroke-width:5.2; filter:drop-shadow(0 0 13px var(--pc)); }
+    .node.active .pt{ fill:var(--pc); r:14; stroke-width:5; filter:drop-shadow(0 0 17px var(--pc)); }
+    .pt-num{ fill:#0a0e1c; font-size:12.5px; font-weight:700; text-anchor:middle; dominant-baseline:central; pointer-events:none; }
+    .pt-lbl{ fill:var(--text-main); font-size:13.5px; font-weight:600; pointer-events:none; opacity:0; transition:all .3s ease;
+             paint-order:stroke; stroke:var(--bg-deep); stroke-width:5px; stroke-linejoin:round; }
+    .node:hover .pt-lbl,.node:focus .pt-lbl,.node.active .pt-lbl{ opacity:1; }
+
+    /* compare-mode track */
+    .ctrack{ fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; opacity:.55; cursor:pointer; transition:.2s; }
+    .ctrack:hover{ opacity:1; stroke-width:4.5; }
+    .clabel{ font-size:12px; font-weight:700; paint-order:stroke; stroke:var(--bg-deep); stroke-width:4px; cursor:pointer; }
+
+    .legend{ display:flex; justify-content:center; gap:16px 20px; margin-top:22px; font-size:.8rem; color:var(--text-dim); flex-wrap:wrap; padding:0 8px; }
+    .legend-item{ display:flex; align-items:center; gap:7px; }
+    .legend-color{ width:20px; height:4px; border-radius:2px; }
+    .legend-dash{ width:20px; height:0; border-top:3px dashed; }
+
+    .rail{ display:flex; flex-wrap:wrap; gap:5px; margin:16px 2px 0; justify-content:center; }
+    .rail button{ font-family:'Space Grotesk',sans-serif; font-size:.74rem; font-weight:600; color:var(--text-dim); background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-radius:999px; padding:5px 10px; cursor:pointer; transition:.15s; }
+    .rail button:hover{ color:var(--text-main); border-color:rgba(255,255,255,0.25); }
+    .rail button.on{ color:#0a0e1c; background:var(--sym); border-color:var(--sym); }
+
+    .panel{ background:var(--card-bg); border:1px solid var(--border-light); border-radius:20px; padding:22px; position:sticky; top:20px; backdrop-filter:blur(12px); min-height:440px; box-shadow:0 20px 50px rgba(0,0,0,0.5); }
+    .panel .badge{ display:inline-flex; align-items:center; gap:8px; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--sym); background:rgba(245,215,110,0.1); border:1px solid rgba(245,215,110,0.25); padding:4px 11px; border-radius:999px; }
+    .panel .badge.seg-badge{ color:#8fb7ff; background:rgba(120,180,255,0.1); border-color:rgba(120,180,255,0.28); }
+    .panel h2{ font-family:'Source Serif 4',serif; font-weight:700; font-size:1.42rem; margin:14px 0 2px; line-height:1.15; }
+    .panel .ph-sub{ color:var(--text-dim); font-size:.9rem; margin:2px 0 15px; }
+    .chips{ display:flex; flex-wrap:wrap; gap:7px; margin:0 0 15px; }
+    .chip{ font-size:.72rem; font-weight:600; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid var(--border-light); border-radius:8px; padding:5px 9px; }
+    .chip b{ color:#ffe9a8; font-weight:700; }
+    .proptable{ width:100%; border-collapse:collapse; margin:4px 0 15px; font-size:.88rem; }
+    .proptable td{ padding:7px 4px; border-bottom:1px solid var(--border-light); vertical-align:top; }
+    .proptable td:first-child{ color:var(--text-dim); width:44%; font-size:.8rem; }
+    .proptable td:last-child{ color:var(--text-main); font-weight:500; text-align:right; }
+    .panel p{ font-family:'Source Serif 4',serif; font-size:.98rem; color:var(--text-main); margin:0 0 12px; line-height:1.6; }
+    .panel p.note{ font-size:.88rem; color:var(--text-dim); font-style:italic; }
+    .eqn{ background:rgba(255,255,255,0.03); border:1px solid var(--border-light); border-left:3px solid var(--sym); border-radius:8px; padding:10px 14px; margin:0 0 14px; overflow-x:auto; }
+    .eqn .en{ font-size:.78rem; color:var(--text-dim); margin-top:5px; }
+    .navrow{ display:flex; justify-content:space-between; gap:10px; margin-top:18px; padding-top:15px; border-top:1px solid var(--border-light); }
+    .navrow button{ font-family:'Space Grotesk',sans-serif; font-size:.82rem; font-weight:600; color:var(--text-main); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.18); border-radius:10px; padding:9px 14px; cursor:pointer; transition:.15s; }
+    .navrow button:hover:not(:disabled){ background:var(--sym); color:#0a0e1c; border-color:var(--sym); }
+    .navrow button:disabled{ opacity:.32; cursor:default; }
+    .navrow .counter{ align-self:center; font-size:.76rem; color:var(--text-dim); }
+    .intro-hero{ font-size:2.4rem; text-align:center; margin:4px 0 2px; }
+    .cmp-note{ font-size:.9rem; color:var(--text-main); font-family:'Source Serif 4',serif; line-height:1.6; }
+    .cmp-list{ list-style:none; padding:0; margin:14px 0 0; }
+    .cmp-list li{ display:flex; align-items:center; gap:9px; padding:7px 2px; border-bottom:1px solid var(--border-light); font-size:.86rem; cursor:pointer; }
+    .cmp-list li:hover{ color:#fff; }
+    .cmp-list i{ width:14px; height:4px; border-radius:2px; flex:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>Stellar Evolution <span class="sym">Atlas</span></h1>
+    <p class="lead">Every star's life is a path across the Hertzsprung–Russell diagram. Pick a mass to trace its journey point by point — or switch to <b>Compare</b> to see how wildly the fate of a star depends on how much it was born with.</p>
+
+    <div class="layout">
+        <div class="masslist" id="masslist"></div>
+
+        <div class="diagram-col">
+            <div class="card">
+                <div class="card-head">
+                    <span class="mname" id="cardName">—</span>
+                    <span class="mmeta" id="cardMeta"></span>
+                </div>
+                <div class="hint" id="hint"><span class="dot"></span><span id="hintText">Click a numbered point, or a path between two points.</span></div>
+                <svg class="hr-diagram" id="svg" viewBox="0 0 980 730" xmlns="http://www.w3.org/2000/svg" aria-label="Interactive Hertzsprung-Russell diagram">
+                    <defs>
+                        <filter id="plasmaGlow" x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b1"/>
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b2"/>
+                            <feMerge><feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <clipPath id="plotClip"><rect x="95" y="45" width="835" height="615"/></clipPath>
+                        <radialGradient id="nebGrad">
+                            <stop offset="0%" stop-color="#cfe3ff" stop-opacity="0.16"/>
+                            <stop offset="35%" stop-color="#4a90e2" stop-opacity="0.08"/>
+                            <stop offset="70%" stop-color="#6a3ba2" stop-opacity="0.025"/>
+                            <stop offset="100%" stop-color="#05060d" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+                    <g id="stars" clip-path="url(#plotClip)">
+                        <circle cx="150" cy="180" r="1.5" fill="#fff" opacity="0.5"/><circle cx="280" cy="120" r="2" fill="#fff" opacity="0.2"/>
+                        <circle cx="450" cy="250" r="1" fill="#fff" opacity="0.7"/><circle cx="620" cy="140" r="1.8" fill="#fff" opacity="0.3"/>
+                        <circle cx="850" cy="210" r="1.2" fill="#fff" opacity="0.6"/><circle cx="905" cy="380" r="2.2" fill="#fff" opacity="0.15"/>
+                        <circle cx="780" cy="450" r="1.5" fill="#fff" opacity="0.4"/><circle cx="610" cy="520" r="1" fill="#fff" opacity="0.5"/>
+                        <circle cx="880" cy="600" r="1.7" fill="#fff" opacity="0.3"/><circle cx="420" cy="620" r="2" fill="#fff" opacity="0.2"/>
+                        <circle cx="210" cy="560" r="1.2" fill="#fff" opacity="0.7"/><circle cx="120" cy="430" r="1.8" fill="#fff" opacity="0.4"/>
+                        <circle cx="340" cy="360" r="1" fill="#fff" opacity="0.6"/><circle cx="530" cy="330" r="1.5" fill="#fff" opacity="0.3"/>
+                        <circle cx="700" cy="270" r="0.9" fill="#fff" opacity="0.6"/><circle cx="240" cy="210" r="0.9" fill="#fff" opacity="0.4"/>
+                        <circle cx="380" cy="160" r="0.7" fill="#fff" opacity="0.7"/><circle cx="510" cy="90" r="0.9" fill="#fff" opacity="0.3"/>
+                        <circle cx="815" cy="310" r="1" fill="#fff" opacity="0.4"/><circle cx="150" cy="300" r="0.8" fill="#fff" opacity="0.5"/>
+                        <circle cx="730" cy="560" r="0.8" fill="#fff" opacity="0.3"/><circle cx="560" cy="610" r="0.9" fill="#fff" opacity="0.6"/>
+                        <circle cx="290" cy="470" r="0.7" fill="#fff" opacity="0.4"/><circle cx="460" cy="430" r="0.8" fill="#fff" opacity="0.35"/>
+                    </g>
+                    <g id="bgLayer" clip-path="url(#plotClip)"></g>
+                    <g id="trackLayer" clip-path="url(#plotClip)"></g>
+                    <g id="axisLayer"></g>
+                    <g id="pointLayer"></g>
+                </svg>
+                <div class="legend" id="legend"></div>
+            </div>
+            <div class="rail" id="rail"></div>
+        </div>
+
+        <aside class="panel" id="panel"></aside>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+   PLOT GEOMETRY + PROJECTION
+   ============================================================ */
+const PLOT = { x0:95, x1:930, y0:45, y1:660 };
+let VIEW = { tL:4.0, tR:3.46, lTop:4.2, lBot:-1.9 };
+
+function xOf(logT){ return PLOT.x0 + (VIEW.tL - logT)/(VIEW.tL - VIEW.tR) * (PLOT.x1 - PLOT.x0); }
+function yOf(logL){ return PLOT.y1 - (logL - VIEW.lBot)/(VIEW.lTop - VIEW.lBot) * (PLOT.y1 - PLOT.y0); }
+function P(logT,logL){ return { x:xOf(logT), y:yOf(logL) }; }
+
+function segPath(pts, i){
+  const p0 = pts[i-1] || pts[i], p1 = pts[i], p2 = pts[i+1], p3 = pts[i+2] || pts[i+1];
+  const c1x = p1.x + (p2.x - p0.x)/6, c1y = p1.y + (p2.y - p0.y)/6;
+  const c2x = p2.x - (p3.x - p1.x)/6, c2y = p2.y - (p3.y - p1.y)/6;
+  return `M${p1.x.toFixed(1)},${p1.y.toFixed(1)} C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+}
+const SVGNS='http://www.w3.org/2000/svg';
+function el(name, attrs={}, text){ const e=document.createElementNS(SVGNS,name); for(const k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; return e; }
+
+/* REFERENCE CURVES (physical log T / log L) */
+const ZAMS = [ [3.56,-1.35],[3.63,-0.85],[3.70,-0.35],[3.748,-0.10],[3.86,0.75],[3.98,1.5],[4.12,2.35],[4.28,3.35],[4.45,4.35],[4.6,5.2] ];
+const HAYASHI = [ [3.66,-1.6],[3.62,-0.2],[3.585,1.4],[3.55,3.0],[3.52,4.2],[3.5,5.2] ];
+const STRIP = { tHot:3.86, tCool:3.74 };
+
+function polyPath(arr){
+  const pts = arr.map(([t,l])=>P(t,l));
+  let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+  for(let i=0;i<pts.length-1;i++){ const s=segPath(pts,i); d += ' '+s.slice(s.indexOf('C')); }
+  return d;
+}
+
+const K_TICKS = [40000,30000,20000,15000,10000,8000,6000,5000,4000,3500,3000,2500];
+function fmtL(e){ const v=Math.pow(10,e); if(v>=1000) return v.toLocaleString('en-US'); if(v>=1) return String(v); return v.toString(); }
+
+/* ============================================================
+   DIAGRAM DATA — masses
+   ============================================================ */
+const MASSES = [
+{
+  id:'m0_5', M:'0.5', name:'Red Dwarf', tag:'0.5 M☉', dot:'#f4a94c', group:'Low mass',
+  meta:'≈ 80 Gyr on the main sequence · ends as a Helium white dwarf',
+  view:{ tL:3.80, tR:3.46, lTop:0.6, lBot:-2.2 },
+  intro:`A 0.5 M☉ red dwarf is fully convective and burns hydrogen so frugally that its main-sequence lifetime — about 80 billion years — exceeds the current age of the universe roughly six times over. Every such star ever born is still on the main sequence.`,
+  points:[
+    { n:1,name:'ZAMS',pc:'#f4a94c',logT:3.585,logL:-1.25, sub:'A cool, dim, fully-convective ember.',
+      chips:[['Age','t = 0'],['Type','M dwarf']],
+      props:[['T_eff','≈ 3,800 K'],['Luminosity','≈ 0.06 L☉'],['Radius','≈ 0.5 R☉'],['Interior','fully convective'],['Energy','pp-chain']],
+      body:`<p>The star reaches the main sequence as a cool red dwarf. Because it is fully convective, fresh hydrogen is continually mixed into the core, so it will eventually burn <i>nearly all</i> of its hydrogen — not just the central few percent.</p>` },
+    { n:2,name:'Late MS',pc:'#f6d867',logT:3.62,logL:-0.5, sub:'Tens of billions of years later.',
+      chips:[['Age','tens of Gyr'],['Trend','slowly bluer & brighter']],
+      props:[['T_eff','rising slowly'],['Luminosity','climbing toward ~0.3 L☉'],['Core','helium-enriching'],['Fate','no helium flash ever']],
+      body:`<p>Over tens of billions of years the star very gradually brightens and warms as helium builds up. Crucially, its core will never get hot enough to ignite helium — a 0.5 M☉ star cannot climb a giant branch.</p>` },
+    { n:3,name:'Helium WD',pc:'#a9cdf5',logT:3.95,logL:-2.0, sub:'A theoretical far-future ember.', term:true,
+      chips:[['Timescale','> Hubble time'],['Remnant','He white dwarf']],
+      props:[['Composition','helium'],['Support','electron degeneracy'],['Radius','≈ Earth-sized'],['Note','no star has done this yet']],
+      body:`<p>In the very distant future the exhausted star simply contracts into a <b>helium white dwarf</b> — skipping the red-giant, helium-flash and planetary-nebula drama entirely. The universe is far too young for any 0.5 M☉ star to have reached this state.</p>` },
+  ],
+  segments:[
+    { color:'#f6d867', title:'The Eternal Main Sequence', sub:'Point 1 → 2',
+      chips:[['Duration','~80 Gyr'],['HR motion','slow drift bluer']],
+      body:`<p>Slow, patient hydrogen burning via the pp-chain. Full convection lets the star tap almost its entire hydrogen supply, stretching the main sequence to tens of billions of years — by far the longest-lived stars in the cosmos.</p>` },
+    { color:'#a9cdf5', recessive:true, title:'Quiet Contraction to a White Dwarf', sub:'Point 2 → 3',
+      chips:[['Duration','> Hubble time'],['HR motion','to hot, then fades']],
+      body:`<p>With hydrogen finally gone and helium unignitable, the core simply contracts under degeneracy pressure. No giant phase, no ejection — just a slow settling into a cooling helium white dwarf.</p>` },
+  ]
+},
+{
+  id:'m1_0', M:'1.0', name:'The Sun', tag:'1.0 M☉', dot:'#f5d76e', group:'Low mass',
+  meta:'~10 Gyr main sequence · Red Giant · Helium flash · CO white dwarf',
+  view:{ tL:3.99, tR:3.46, lTop:4.2, lBot:-1.9 },
+  intro:`A 1 M☉ star like the Sun: ten quiet billion years of hydrogen burning, a red-giant expansion, a hidden helium flash, a horizontal-branch second act, a thermally-pulsing AGB, a planetary nebula, and an all-but-eternal fade as a carbon–oxygen white dwarf.`,
+  points:[
+    { n:1,name:'ZAMS',pc:'#f6d867',logT:3.748,logL:-0.10, sub:'The star switches on.',
+      chips:[['Age','t = 0'],['Colour','yellow G-type']],
+      props:[['T_eff','≈ 5,600 K'],['Luminosity','≈ 0.7 L☉'],['Radius','≈ 0.9 R☉'],['Core','radiative, 1.4×10⁷ K'],['Energy','pp-chain (~99%)']],
+      body:`<p>Full hydrostatic and thermal equilibrium: the pp-chain releases exactly what the surface radiates. This is the Zero Age Main Sequence — the star's "birth certificate." It is fainter than today's Sun; a ZAMS star only brightens with age.</p>` },
+    { n:2,name:'TAMS',pc:'#f4e08a',logT:3.74,logL:0.25, sub:'Core hydrogen exhausted.',
+      chips:[['Age','≈ 10 Gyr'],['X_core','→ 0.05']],
+      props:[['T_eff','≈ 5,700 K'],['Luminosity','≈ 1.8 L☉'],['Core','nearly pure He, contracting'],['Energy','H-shell igniting']],
+      body:`<p>The core has burned through its hydrogen and begins to contract and heat, with a hydrogen shell igniting around it. A sharp high-$\\mu$ core inside a low-$\\mu$ envelope is the engine of everything that follows.</p>
+      <div class="eqn">$$\\mu = \\frac{1}{2X + \\tfrac34 Y + \\tfrac12 Z}$$<div class="en">The core/envelope $\\mu$ mismatch forces the envelope to expand.</div></div>` },
+    { n:3,name:'RGB base',pc:'#f2a950',logT:3.68,logL:0.5, sub:'Hits the Hayashi track.',
+      chips:[['Envelope','fully convective'],['Next','turns upward']],
+      props:[['T_eff','≈ 4,800 K'],['Luminosity','≈ 3 L☉'],['Core','inert degenerate He'],['Energy','H-burning shell']],
+      body:`<p>The swelling envelope cools until it meets the <b>Hayashi track</b> — the coolest it can be in equilibrium. Unable to cool further, continued expansion instead raises the luminosity: the star turns up onto the Red Giant Branch.</p>` },
+    { n:4,name:'RGB tip · He flash',pc:'#ff7a45',logT:3.52,logL:3.4, sub:'A hidden thermonuclear runaway.',
+      chips:[['Standard candle','log L ≈ 3.4'],['Surface','no visible flash']],
+      props:[['T_eff','≈ 3,300 K'],['Luminosity','≈ 2,500 L☉'],['Radius','≈ 170 R☉'],['Core','degenerate He, ≈0.45 M☉'],['Core T','10⁸ K → 3α ignites']],
+      body:`<p>The degenerate helium core ignites at $10^8$ K. With pressure independent of temperature there is no thermostat, so burning runs away — the <b>helium flash</b> — but every joule lifts the degeneracy rather than escaping, so the surface never brightens.</p>
+      <div class="eqn">$$P \\propto \\rho^{5/3}$$<div class="en">Degenerate pressure is temperature-independent — the missing thermostat.</div></div>` },
+    { n:5,name:'Horizontal Branch',pc:'#efc94a',logT:3.69,logL:1.7, sub:'Quiet helium core burning.',
+      chips:[['Duration','~100 Myr'],['≈ 1%','of MS lifetime']],
+      props:[['T_eff','≈ 4,900 K'],['Luminosity','≈ 50 L☉'],['Core','convective, He-burning'],['Also','H shell above core']],
+      body:`<p>Degeneracy lifted, the core settles into calm helium burning on the "red clump." Two fires run at once — helium core and hydrogen shell — but helium yields far less energy per gram, so this act lasts only ~100 Myr.</p>` },
+    { n:6,name:'AGB tip',pc:'#d83c2c',logT:3.49,logL:3.5, sub:'Double-shell burning, thermal pulses.',
+      chips:[['Core','inert C–O'],['Winds','dust-driven superwind']],
+      props:[['T_eff','≈ 3,100 K'],['Luminosity','≈ 3,000 L☉'],['Energy','alternating He + H shells'],['Enrichment','3ʳᵈ dredge-up, s-process']],
+      body:`<p>An inert carbon–oxygen core with a helium shell and hydrogen shell that <b>alternately flare in thermal pulses</b>, dredging carbon and s-process elements to the surface. A dust-driven superwind then strips the envelope.</p>` },
+    { n:7,name:'Planetary Nebula',pc:'#cfe3ff',logT:3.95,logL:3.4, sub:'A glowing shell, a naked hot core.',
+      chips:[['Lifetime','~10,000 yr'],['Returns','enriched gas to ISM']],
+      props:[['T_eff','up to ~100,000 K'],['Luminosity','≈ 2,500 L☉'],['Core','exposed C–O'],['Emission','ionises ejected shell']],
+      body:`<p>The exposed core is so hot its ultraviolet light ionises the cast-off gas into a glowing <b>planetary nebula</b> for a fleeting ~10,000 years, returning CNO- and s-process-enriched material to the interstellar medium.</p>` },
+    { n:8,name:'White Dwarf',pc:'#a9cdf5',logT:3.9,logL:-1.3, sub:'The Sun’s final, near-eternal ember.', term:true,
+      chips:[['Mass','≈ 0.55–0.6 M☉'],['Below','Chandrasekhar 1.44 M☉']],
+      props:[['Radius','≈ Earth-sized'],['Support','electron degeneracy'],['R ∝ M⁻¹ᐟ³','more massive ⇒ smaller'],['Fate','cools forever']],
+      body:`<p>A naked degenerate carbon–oxygen ember held up by electron degeneracy pressure, radiating leftover heat down a slope-4 cooling track. The fate of the Sun, and of ~95% of all stars.</p>
+      <div class="eqn">$$L_{WD}(t)=L_0\\!\\left[1+\\tfrac52\\tfrac{t}{\\tau_0}\\right]^{-7/5}$$<div class="en">Mestel cooling: fast while young, ever slower after.</div></div>` },
+  ],
+  segments:[
+    { color:'#f6d867', title:'The Long Burn', sub:'Main Sequence · 1 → 2',
+      chips:[['Duration','~10 Gyr'],['~90%','of the life']],
+      body:`<p>Ten billion years of hydrogen→helium in the radiative core. As $\\mu$ rises the luminosity slowly creeps up, so the star drifts a little up and rightward.</p>
+      <div class="eqn">$$t_{MS}\\cong 10^{10}M^{-3}\\ \\text{yr}$$<div class="en">$L\\propto M^4$ but fuel only $\\propto M$ — low-mass stars live far longer.</div></div>` },
+    { color:'#f2a950', title:'Subgiant Branch', sub:'2 → 3',
+      chips:[['Duration','~1–2 Gyr'],['HR','rightward at ~const L']],
+      body:`<p>The contracting He core drives an expanding envelope (the "mirror principle"), so the star swells and cools at nearly constant luminosity until it meets the Hayashi track.</p>` },
+    { color:'#e8622f', title:'Climbing the Red Giant Branch', sub:'3 → 4',
+      chips:[['Duration','~10⁸ yr'],['Event','First Dredge-Up']],
+      body:`<p>Pinned to the Hayashi track, the star can only respond to its shrinking core by brightening, climbing almost vertically. It halts at a universal tip luminosity — a standard candle.</p>` },
+    { color:'#ff7a45', title:'After the Flash', sub:'4 → 5',
+      chips:[['Duration','~10⁴–10⁶ yr'],['HR','drops & bluewards']],
+      body:`<p>The flash lifts degeneracy; the core expands and cools, throttling the shell, so luminosity falls sharply and the star settles down and left onto the Horizontal Branch.</p>` },
+    { color:'#d83c2c', title:'Onto the AGB', sub:'5 → 6',
+      chips:[['Duration','~10⁸ yr on HB'],['HR','loop, then up']],
+      body:`<p>With core helium spent, a helium shell ignites around the inert C–O core and the star re-ascends the giant branch, now asymptotically.</p>` },
+    { color:'#f3e39a', recessive:true, title:'Superwind Strips the Envelope', sub:'Post-AGB · 6 → 7',
+      chips:[['Duration','~10⁴ yr'],['HR','races left at fixed L']],
+      body:`<p>A superwind ($\\dot M\\sim10^{-4}M_\\odot$/yr) ejects the envelope; as hotter layers are exposed the surface temperature soars at nearly constant luminosity.</p>` },
+    { color:'#a9cdf5', recessive:true, title:'Descending the Cooling Track', sub:'7 → 8',
+      chips:[['Duration','billions of yr'],['Slope','4 (fixed radius)']],
+      body:`<p>Fusion ceases; only leftover heat remains. The naked white dwarf fades down and right along a constant-radius line, eventually crystallising into a cold carbon–oxygen diamond.</p>` },
+  ]
+},
+{
+  id:'m2_25', M:'2.25', name:'Marginal Flash', tag:'2.25 M☉', dot:'#f0a84b', group:'Low mass',
+  meta:'MS hook · Red Giant · marginal Helium flash · CO white dwarf',
+  view:{ tL:4.0, tR:3.46, lTop:4.0, lBot:-0.9 },
+  intro:`At about 2.25 M☉ a star sits right at the boundary where the helium flash fades away. It has a convective core (so its main sequence ends with a hook), climbs a shorter red-giant branch, and ignites helium only marginally degenerately before a horizontal-branch phase, AGB, and a CO white dwarf.`,
+  points:[
+    { n:1,name:'ZAMS',pc:'#bcd0ff',logT:3.97,logL:1.35, sub:'A hot A-type star.',
+      chips:[['Age','t = 0'],['Type','A star']],
+      props:[['T_eff','≈ 9,300 K'],['Luminosity','≈ 22 L☉'],['Core','convective'],['Energy','CNO cycle']],
+      body:`<p>More massive than the Sun, this star has a convective core and burns hydrogen mainly through the CNO cycle, which is far more temperature-sensitive than the pp-chain.</p>` },
+    { n:2,name:'TAMS hook',pc:'#f4e08a',logT:3.93,logL:1.7, sub:'The main-sequence hook.',
+      chips:[['Age','≈ 0.9 Gyr'],['Feature','hook']],
+      props:[['Core','shrinking convective core'],['HR','a leftward hook then right'],['Energy','H-shell taking over']],
+      body:`<p>When the convective core runs out of hydrogen it contracts rapidly, producing the characteristic <b>hook</b> at the end of the main sequence before the star crosses toward the giant branch.</p>` },
+    { n:3,name:'RGB',pc:'#f2a950',logT:3.66,logL:1.5, sub:'A brief red-giant climb.',
+      chips:[['Hertzsprung gap','crossed fast'],['Core','He, mildly degenerate']],
+      props:[['T_eff','≈ 4,600 K'],['Luminosity','rising to ~2,000 L☉'],['Energy','H-burning shell']],
+      body:`<p>The star crosses the Hertzsprung gap quickly and climbs a red-giant branch — shorter than the Sun's, because its helium core is only marginally degenerate.</p>` },
+    { n:4,name:'Marginal flash',pc:'#ff7a45',logT:3.55,logL:3.3, sub:'A weak helium flash.',
+      chips:[['Flash','marginal / weak'],['Boundary','~2.2 M☉']],
+      props:[['Core','barely degenerate He'],['Ignition','near-quiescent'],['Note','flash vanishes above ~2.2 M☉']],
+      body:`<p>Helium ignites with only a feeble flash — this mass sits right at the transition above which helium lights quietly. Little energy is wasted lifting degeneracy.</p>` },
+    { n:5,name:'Horizontal Branch',pc:'#efc94a',logT:3.72,logL:1.8, sub:'Core helium burning.',
+      chips:[['Duration','~10⁸ yr'],['Clump','red clump']],
+      props:[['Core','He-burning'],['Also','H shell'],['Luminosity','≈ 60 L☉']],
+      body:`<p>Quiet, stable helium burning in the core, sitting in the red clump, with a hydrogen shell still active above it.</p>` },
+    { n:6,name:'AGB',pc:'#d83c2c',logT:3.52,logL:3.5, sub:'Double-shell burning.',
+      chips:[['Core','inert C–O'],['Pulses','thermal']],
+      props:[['Energy','He + H shells'],['Winds','strong mass loss'],['Luminosity','≈ 3,500 L☉']],
+      body:`<p>An inert carbon–oxygen core with alternating shell burning and thermal pulses, shedding mass through strong winds.</p>` },
+    { n:7,name:'Planetary Nebula',pc:'#cfe3ff',logT:3.98,logL:3.4, sub:'Envelope ejected.',
+      chips:[['Lifetime','~10⁴ yr'],['Core','exposed']],
+      props:[['T_eff','tens of thousands K'],['Emission','ionised shell']],
+      body:`<p>The ejected envelope glows as a planetary nebula around the hot exposed core.</p>` },
+    { n:8,name:'White Dwarf',pc:'#a9cdf5',logT:3.95,logL:-0.5, sub:'A carbon–oxygen ember.', term:true,
+      chips:[['Mass','≈ 0.65 M☉'],['Type','CO WD']],
+      props:[['Support','electron degeneracy'],['Fate','cools forever']],
+      body:`<p>A somewhat more massive carbon–oxygen white dwarf than the Sun will leave, cooling slowly for eternity.</p>` },
+  ],
+  segments:[
+    { color:'#f6d867', title:'Main Sequence (CNO)', sub:'1 → 2', chips:[['Duration','~0.9 Gyr'],['Burning','CNO cycle']],
+      body:`<p>Hydrogen burns in a convective core via the CNO cycle — hotter and faster than the Sun, so the star lives only a fraction as long.</p>` },
+    { color:'#f2a950', title:'Hook & Hertzsprung Gap', sub:'2 → 3', chips:[['HR','hook, then rightward']],
+      body:`<p>The convective core's exhaustion makes the hook; the star then races across the Hertzsprung gap to the giant branch.</p>` },
+    { color:'#e8622f', title:'Short Red Giant Branch', sub:'3 → 4', chips:[['Duration','shorter than Sun']],
+      body:`<p>A brief climb, because the helium core is only marginally degenerate and ignites at lower luminosity than in the Sun.</p>` },
+    { color:'#ff7a45', title:'Settling to the Clump', sub:'4 → 5', chips:[['HR','down & blue']],
+      body:`<p>After the weak flash the star drops onto the red clump for core-helium burning.</p>` },
+    { color:'#d83c2c', title:'Onto the AGB', sub:'5 → 6', chips:[['HR','up & cool']],
+      body:`<p>Core helium spent, a helium shell drives a second giant ascent.</p>` },
+    { color:'#f3e39a', recessive:true, title:'Envelope Ejection', sub:'6 → 7', chips:[['Duration','~10⁴ yr']],
+      body:`<p>Winds and a superwind strip the envelope, exposing the hot core.</p>` },
+    { color:'#a9cdf5', recessive:true, title:'Cooling Track', sub:'7 → 8', chips:[['Fate','CO white dwarf']],
+      body:`<p>The remnant fades down the cooling track as a carbon–oxygen white dwarf.</p>` },
+  ]
+},
+{
+  id:'m5_0', M:'5.0', name:'Blue Loop', tag:'5.0 M☉', dot:'#7fd0ff', group:'Intermediate',
+  meta:'MS hook · Cepheid blue loops · AGB · CO white dwarf',
+  view:{ tL:4.35, tR:3.46, lTop:4.4, lBot:-0.6 },
+  intro:`A 5 M☉ star ignites helium quietly (no flash — its core never becomes degenerate) and executes a dramatic blue loop that carries it back and forth across the Cepheid instability strip, pulsating as a Cepheid variable, before an AGB phase and a CO white dwarf.`,
+  points:[
+    { n:1,name:'ZAMS',pc:'#8fbfff',logT:4.23,logL:2.74, sub:'A hot blue B-type star.',
+      chips:[['Age','t = 0'],['Type','B star']],
+      props:[['T_eff','≈ 17,000 K'],['Luminosity','≈ 550 L☉'],['Core','large convective core'],['Energy','CNO cycle']],
+      body:`<p>A luminous blue star with a big convective core, burning hydrogen rapidly via the CNO cycle.</p>` },
+    { n:2,name:'TAMS hook',pc:'#bcd0ff',logT:4.15,logL:3.0, sub:'End of the main sequence.',
+      chips:[['Age','≈ 100 Myr'],['Feature','hook']],
+      props:[['Core','convective, exhausting'],['HR','hook then redward']],
+      body:`<p>The convective core exhausts its hydrogen and contracts, hooking the track before the star crosses to the red.</p>` },
+    { n:3,name:'First red crossing',pc:'#f2a950',logT:3.62,logL:3.05, sub:'A cool giant, briefly.',
+      chips:[['Gap','crossed in ~10⁴ yr'],['Core','contracting He']],
+      props:[['T_eff','≈ 4,200 K'],['Luminosity','≈ 1,100 L☉'],['Energy','H-shell']],
+      body:`<p>The star sweeps across the Hertzsprung gap so fast it is rarely caught here, arriving as a cool red giant just before helium ignites.</p>` },
+    { n:4,name:'Quiet He ignition',pc:'#e8622f',logT:3.60,logL:3.1, sub:'No flash — a gentle light.',
+      chips:[['Ignition','non-degenerate'],['No','helium flash']],
+      props:[['Core','non-degenerate He'],['T','10⁸ K, self-regulating'],['Reactions','3α']],
+      body:`<p>Because the core never became degenerate, helium ignites <b>quietly and stably</b> — there is no helium flash. This gentle ignition lets the star relax and loop back toward the blue.</p>` },
+    { n:5,name:'Blue loop (Cepheid)',pc:'#7fd0ff',logT:3.85,logL:3.2, sub:'Crossing the instability strip.',
+      chips:[['Variable','Cepheid'],['Strip','crossed twice']],
+      props:[['T_eff','≈ 7,000 K'],['Luminosity','≈ 1,600 L☉'],['Pulsation','κ-mechanism'],['Use','distance ladder']],
+      body:`<p>During core-helium burning the star loops to the blue and back, crossing the <b>Cepheid instability strip</b> — where it pulsates with the period–luminosity relation used to measure cosmic distances.</p>` },
+    { n:6,name:'AGB',pc:'#d83c2c',logT:3.55,logL:4.0, sub:'A luminous, pulsing giant.',
+      chips:[['Core','C–O'],['Pulses','thermal']],
+      props:[['Luminosity','≈ 10,000 L☉'],['Winds','heavy mass loss'],['Enrichment','s-process']],
+      body:`<p>With core helium gone the star ascends the AGB, now very luminous, with double-shell burning, thermal pulses and heavy mass loss.</p>` },
+    { n:7,name:'Planetary Nebula',pc:'#cfe3ff',logT:4.3,logL:3.9, sub:'Envelope cast off.',
+      chips:[['Lifetime','~10⁴ yr'],['Core','hot, exposed']],
+      props:[['T_eff','≈ 100,000 K'],['Emission','bright nebula']],
+      body:`<p>The envelope is ejected as a planetary nebula around a very hot central star.</p>` },
+    { n:8,name:'White Dwarf',pc:'#a9cdf5',logT:4.0,logL:-0.3, sub:'A massive CO ember.', term:true,
+      chips:[['Mass','≈ 0.9 M☉'],['Type','CO WD']],
+      props:[['Support','electron degeneracy'],['Fate','cools forever']],
+      body:`<p>Left behind is a relatively massive carbon–oxygen white dwarf, close to a solar mass, cooling for eternity.</p>` },
+  ],
+  segments:[
+    { color:'#f6d867', title:'Main Sequence', sub:'1 → 2', chips:[['Duration','~100 Myr']], body:`<p>Rapid CNO burning in a large convective core.</p>` },
+    { color:'#f2a950', title:'Hertzsprung Gap', sub:'2 → 3', chips:[['Duration','~10⁴ yr']], body:`<p>A lightning-fast crossing to the red — so quick that few stars are observed in the gap.</p>` },
+    { color:'#e8622f', title:'Helium Ignites Quietly', sub:'3 → 4', chips:[['No flash']], body:`<p>Non-degenerate helium lights up gently and self-regulates immediately.</p>` },
+    { color:'#7fd0ff', title:'The Blue Loop', sub:'4 → 5', chips:[['Cepheid','strip crossings']], body:`<p>Core-helium burning drives a blueward loop across the instability strip, pulsating as a Cepheid.</p>` },
+    { color:'#d83c2c', title:'Back to the AGB', sub:'5 → 6', chips:[['HR','redward, brighter']], body:`<p>Helium exhaustion sends the star back to the red as a luminous AGB giant.</p>` },
+    { color:'#f3e39a', recessive:true, title:'Envelope Ejection', sub:'6 → 7', chips:[['Duration','~10⁴ yr']], body:`<p>Strong winds strip the envelope, exposing a very hot core.</p>` },
+    { color:'#a9cdf5', recessive:true, title:'Cooling Track', sub:'7 → 8', chips:[['Fate','CO white dwarf']], body:`<p>The remnant fades as a massive carbon–oxygen white dwarf.</p>` },
+  ]
+},
+{
+  id:'m15', M:'15', name:'Red Supergiant', tag:'15 M☉', dot:'#ff6b5a', group:'Massive',
+  meta:'Red supergiant · onion-shell burning · core collapse → neutron star',
+  view:{ tL:4.65, tR:3.46, lTop:5.5, lBot:3.6 },
+  intro:`A 15 M☉ star burns bright and dies young. After a short main sequence it becomes a red supergiant, burns heavier and heavier elements in nested shells, builds an iron core — and then collapses, exploding as a Type II supernova and leaving a neutron star. No white dwarf, ever.`,
+  points:[
+    { n:1,name:'ZAMS',pc:'#9ec2ff',logT:4.48,logL:4.3, sub:'A hot, luminous O/B star.',
+      chips:[['Age','t = 0'],['Type','O/B star']],
+      props:[['T_eff','≈ 30,000 K'],['Luminosity','≈ 20,000 L☉'],['Core','large convective core'],['Energy','CNO cycle']],
+      body:`<p>A massive, blue, hugely luminous star burning hydrogen furiously via the CNO cycle in a large convective core.</p>` },
+    { n:2,name:'TAMS',pc:'#bcd0ff',logT:4.4,logL:4.5, sub:'Core hydrogen exhausted.',
+      chips:[['Age','≈ 11 Myr'],['Life','~1000× shorter than Sun']],
+      props:[['Core','helium, contracting'],['HR','heading redward']],
+      body:`<p>After only ~11 million years the core hydrogen is gone. The star begins its march across the diagram toward the red supergiant branch.</p>` },
+    { n:3,name:'Red Supergiant',pc:'#ff6b5a',logT:3.55,logL:4.8, sub:'A vast, cool giant.',
+      chips:[['Radius','~hundreds of R☉'],['Burning','He, C, Ne…']],
+      props:[['T_eff','≈ 3,600 K'],['Luminosity','≈ 60,000 L☉'],['Envelope','enormous, convective']],
+      body:`<p>The star swells into a red supergiant — cool but colossal, large enough to swallow the orbits of the inner planets. Helium and then carbon burn in the core.</p>` },
+    { n:4,name:'Onion-shell burning',pc:'#d83c2c',logT:3.6,logL:5.0, sub:'Nested nuclear shells.',
+      chips:[['Shells','H,He,C,Ne,O,Si'],['Si burning','~1 day']],
+      props:[['Core','building iron'],['Timescale','each stage faster'],['Energy','advanced burning']],
+      body:`<p>The core develops an <b>onion-like structure</b> of nested burning shells — hydrogen, helium, carbon, neon, oxygen, silicon — each igniting faster than the last. Silicon burning lasts barely a day and forges an inert iron core.</p>` },
+    { n:5,name:'Core collapse → SN II',pc:'#ff9a3c',logT:3.6,logL:5.1, sub:'Iron core implodes; the star explodes.', term:true,
+      chips:[['Trigger','iron core > 1.4 M☉'],['Remnant','neutron star']],
+      props:[['Collapse','in < 1 second'],['Explosion','Type II supernova'],['Leaves','neutron star (~1.4 M☉)'],['No','white dwarf']],
+      body:`<p>Iron cannot release fusion energy, so the core exceeds the Chandrasekhar mass and <b>collapses in under a second</b>. The rebound and neutrino blast drive a <b>Type II supernova</b>, leaving a neutron star behind.</p>` },
+  ],
+  segments:[
+    { color:'#f6d867', title:'Brief Main Sequence', sub:'1 → 2', chips:[['Duration','~11 Myr']], body:`<p>Ferocious CNO burning — the star spends its fuel a thousand times faster than the Sun.</p>` },
+    { color:'#f2a950', title:'March to the Red', sub:'2 → 3', chips:[['HR','across to red']], body:`<p>The envelope expands enormously as the star crosses toward the red supergiant branch.</p>` },
+    { color:'#e8622f', title:'Advanced Burning', sub:'3 → 4', chips:[['Stages','He→C→Ne→O→Si']], body:`<p>Successive core-burning stages, each shorter than the last, build the onion-shell structure.</p>` },
+    { color:'#ff9a3c', recessive:true, title:'The Final Second', sub:'4 → 5', chips:[['Timescale','< 1 s']], body:`<p>The iron core collapses catastrophically, triggering the supernova. There is no slow fade — the star dies violently.</p>` },
+  ]
+},
+{
+  id:'m25', M:'25', name:'Wolf–Rayet → Black Hole', tag:'25 M☉', dot:'#c9a6ff', group:'Massive',
+  meta:'Red excursion · Wolf–Rayet wind stripping · core collapse → black hole',
+  view:{ tL:4.8, tR:3.46, lTop:5.8, lBot:4.5 },
+  intro:`A 25 M☉ star is so luminous that its own radiation-driven winds tear off its outer layers. After a brief red excursion it is stripped bare into a hot Wolf–Rayet star, then collapses — likely straight into a black hole, often without a bright supernova.`,
+  points:[
+    { n:1,name:'ZAMS',pc:'#a9c6ff',logT:4.55,logL:5.0, sub:'A blazing O star.',
+      chips:[['Age','t = 0'],['Type','O star']],
+      props:[['T_eff','≈ 38,000 K'],['Luminosity','≈ 100,000 L☉'],['Winds','strong already'],['Energy','CNO cycle']],
+      body:`<p>An extremely hot, luminous O star. Even on the main sequence its radiation pressure drives powerful stellar winds.</p>` },
+    { n:2,name:'TAMS',pc:'#bcd0ff',logT:4.45,logL:5.2, sub:'Core hydrogen spent.',
+      chips:[['Age','≈ 7 Myr'],['Mass loss','significant']],
+      props:[['Core','helium'],['Envelope','being eroded by winds']],
+      body:`<p>After just a few million years the core hydrogen is exhausted, while winds have already stripped a noticeable fraction of the star's mass.</p>` },
+    { n:3,name:'Red excursion',pc:'#ff6b5a',logT:3.6,logL:5.4, sub:'A brief supergiant phase.',
+      chips:[['Radius','huge'],['Phase','LBV / RSG']],
+      props:[['T_eff','≈ 4,000 K'],['Luminosity','≈ 250,000 L☉'],['Stability','near Eddington limit']],
+      body:`<p>The star makes a short excursion to the red as a supergiant, close to the Eddington luminosity where radiation nearly overwhelms gravity — often erupting as a luminous blue variable.</p>` },
+    { n:4,name:'Wolf–Rayet',pc:'#c9a6ff',logT:4.7,logL:5.4, sub:'Stripped bare, hot and blue.',
+      chips:[['Hook','blueward'],['Layers','H envelope gone']],
+      props:[['T_eff','> 50,000 K'],['Winds','extreme'],['Exposed','He / C / O core']],
+      body:`<p>Winds strip the hydrogen envelope entirely, exposing the hot helium/carbon core: a <b>Wolf–Rayet star</b>. The track hooks back to the blue as the naked core is revealed.</p>` },
+    { n:5,name:'Core collapse → Black Hole',pc:'#b48cff',logT:4.6,logL:5.5, sub:'Direct collapse to a black hole.', term:true,
+      chips:[['Remnant','black hole'],['SN','may be faint / failed']],
+      props:[['Core','iron, collapsing'],['Outcome','black hole (~several M☉)'],['Possibly','no bright supernova'],['No','white dwarf']],
+      body:`<p>The massive core collapses past the neutron-star limit and forms a <b>black hole</b>. For the most massive stars the collapse can be so complete that little escapes — a faint or even "failed" supernova.</p>` },
+  ],
+  segments:[
+    { color:'#f6d867', title:'Short, Violent Main Sequence', sub:'1 → 2', chips:[['Duration','~7 Myr']], body:`<p>Blistering hydrogen burning with strong winds already peeling away mass.</p>` },
+    { color:'#f2a950', title:'Toward the Red', sub:'2 → 3', chips:[['Near','Eddington limit']], body:`<p>A brief, unstable excursion to the red supergiant / luminous-blue-variable regime.</p>` },
+    { color:'#c9a6ff', title:'Wind Stripping', sub:'3 → 4', chips:[['HR','hooks blueward']], body:`<p>Radiation-driven winds tear off the hydrogen envelope, exposing the hot core and hooking the star back to the blue as a Wolf–Rayet star.</p>` },
+    { color:'#b48cff', recessive:true, title:'Collapse to a Black Hole', sub:'4 → 5', chips:[['Timescale','< 1 s']], body:`<p>The core collapses directly into a black hole, possibly without a luminous explosion.</p>` },
+  ]
+},
+];
+
+/* ============================================================
+   STATE + RENDERING
+   ============================================================ */
+const bgLayer=document.getElementById('bgLayer'), trackLayer=document.getElementById('trackLayer'),
+      axisLayer=document.getElementById('axisLayer'), pointLayer=document.getElementById('pointLayer');
+const panel=document.getElementById('panel'), rail=document.getElementById('rail'),
+      legend=document.getElementById('legend'), cardName=document.getElementById('cardName'),
+      cardMeta=document.getElementById('cardMeta'), hintText=document.getElementById('hintText');
+let activeMass=null, SEQ=[], current='intro';
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function propRows(p){ return `<table class="proptable">${p.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>`; }
+function chipRow(c){ return c&&c.length?`<div class="chips">${c.map(([k,v])=>`<span class="chip">${esc(k)} <b>${esc(v)}</b></span>`).join('')}</div>`:''; }
+
+function drawAxes(){
+  axisLayer.replaceChildren();
+  for(let e=Math.ceil(VIEW.lBot); e<=Math.floor(VIEW.lTop); e++){
+    const y=yOf(e);
+    axisLayer.appendChild(el('line',{class:'grid-line',x1:PLOT.x0,y1:y,x2:PLOT.x1,y2:y}));
+    axisLayer.appendChild(el('text',{class:'tick-text',x:PLOT.x0-11,y:y+4,'text-anchor':'end'}, fmtL(e)));
+  }
+  K_TICKS.forEach(K=>{
+    const lt=Math.log10(K);
+    if(lt<=VIEW.tL && lt>=VIEW.tR){
+      const x=xOf(lt);
+      axisLayer.appendChild(el('line',{class:'grid-line',x1:x,y1:PLOT.y0,x2:x,y2:PLOT.y1}));
+      axisLayer.appendChild(el('text',{class:'tick-text',x:x,y:PLOT.y1+22,'text-anchor':'middle'}, K.toLocaleString('en-US')));
+    }
+  });
+  axisLayer.appendChild(el('line',{class:'axis-line',x1:PLOT.x0,y1:PLOT.y1,x2:PLOT.x1,y2:PLOT.y1}));
+  axisLayer.appendChild(el('line',{class:'axis-line',x1:PLOT.x0,y1:PLOT.y0,x2:PLOT.x0,y2:PLOT.y1}));
+  axisLayer.appendChild(el('text',{class:'axis-label',x:(PLOT.x0+PLOT.x1)/2,y:PLOT.y1+52,'text-anchor':'middle'},'Surface temperature (K)   ← hotter · cooler →'));
+  axisLayer.appendChild(el('text',{class:'axis-label','text-anchor':'middle',transform:`translate(28,${(PLOT.y0+PLOT.y1)/2}) rotate(-90)`},'Luminosity (L / L☉)'));
+}
+
+function drawBackground(){
+  bgLayer.replaceChildren();
+  const sx1=xOf(STRIP.tHot), sx2=xOf(STRIP.tCool);
+  bgLayer.appendChild(el('polygon',{class:'strip',points:`${sx1},${PLOT.y0} ${sx2},${PLOT.y0} ${sx2},${PLOT.y1} ${sx1},${PLOT.y1}`}));
+  bgLayer.appendChild(el('text',{class:'strip-label',x:(sx1+sx2)/2,y:PLOT.y0+16,'text-anchor':'middle',transform:`rotate(4 ${(sx1+sx2)/2} ${PLOT.y0+16})`},'instability strip'));
+  bgLayer.appendChild(el('path',{class:'hayashi-line',d:polyPath(HAYASHI)}));
+  const zd=polyPath(ZAMS);
+  bgLayer.appendChild(el('path',{class:'zams-band',d:zd}));
+  bgLayer.appendChild(el('path',{class:'zams-core',d:zd}));
+  const zmid=P(3.748,-0.10);
+  if(zmid.x>PLOT.x0+30 && zmid.x<PLOT.x1-30 && zmid.y>PLOT.y0+20 && zmid.y<PLOT.y1-20)
+    bgLayer.appendChild(el('text',{class:'zams-label',x:zmid.x+30,y:zmid.y+34,'text-anchor':'middle',transform:`rotate(-24 ${zmid.x+30} ${zmid.y+34})`},'ZAMS'));
+  else
+    bgLayer.appendChild(el('text',{class:'zams-label',x:PLOT.x0+90,y:PLOT.y0+40},'ZAMS'));
+}
+
+function renderMass(m){
+  activeMass=m; current='intro';
+  VIEW={...m.view};
+  cardName.textContent=`${m.tag} — ${m.name}`;
+  cardMeta.textContent=m.meta;
+  hintText.textContent='Click a numbered point, or a path between two points.';
+  drawAxes(); drawBackground();
+
+  // nebula glow at a planetary-nebula point, if this mass has one
+  const pn=m.points.find(pt=>/Planetary Nebula/.test(pt.name));
+  if(pn){ const c=P(pn.logT,pn.logL); bgLayer.appendChild(el('circle',{cx:c.x,cy:c.y,r:120,fill:'url(#nebGrad)',style:'mix-blend-mode:screen;pointer-events:none'})); }
+
+  const pp=m.points.map(pt=>P(pt.logT,pt.logL));
+  trackLayer.replaceChildren(); pointLayer.replaceChildren();
+
+  const heroG=el('g',{filter:'url(#plasmaGlow)'});
+  const hitG=el('g',{});
+  m.segments.forEach((s,i)=>{
+    const d=segPath(pp,i);
+    const cls='seg'+(s.recessive?' seg-recessive':'');
+    const path=el('path',{class:cls,'data-seg':'s'+i,style:`stroke:${s.color}`,d});
+    if(s.recessive) trackLayer.appendChild(path); else heroG.appendChild(path);
+    hitG.appendChild(el('path',{class:'seg-hit','data-seg':'s'+i,d}));
+  });
+  trackLayer.appendChild(heroG);
+  trackLayer.appendChild(hitG);
+
+  m.points.forEach((pt,i)=>{
+    const c=pp[i];
+    const g=el('g',{class:'node'+(pt.term?' term':''),'data-pt':'p'+i,style:`--pc:${pt.pc}`,tabindex:'0',role:'button','aria-label':`Point ${pt.n}, ${pt.name}`});
+    g.appendChild(el('circle',{class:'pt',cx:c.x,cy:c.y,r:11}));
+    g.appendChild(el('text',{class:'pt-num',x:c.x,y:c.y},pt.n));
+    const right = c.x < PLOT.x1-120;
+    g.appendChild(el('text',{class:'pt-lbl',x:c.x+(right?18:-18),y:c.y+4,'text-anchor':right?'start':'end'},pt.name));
+    pointLayer.appendChild(g);
+  });
+
+  wireInteractions();
+  buildSEQ(m);
+  buildRail();
+  buildLegend(m);
+  render('intro');
+}
+
+function buildLegend(m){
+  legend.replaceChildren();
+  const seen=new Set(); const items=[];
+  m.segments.forEach(s=>{ if(!seen.has(s.color)){ seen.add(s.color); items.push([s.color, s.title.replace(/—.*/,'').trim(), s.recessive]); } });
+  items.forEach(([color,name,dash])=>{
+    const it=el('div',{class:'legend-item'});
+    const sw=document.createElement('div'); sw.className=dash?'legend-dash':'legend-color';
+    if(dash){ sw.style.borderColor=color; } else { sw.style.background=color; sw.style.boxShadow=`0 0 8px ${color}88`; }
+    const sp=document.createElement('span'); sp.textContent=name;
+    it.appendChild(sw); it.appendChild(sp); legend.appendChild(it);
+  });
+}
+
+function buildSEQ(m){
+  SEQ=[];
+  m.points.forEach((pt,i)=>{ SEQ.push('p'+i); if(i<m.segments.length) SEQ.push('s'+i); });
+}
+function dataFor(key){
+  if(key==='intro') return {type:'intro'};
+  const idx=+key.slice(1);
+  if(key[0]==='p'){ const pt=activeMass.points[idx]; return {type:'point',...pt}; }
+  const s=activeMass.segments[idx]; return {type:'seg',...s,from:activeMass.points[idx].n,to:activeMass.points[idx+1].n};
+}
+function render(key){
+  const d=dataFor(key); current=key; let inner='';
+  if(d.type==='intro'){
+    inner=`<div class="intro-hero">✦</div>
+      <h2 style="text-align:center;margin-top:0;">${esc(activeMass.tag)} — ${esc(activeMass.name)}</h2>
+      <p style="text-align:center;">${activeMass.intro}</p>
+      <p class="note" style="text-align:center;">Click any numbered point or connecting leg on the diagram — or press <b>Next&nbsp;→</b> to walk the whole life in order.</p>`;
+  } else if(d.type==='point'){
+    inner=`<span class="badge">Point ${d.n} · a star, frozen in time</span>
+      <h2>${esc(d.name)}</h2><p class="ph-sub">${esc(d.sub||'')}</p>
+      ${chipRow(d.chips)}${propRows(d.props)}${d.body||''}`;
+  } else {
+    inner=`<span class="badge seg-badge">Leg ${d.from} → ${d.to} · what happens on the way</span>
+      <h2>${esc(d.title)}</h2><p class="ph-sub">${esc(d.sub||'')}</p>
+      ${chipRow(d.chips)}${d.body||''}`;
+  }
+  const idx=SEQ.indexOf(key), pos=idx<0?0:idx+1;
+  inner+=`<div class="navrow">
+      <button id="prevBtn" ${idx<=0?'disabled':''}>← Prev</button>
+      <span class="counter">${idx<0?'overview':pos+' / '+SEQ.length}</span>
+      <button id="nextBtn" ${idx>=SEQ.length-1?'disabled':''}>Next →</button></div>`;
+  panel.replaceChildren(); panel.insertAdjacentHTML('afterbegin',inner);
+  document.getElementById('prevBtn')?.addEventListener('click',()=>{ const i=SEQ.indexOf(current); if(i>0) select(SEQ[i-1]); });
+  document.getElementById('nextBtn')?.addEventListener('click',()=>{ const i=SEQ.indexOf(current); if(i<0) select(SEQ[0]); else if(i<SEQ.length-1) select(SEQ[i+1]); });
+  highlight(key); updateRail(key);
+  if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([panel]);
+}
+function highlight(key){
+  document.querySelectorAll('#svg .seg').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('#svg .node').forEach(n=>n.classList.remove('active'));
+  if(key[0]==='p') document.querySelector(`.node[data-pt="${key}"]`)?.classList.add('active');
+  else if(key[0]==='s') document.querySelector(`.seg[data-seg="${key}"]`)?.classList.add('active');
+}
+function buildRail(){
+  const html=SEQ.map(k=>{ const isP=k[0]==='p'; const idx=+k.slice(1);
+    const label=isP?activeMass.points[idx].n:(activeMass.points[idx].n+'→'+activeMass.points[idx+1].n);
+    return `<button data-key="${k}">${label}</button>`; }).join('');
+  rail.replaceChildren(); rail.insertAdjacentHTML('afterbegin',html);
+  rail.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>select(b.dataset.key)));
+}
+function updateRail(key){ rail.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.key===key)); }
+function select(key){ render(key); if(window.matchMedia('(max-width:1200px)').matches) panel.scrollIntoView({behavior:'smooth',block:'start'}); }
+function wireInteractions(){
+  document.querySelectorAll('#svg .seg-hit').forEach(elm=>elm.addEventListener('click',()=>select(elm.dataset.seg)));
+  document.querySelectorAll('#svg .node').forEach(elm=>{
+    elm.addEventListener('click',()=>select(elm.dataset.pt));
+    elm.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); select(elm.dataset.pt); } });
+  });
+}
+
+/* COMPARE MODE */
+const CMP_VIEW={ tL:4.75, tR:3.44, lTop:5.9, lBot:-2.0 };
+function renderCompare(){
+  activeMass=null; VIEW={...CMP_VIEW};
+  cardName.textContent='Compare — all masses';
+  cardMeta.textContent='One diagram, every fate';
+  hintText.textContent='Click any track to open that star’s full journey.';
+  drawAxes(); drawBackground();
+  trackLayer.replaceChildren(); pointLayer.replaceChildren(); rail.replaceChildren(); legend.replaceChildren();
+  MASSES.forEach(m=>{
+    const pts=m.points.map(pt=>P(pt.logT,pt.logL));
+    let d=`M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+    for(let i=0;i<pts.length-1;i++){ const s=segPath(pts,i); d+=' '+s.slice(s.indexOf('C')); }
+    const path=el('path',{class:'ctrack','data-m':m.id,style:`stroke:${m.dot}`,d});
+    path.addEventListener('click',()=>selectMass(m.id));
+    trackLayer.appendChild(path);
+    const z=pts[0];
+    const t=el('text',{class:'clabel','data-m':m.id,x:z.x+ (z.x<PLOT.x1-70?12:-12),y:z.y+4,'text-anchor':z.x<PLOT.x1-70?'start':'end',fill:m.dot},m.tag);
+    t.addEventListener('click',()=>selectMass(m.id));
+    pointLayer.appendChild(t);
+  });
+  const items=MASSES.map(m=>`<li data-m="${m.id}"><i style="background:${m.dot}"></i><span>${esc(m.tag)} — ${esc(m.name)}</span></li>`).join('');
+  panel.replaceChildren();
+  panel.insertAdjacentHTML('afterbegin',
+    `<span class="badge seg-badge">Compare</span>
+     <h2>Every fate on one map</h2>
+     <p class="cmp-note">The same physics, wildly different destinies — set entirely by birth mass. Low-mass stars crawl along the bottom for eons and end as white dwarfs; massive stars blaze at the top and die in seconds. Click a track (or a name below) to explore it in full.</p>
+     <ul class="cmp-list">${items}</ul>`);
+  panel.querySelectorAll('.cmp-list li').forEach(li=>li.addEventListener('click',()=>selectMass(li.dataset.m)));
+  buildSelector();
+}
+
+/* MASS SELECTOR */
+function buildSelector(){
+  const ml=document.getElementById('masslist');
+  ml.replaceChildren();
+  const t=document.createElement('div'); t.className='mtitle'; t.textContent='Select a mass'; ml.appendChild(t);
+  MASSES.forEach(m=>{
+    const b=document.createElement('button'); b.className='mbtn'+(activeMass&&activeMass.id===m.id?' on':''); b.dataset.m=m.id;
+    b.insertAdjacentHTML('afterbegin',`<span class="dotc" style="color:${m.dot}"></span><span>${m.tag}<br><small>${m.name}</small></span>`);
+    b.addEventListener('click',()=>selectMass(m.id));
+    ml.appendChild(b);
+  });
+  const cb=document.createElement('button'); cb.className='mbtn compare'+(activeMass===null?' on':''); cb.id='cmpBtn';
+  cb.textContent='◇ Compare all';
+  cb.addEventListener('click',()=>{ renderCompare(); });
+  ml.appendChild(cb);
+}
+function selectMass(id){
+  const m=MASSES.find(x=>x.id===id); if(!m) return;
+  renderMass(m); buildSelector();
+}
+
+/* INIT */
+buildSelector();
+selectMass('m1_0');
+</script>
+</body>
+</html>
