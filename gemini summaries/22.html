@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post-Main Sequence Stellar Evolution - 30-Min Masterclass</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons for premium visual depth -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf6e8;
+      color: #433422;
+    }
+    .theme-sepia .card-bg {
+      background-color: #f4ebd0;
+      border-color: #e6d3a8;
+    }
+    .theme-sepia .text-muted {
+      color: #705e47;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d2b48c;
+    }
+
+    /* Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #e2e8f0;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #3b82f6;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #334155;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-rose-500/10 text-rose-500 rounded-lg">
+          <i data-lucide="orbit" class="w-6 h-6 animate-spin-slow"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Stellar Evolution <span class="text-rose-500">Part III</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Post-Main Sequence Comprehensive Masterclass</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-rose-500/10 text-rose-600 dark:text-rose-400 px-3 py-1.5 rounded-lg border border-rose-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-rose-800 dark:hover:text-rose-200">
+            <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-blue-500 to-rose-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION & QUICK STUDY TOOLS -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-blue-600 dark:text-blue-400 font-semibold bg-blue-50/50 dark:bg-blue-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-blue-500 text-white text-xs">1</span>
+              <span class="truncate">Chemical Dichotomy</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
+              <span class="truncate">Density Gradient Derivation</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
+              <span class="truncate">S-C Limit & Isothermal Core</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
+              <span class="truncate">The SGB & Hayashi Limit</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
+              <span class="truncate">Quantum Electron Degeneracy</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
+              <span class="truncate">Deep Dredge-Up & Surface CN</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
+              <span class="truncate">The RGB Bump Microphysics</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
+              <span class="truncate">Thermonuclear Helium Flash</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
+              <span class="truncate">Standard Candle & Distances</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
+              <span class="truncate">Stellar Winds & Mass Loss</span>
+            </a>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">11</span>
+              <span class="truncate">ZAHB, Blue Loops & 2nd Parameter</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-amber-500 text-white text-xs"><i data-lucide="award" class="w-3 h-3"></i></span>
+              <span class="truncate font-semibold">Active Recall Mastery Test</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <!-- Ring indicator -->
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-indigo-400"></i>
+            <h4 class="font-bold text-sm text-indigo-200 uppercase tracking-wider">Stellar Constants</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-slate-300">
+            <div class="flex justify-between border-b border-indigo-950 pb-1.5">
+              <span>S-C Core limit:</span>
+              <span class="text-indigo-300">$q_{\text{SC}} \approx 8\text{-}10\% M$</span>
+            </div>
+            <div class="flex justify-between border-b border-indigo-950 pb-1.5">
+              <span>Degeneracy limit:</span>
+              <span class="text-indigo-300">$P \propto \rho^{5/3}$</span>
+            </div>
+            <div class="flex justify-between border-b border-indigo-950 pb-1.5">
+              <span>TRGB absolute:</span>
+              <span class="text-indigo-300">$M_I \approx -4.0$</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>Triple-$\alpha$ rate:</span>
+              <span class="text-indigo-300">$\epsilon_{3\alpha} \propto T^{25}$</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+        
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-slate-100 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="orbit" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-rose-500/10 text-rose-500 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics Study Suite</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              Post-Main Sequence Stellar Evolution
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive, derivation-grounded companion containing advanced physical proofs, structural profiles, and exact cosmological diagnostics optimized for graduate and advanced undergraduate astrophysics students.
+            </p>
+            <div class="pt-4 flex flex-wrap gap-4 text-xs font-medium text-slate-400 dark:text-slate-500">
+              <span class="flex items-center"><i data-lucide="clock" class="w-4 h-4 mr-1.5"></i>30 min intensive study session</span>
+              <span class="flex items-center"><i data-lucide="book-open" class="w-4 h-4 mr-1.5"></i>Complete Mathematical Derivations</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Core-Envelope Chemical Dichotomy</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              At the absolute termination of the Main Sequence (MS) phase (<strong>Point 2</strong> on the Hertzsprung-Russell Diagram), the core runs entirely out of Hydrogen. The complete depletion of this fuel creates a powerful <strong>chemical dichotomy</strong> between the inner core and the expansive outer envelope. This physical division is marked by a step-discontinuity in the mean molecular weight ($\mu$) across the core-envelope boundary:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <!-- Envelope Panel -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">Stellar Envelope</span>
+                <p class="mt-2 text-sm">Retains the initial unburnt chemical composition of the progenitor gas cloud:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2.5 border border-slate-100 dark:border-slate-900 text-center">
+                  $$X_e = 0.70, \quad Y_e = 0.28, \quad Z_e = 0.02$$
+                </div>
+                <p class="text-sm">Calculating the mean molecular weight ($\mu_e$) for fully ionized gas:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2 border border-slate-100 dark:border-slate-900 text-center text-blue-500 font-bold">
+                  $$\mu_e = \frac{1}{2X_e + \frac{3}{4}Y_e + \frac{1}{2}Z_e} \approx 0.63$$
+                </div>
+              </div>
+
+              <!-- Core Panel -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">Stellar Helium Core</span>
+                <p class="mt-2 text-sm">Entirely composed of Helium ashes resulting from prior proton-proton or CNO cycles:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2.5 border border-slate-100 dark:border-slate-900 text-center">
+                  $$X_i \sim 0, \quad Y_i = 0.98, \quad Z_i = 0.02$$
+                </div>
+                <p class="text-sm">Yielding a vastly higher molecular weight due to heavier Helium nuclei:</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2 border border-slate-100 dark:border-slate-900 text-center text-rose-500 font-bold">
+                  $$\mu_i = \frac{1}{2X_i + \frac{3}{4}Y_i + \frac{1}{2}Z_i} \approx \frac{4}{3} \approx 1.34$$
+                </div>
+              </div>
+            </div>
+
+            <!-- Inline SVG Diagram: Dichotomy -->
+            <div class="flex flex-col items-center justify-center p-4 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200/50 dark:border-slate-800/50">
+              <svg viewBox="0 0 600 220" class="w-full max-w-lg h-auto">
+                <!-- Envelope -->
+                <circle cx="300" cy="110" r="100" class="fill-blue-500/10 stroke-blue-400 stroke-2 stroke-dashed"/>
+                <!-- Core -->
+                <circle cx="300" cy="110" r="25" class="fill-rose-500/20 stroke-rose-500 stroke-2"/>
+                <!-- Discontinuity visual line -->
+                <line x1="300" y1="110" x2="480" y2="40" class="stroke-slate-400 stroke-1 stroke-dashed"/>
+                <!-- Labels -->
+                <text x="300" y="114" text-anchor="middle" class="fill-rose-600 dark:fill-rose-400 text-xs font-bold font-mono">He Core</text>
+                <text x="300" y="45" text-anchor="middle" class="fill-blue-600 dark:fill-blue-400 text-xs font-bold font-mono">H Envelope</text>
+                
+                <!-- Density profile inset -->
+                <g transform="translate(430, 110)">
+                  <!-- Axes -->
+                  <line x1="0" y1="50" x2="120" y2="50" class="stroke-slate-500 stroke-1"/>
+                  <line x1="10" y1="55" x2="10" y2="-40" class="stroke-slate-500 stroke-1"/>
+                  <text x="120" y="62" text-anchor="end" class="fill-slate-400 text-[10px]">Radius</text>
+                  <text x="5" y="-45" class="fill-slate-400 text-[10px]">$\mu$</text>
+                  <!-- Graph line -->
+                  <path d="M 10,-30 L 40,-30 L 40,10 L 110,10" class="stroke-rose-500 stroke-2 fill-none"/>
+                  <text x="45" y="-15" class="fill-rose-500 text-[10px] font-bold">$\mu_i \approx 1.34$</text>
+                  <text x="70" y="25" class="fill-blue-500 text-[10px] font-bold">$\mu_e \approx 0.63$</text>
+                </g>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 1: Structural Profile and step-change chemical boundary.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Derivation of the Density Gradient Ratio</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Starting from <strong>Point 3</strong> on the evolutionary track, the stellar envelope undergoes rapid expansion. Below is the strict derivation explaining why the envelope must expand to maintain structural integrity.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">1. Boundary Conditions</h3>
+            <p>At the exact core-envelope interface radius ($r = r_0$), hydrostatic stability and local energy flow dictate physical continuity:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$P_e = P_i \quad \text{and} \quad T_e = T_i \quad \text{and} \quad M_e = M_i$$
+            </div>
+            <p>Evaluating the ideal gas Equation of State ($P = \frac{k \rho T}{\mu H}$) on both sides of the interface:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{k\rho_i T_i}{\mu_i H} = \frac{k\rho_e T_e}{\mu_e H} \implies \frac{\rho_i}{\rho_e} = \frac{\mu_i}{\mu_e}$$
+            </div>
+            <p>When the hydrogen-burning shell is active, it outputs substantial energy, parameterized using the shell efficiency parameter ($u$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$L_e = L_i(1+u)$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">2. Parameterizing the Density Gradient</h3>
+            <p>By differentiating the gas state equation with respect to radius $r$:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$T \frac{d\rho}{dr} + \rho \frac{dT}{dr} = \frac{\mu H}{k} \frac{dP}{dr}$$
+            </div>
+            <p>Solving for the spatial density gradient $\frac{d\rho}{dr}$:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-blue-600 dark:text-blue-400">
+              $$\frac{d\rho}{dr} = \frac{1}{T} \left( \frac{\mu H}{k} \frac{dP}{dr} - \rho \frac{dT}{dr} \right)$$
+            </div>
+            <p>Taking the spatial gradient ratio across the envelope ($e$) and the core ($i$) regions:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{\left(\frac{d\rho}{dr}\right)_e}{\left(\frac{d\rho}{dr}\right)_i} = \frac{\frac{\mu_e H}{k} \left(\frac{dP}{dr}\right)_e - \rho_e \left(\frac{dT}{dr}\right)_e}{\frac{\mu_i H}{k} \left(\frac{dP}{dr}\right)_i - \rho_i \left(\frac{dT}{dr}\right)_i} \quad \text{--- (Equation 1)}$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">3. Deriving Pressure and Temperature Gradients</h3>
+            <ul class="list-disc list-inside space-y-3">
+              <li>
+                <strong>Pressure Gradient:</strong> Under strict hydrostatic equilibrium ($\frac{dP}{dr} = -\frac{GM_r\rho}{r^2}$):
+                $$\frac{\left(\frac{dP}{dr}\right)_e}{\left(\frac{dP}{dr}\right)_i} = \frac{\rho_e}{\rho_i} = \frac{\mu_e}{\mu_i} \implies \left(\frac{dP}{dr}\right)_e = \left(\frac{dP}{dr}\right)_i \frac{\mu_e}{\mu_i}$$
+              </li>
+              <li>
+                <strong>Temperature Gradient:</strong> Utilizing the standard radiative transfer equation ($\frac{dT}{dr} \propto \frac{\kappa \rho L}{T^3 r^2}$):
+                $$\frac{\left(\frac{dT}{dr}\right)_e}{\left(\frac{dT}{dr}\right)_i} = \frac{\kappa_e \rho_e L_e}{\kappa_i \rho_i L_i}$$
+                Substituting standard physical opacity $\kappa \propto (1+X)\rho^n$:
+                $$\frac{\left(\frac{dT}{dr}\right)_e}{\left(\frac{dT}{dr}\right)_i} = (1+u) \frac{1+X_e}{1+X_i} \left(\frac{\mu_e}{\mu_i}\right)^{n+1}$$
+              </li>
+            </ul>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">4. Final Density Gradient Ratio Solution</h3>
+            <p>Substituting back into Equation (1) with parameters:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+              <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-center text-xs font-mono">
+                <span class="block font-bold text-blue-500">$$\alpha = \frac{\mu_i H}{k} \left(\frac{dP}{dr}\right)_i$$</span>
+                <span class="text-[10px] text-slate-400">Pressure-to-gravity work parameter inside the core boundary</span>
+              </div>
+              <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-center text-xs font-mono">
+                <span class="block font-bold text-emerald-500">$$\beta = \rho_i \left(\frac{dT}{dr}\right)_i$$</span>
+                <span class="text-[10px] text-slate-400">Radiative temperature scale parameter inside the core boundary</span>
+              </div>
+              <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-center text-xs font-mono">
+                <span class="block font-bold text-rose-500">$$\gamma = (1+u) \frac{1+X_e}{1+X_i} \left(\frac{\mu_e}{\mu_i}\right)^n$$</span>
+                <span class="text-[10px] text-slate-400">Feedback parameter capturing opacity and active shell efficiency</span>
+              </div>
+            </div>
+            <p>Yields the final simplified ratio:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-rose-500/30 text-rose-600 dark:text-rose-400 font-extrabold my-4">
+              $$\frac{\left(\frac{d\rho}{dr}\right)_e}{\left(\frac{d\rho}{dr}\right)_i} = \left(\frac{\mu_e}{\mu_i}\right)^2 \frac{\alpha - \gamma \beta}{\alpha - \beta}$$
+            </div>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500 font-mono">Physical Analysis & Boundary Cases</span>
+              <ul class="list-decimal list-inside text-sm space-y-2">
+                <li>
+                  <strong>Case I: Zero Chemical Discontinuity (Main Sequence):</strong> If the star is uniform ($\mu_e = \mu_i$, $X_e = X_i$, and the burning shell is inactive, $u=0$), then $\gamma = 1$. The ratio becomes exactly 1, reflecting a smooth density gradient.
+                </li>
+                <li>
+                  <strong>Case II: Active Shell Post-Main Sequence:</strong> With $X_e = 0.70$, $X_i \sim 0$, $\mu_e / \mu_i \approx 0.48$. For active shell burning ($u > 0.3$), we find $\gamma > 1 \implies \frac{\alpha - \gamma \beta}{\alpha - \beta} < 1$.
+                </li>
+              </ul>
+              <p class="text-sm font-bold mt-2">
+                This demands that the outer envelope's density gradient drops by a factor of 4 relative to the core! To satisfy this, the stellar envelope has no option but to expand dramatically in radius.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Schönberg-Chandrasekhar Limit & Isothermal Core Physics</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As the star transitions from the main sequence, the hydrogen-depleted core lacks nuclear energy sources. Left with no local burning, it begins to cool and becomes <strong>isothermal</strong>, matching the temperature of the surrounding active hydrogen-burning shell ($T_{\text{core}} \approx T_{\text{shell}}$).
+            </p>
+            <p>
+              An isothermal core can only support a finite amount of weight from the overlying envelope. The maximum fraction of the star's total mass that can be supported by an isothermal gas core is defined by the famous <strong>Schönberg-Chandrasekhar limit</strong>:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-indigo-600 dark:text-indigo-400 font-bold my-4">
+              $$q_{\text{SC}} = \left(\frac{M_c}{M}\right)_{\text{SC}} \approx 0.37 \left(\frac{\mu_e}{\mu_i}\right)^2$$
+            </div>
+            <p>
+              Plugging in the molecular weights for our chemically-dichotomous post-MS star ($\mu_e \approx 0.63$ and $\mu_i \approx 1.34$):
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$q_{\text{SC}} \approx 0.37 \left(\frac{0.63}{1.34}\right)^2 \approx 0.08 \implies 8\% \text{ of the star's total mass}$$
+            </div>
+
+            <div class="bg-rose-500/5 border border-rose-500/20 rounded-2xl p-5 space-y-3">
+              <span class="text-xs font-bold uppercase text-rose-500 font-mono">Structural Crisis After Exceeding the Limit</span>
+              <p class="text-sm">
+                If the core mass exceeds $8\text{--}10\%$ of the total stellar mass ($M_c > M_{\text{SC}}$), the isothermal pressure is no longer sufficient to support the overlying weight.
+              </p>
+              <p class="text-sm font-semibold">
+                This triggers a rapid, catastrophic contraction of the core. As the core shrinks, gravitational potential energy is converted into thermal heat, raising the core temperature and dumping massive thermal energy into the hydrogen shell. This triggers a run-away expansion of the envelope.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Subgiant Branch & Hayashi Track Navigation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              During the Subgiant Branch (SGB) transition (<strong>Point 4 to 5</strong>), the hydrogen-burning shell generates nearly 100% of the star's overall luminosity ($u \approx 1$). 
+            </p>
+            
+            <p>
+              As the star expands outward, its surface temperature drops while its luminosity remains roughly constant due to:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 my-4">
+              $$L = 4\pi R^2 \sigma T_{\text{eff}}^4$$
+            </div>
+
+            <!-- Vector SVG H-R diagram -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+              <svg viewBox="0 0 600 300" class="w-full max-w-xl h-auto">
+                <!-- Grid Lines -->
+                <line x1="50" y1="250" x2="550" y2="250" class="stroke-slate-300 dark:stroke-slate-700 stroke-1"/>
+                <line x1="50" y1="250" x2="50" y2="50" class="stroke-slate-300 dark:stroke-slate-700 stroke-1"/>
+                
+                <!-- Main Sequence Line -->
+                <path d="M 100,240 Q 250,180 320,120" class="stroke-slate-400 stroke-2 fill-none stroke-dashed"/>
+                <text x="140" y="230" class="fill-slate-400 text-[10px]">Main Sequence</text>
+
+                <!-- Post-MS Evolutionary Track -->
+                <path d="M 320,120 L 330,110 L 400,110 L 480,115 L 490,40" class="stroke-rose-500 stroke-3 fill-none"/>
+                
+                <!-- Points -->
+                <circle cx="320" cy="120" r="4" class="fill-rose-500"/>
+                <text x="315" y="135" class="fill-slate-900 dark:fill-white text-[10px] font-bold">2 (H Exhaustion)</text>
+                
+                <circle cx="330" cy="110" r="4" class="fill-rose-500"/>
+                <text x="325" y="98" class="fill-slate-900 dark:fill-white text-[10px] font-bold">3</text>
+                
+                <circle cx="400" cy="110" r="4" class="fill-rose-500"/>
+                <text x="395" y="98" class="fill-slate-900 dark:fill-white text-[10px] font-bold">4 (SGB)</text>
+
+                <circle cx="480" cy="115" r="4" class="fill-rose-500"/>
+                <text x="475" y="130" class="fill-slate-900 dark:fill-white text-[10px] font-bold">5 (Base of RGB)</text>
+
+                <circle cx="490" cy="40" r="4" class="fill-rose-500"/>
+                <text x="500" y="45" class="fill-slate-900 dark:fill-white text-[10px] font-bold">6 (RGB Tip)</text>
+
+                <!-- Shaded Hayashi Zone -->
+                <rect x="500" y="30" width="80" height="220" class="fill-red-500/10 stroke-red-500/20 stroke-1"/>
+                <text x="540" y="140" text-anchor="middle" class="fill-red-500 text-[10px] font-bold uppercase tracking-wider">Forbidden Zone</text>
+
+                <!-- Arrow indicators -->
+                <path d="M 410,110 L 460,110" class="stroke-blue-500 stroke-2 fill-none"/>
+                
+                <!-- Axes Labels -->
+                <text x="300" y="280" text-anchor="middle" class="fill-slate-500 text-xs font-bold font-mono">$\log T_{\text{eff}}$ (Decreasing $\rightarrow$)</text>
+                <text x="25" y="150" text-anchor="middle" class="fill-slate-500 text-xs font-bold font-mono" transform="rotate(-90, 25, 150)">$\log (L/L_\odot)$</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 2: Post-MS evolutionary path, from hydrogen core exhaustion to the RGB tip.</span>
+            </div>
+
+            <h3 class="text-base font-bold text-slate-950 dark:text-white">The Hayashi Limit & The Forbidden Convective Zone</h3>
+            <p>
+              As the envelope expands and cools, it eventually hits the <strong>Hayashi Limit</strong> (Point 5). The Hayashi Limit represents a strict boundary in the HR diagram separating stable, hydrostatically balanced stars (on the left) from a region where no stable stellar models can exist in hydrostatic equilibrium (on the right).
+            </p>
+            <p>
+              This limit is dictated by convective efficiency. Fully convective envelopes have a minimum temperature boundary at a given luminosity: any further expansion forces the star to become completely convective, meaning it must climb vertically in luminosity along the Hayashi track rather than cooling further.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Quantum Electron Degeneracy Pathways</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Once a low-mass star ascends the Red Giant Branch, its central density grows extremely high ($\rho \sim 10^5\text{--}10^6 \text{ g/cm}^3$). Under these conditions, the central gas can no longer be treated as an ideal gas. Instead, quantum mechanics dominates through <strong>electron degeneracy pressure</strong>.
+            </p>
+
+            <div class="p-6 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-4">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">The Pauli Exclusion Principle & Fermi Energy</span>
+              <p class="text-sm">
+                According to the Pauli Exclusion Principle, no two fermions (such as electrons) can occupy the same quantum state. As the core contracts, all low-energy states fill up, forcing electrons into high momentum levels. The boundary momentum level is known as the <strong>Fermi Momentum ($p_F$)</strong>:
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs text-center">
+                $$p_F = \left( 3\pi^2 \hbar^3 n_e \right)^{1/3} \quad \text{where } n_e = \frac{\rho}{\mu_e m_H} \text{ is the electron number density}$$
+              </div>
+              <p class="text-sm">
+                This yields a non-relativistic pressure equation that is completely independent of temperature ($T$):
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-sm text-center text-rose-500 font-bold">
+                $$P_e = \frac{1}{5m_e} \left( 3\pi^2 \right)^{2/3} \hbar^2 n_e^{5/3} \implies P_e \propto \rho^{5/3}$$
+              </div>
+              <p class="text-sm">
+                Since $P_e$ depends only on density, the core can support its own weight without needing nuclear energy generation to maintain its temperature.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-6">Evolutionary Pathways by Mass Range</h3>
+            <div class="overflow-x-auto my-6 border border-slate-200 dark:border-slate-800 rounded-xl">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200">
+                  <tr>
+                    <th class="px-4 py-3">Mass Range ($M_\odot$)</th>
+                    <th class="px-4 py-3">Central Degeneracy Status</th>
+                    <th class="px-4 py-3">Helium Ignition Process</th>
+                    <th class="px-4 py-3">Horizontal Branch Core</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+                    <td class="px-4 py-3.5 font-semibold font-mono text-rose-500">$0.08 < M < 0.5$</td>
+                    <td class="px-4 py-3.5">Fully Degenerate</td>
+                    <td class="px-4 py-3.5 text-slate-500">Never ignites Helium</td>
+                    <td class="px-4 py-3.5 font-bold">No ignition (He-WD)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+                    <td class="px-4 py-3.5 font-semibold font-mono text-emerald-500">$0.5 < M < 2.2$</td>
+                    <td class="px-4 py-3.5">Highly Degenerate Core</td>
+                    <td class="px-4 py-3.5 text-emerald-600 dark:text-emerald-400 font-bold">Explosive Core Helium Flash</td>
+                    <td class="px-4 py-3.5">Ideal Gas He-burning Core</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20">
+                    <td class="px-4 py-3.5 font-semibold font-mono text-blue-500">$2.2 < M < 8.0$</td>
+                    <td class="px-4 py-3.5">Non-Degenerate Core</td>
+                    <td class="px-4 py-3.5">Gradual, stable ignition</td>
+                    <td class="px-4 py-3.5">Ideal Gas He-burning Core</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Convective Dredge-Up & Surface Abundance Shifts</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As the star ascends the RGB, its opacity increases, driving convective heat transport throughout the envelope. The outer convective envelope deepens, eventually penetrating deep into the stellar interior. This event is called the <strong>First Dredge-Up</strong>.
+            </p>
+
+            <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg space-y-4">
+              <h4 class="font-bold text-slate-950 dark:text-white">Microphysics of CN-Abundance Shifts</h4>
+              <p class="text-sm">
+                Although the convective envelope never directly touches the burning shell, it penetrates into regions that were partially processed by CNO nuclear fusion during the Main Sequence. This mixes fusion ashes into the stellar surface, causing clear observational shifts:
+              </p>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+                <div class="bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20 text-center">
+                  <span class="block font-bold text-emerald-600 dark:text-emerald-400">Helium ($^4\text{He}$)</span>
+                  <p class="text-[10px] mt-1 text-slate-400">Abundance increases at the surface</p>
+                </div>
+                <div class="bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20 text-center">
+                  <span class="block font-bold text-emerald-600 dark:text-emerald-400">Nitrogen ($^{14}\text{N}$)</span>
+                  <p class="text-[10px] mt-1 text-slate-400">Increases (doubles due to C &rarr; N processing)</p>
+                </div>
+                <div class="bg-rose-500/10 p-3 rounded-lg border border-rose-500/20 text-center">
+                  <span class="block font-bold text-rose-600 dark:text-rose-400">Carbon ($^{12}\text{C}$)</span>
+                  <p class="text-[10px] mt-1 text-slate-400">Abundance drops at the surface</p>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500">
+                At its deepest point, the convective envelope leaves behind a sharp **chemical discontinuity** (a steep step-down in hydrogen abundance) frozen in mass coordinate at $M \approx M_{\text{max,conv}}$.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The RGB-Bump: Chemical Interactions with the Burning Shell</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              After reaching its deepest point, the convective envelope recedes. The thin, hydrogen-burning shell continues to eat its way outward. Eventually, the shell reaches the chemical discontinuity left behind by the convective envelope.
+            </p>
+
+            <div class="flex flex-col md:flex-row gap-6 items-start my-6">
+              <div class="w-full md:w-1/2 space-y-3">
+                <h4 class="font-bold text-slate-950 dark:text-white">The Mathematical Interaction Loop</h4>
+                <p class="text-sm">
+                  The H-shell's energy generation rate and luminosity ($L_H$) are highly sensitive to the local mean molecular weight:
+                </p>
+                <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-xl font-mono text-sm text-center border border-slate-200 dark:border-slate-800">
+                  $$L_H \propto \mu^7$$
+                </div>
+                <p class="text-sm">
+                  When the outward-burning H-shell hits the H-rich chemical discontinuity, it enters a region with a higher hydrogen fraction (lower mean molecular weight, $\mu \downarrow$).
+                </p>
+              </div>
+              <div class="w-full md:w-1/2 p-5 bg-amber-500/5 rounded-2xl border border-amber-500/20 text-xs space-y-2">
+                <span class="font-extrabold uppercase text-amber-500 block">Stellar Response & Recovery</span>
+                <p>
+                  <strong>1. Luminosity Drop:</strong> As $\mu$ drops, the shell's energy generation rate plunges, causing the star's overall luminosity to decrease.
+                </p>
+                <p>
+                  <strong>2. Structural Adjustment:</strong> The star contracts slightly, heating up the shell to restore thermal equilibrium.
+                </p>
+                <p>
+                  <strong>3. Resumed Ascent:</strong> Once the H-shell has passed completely through the discontinuity, it enters the fuel-rich, homogeneous envelope and resumes its steady ascent up the RGB.
+                </p>
+              </div>
+            </div>
+            <p class="text-sm">
+              Because the star is forced to traverse the same narrow luminosity range <strong>three times</strong> (forming a loop on the HR track), stars accumulate at this specific luminosity. This shows up as a distinct peak—the <strong>RGB-Bump</strong>—in the stellar luminosity function of clusters.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Thermonuclear Helium Flash</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              For stars under $2.2 M_\odot$, Helium core ignition occurs under highly degenerate conditions. This triggers an explosive thermonuclear runaway due to the decoupling of temperature and pressure in degenerate gas.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+              <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-emerald-500">Perfect Gas (Self-Regulated)</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  Heating causes pressure to rise immediately, expanding and cooling the gas back to equilibrium:
+                </p>
+                <p class="font-bold text-sm text-center text-emerald-500 font-mono mt-4">
+                  $T\uparrow \implies P\uparrow \implies \text{Expansion} \implies T\downarrow$
+                </p>
+              </div>
+              <div class="p-5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs font-extrabold uppercase text-rose-500">Degenerate Gas (Thermonuclear Runaway)</span>
+                <p class="text-xs mt-2 text-slate-500">
+                  Pressure depends on density, not temperature. Heating does not cause expansion, triggering a runaway:
+                </p>
+                <p class="font-bold text-sm text-center text-rose-500 font-mono mt-4">
+                  $T\uparrow \implies P\text{ stays const.} \implies \text{No expansion} \implies T\uparrow\uparrow\uparrow$
+                </p>
+              </div>
+            </div>
+
+            <p>
+              Since the triple-alpha fusion rate is highly temperature-dependent ($\epsilon_{3\alpha} \propto T^{25}$), this positive feedback loop results in the explosive <strong>Helium Flash</strong>.
+            </p>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 space-y-3 text-sm">
+              <span class="text-xs font-bold uppercase text-amber-500">Key Microphysics of the Helium Flash</span>
+              <ul class="list-disc list-inside space-y-2">
+                <li>
+                  <strong>Off-Center Ignition:</strong> Highly efficient neutrino emissions ($\gamma + e^- \to e^- + \nu + \bar{\nu}$) carry heat away from the dense central core, creating a temperature inversion. The flash ignites off-center (at $M \approx 0.15\text{--}0.2 M_\odot$).
+                </li>
+                <li>
+                  <strong>No Surface Explosion:</strong> While the local energy release is enormous ($L_{\text{flash}} \approx 10^{11} L_\odot$), this energy is absorbed internally to lift core degeneracy; the surface remains undisturbed.
+                </li>
+                <li>
+                  <strong>Core De-degeneracy:</strong> A series of weaker, successive flashes over $\approx 10^6 \text{ years}$ slowly returns the entire core to a non-degenerate, ideal-gas state, and the star settles on the Horizontal Branch.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The TRGB as a Cosmological Standard Candle</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Because Helium ignition in low-mass stars always occurs when the degenerate core reaches a highly uniform, critical mass threshold:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 my-4">
+              $$M_{c,\text{He}} \approx 0.48\text{--}0.50 M_\odot \implies \log(L/L_\odot) \approx 3.45$$
+            </div>
+            <p>
+              The <strong>Tip of the Red Giant Branch (TRGB)</strong> is highly stable across varying ages and metallicity profiles, especially when measured in the near-infrared $I$-band:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-rose-500 font-extrabold my-4">
+              $$M_I \approx -4.0 \pm 0.1 \text{ mag}$$
+            </div>
+
+            <!-- Detailed Case Study Box -->
+            <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg space-y-3">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">Case Study: Distance Modulus Formulation</span>
+              <p class="text-xs text-slate-500">
+                To calculate the physical distance $d$ (in parsecs) to a target galaxy using an observed TRGB apparent magnitude $m_I = 26.5$ (assuming negligible dust extinction):
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg text-xs space-y-2 font-mono">
+                <p>1. Write down the Distance Modulus formula: $(m - M)_I = 5 \log_{10}(d) - 5$</p>
+                <p>2. Substitute known values ($m_I = 26.5$ and $M_I = -4.0$):</p>
+                <p class="pl-4">$$26.5 - (-4.0) = 30.5$$</p>
+                <p>3. Solve for $d$:</p>
+                <p class="pl-4">$$5 \log_{10}(d) = 35.5 \implies \log_{10}(d) = 7.1 \implies d = 10^{7.1} \approx 12.58 \text{ Mpc}$$</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Red Giant Mass Loss & Reimers' Law</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As a star ascends the RGB, its radius expands by orders of magnitude, causing surface gravity $g = \frac{GM}{R^2}$ to plunge to fragile levels ($\log g \approx -0.5$ compared to the solar MS value of $4.4$). Atmospheric material escapes via highly efficient stellar winds.
+            </p>
+            <p>To parameterize this mass loss, astrophysicists rely on <strong>Reimers' Law (1975)</strong>:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-blue-600 dark:text-blue-400 font-bold my-4">
+              $$\dot{M} = -4 \times 10^{-13} \eta \frac{L}{g R} \quad [M_\odot / \text{year}] \implies \dot{M} \propto \eta \frac{L R}{M}$$
+            </div>
+            <p class="text-sm">
+              Here, $\eta$ represents the mass-loss efficiency scaling factor, typically fitted observationally to $\approx 1/3$. Over the course of the RGB, a standard $0.8 M_\odot$ low-mass star will shed up to $30\text{--}40\%$ of its total initial mass.
+            </p>
+
+            <!-- Detailed Case Study Box -->
+            <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg space-y-3">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-500">Case Study: Mass-Loss Analysis</span>
+              <p class="text-xs text-slate-500 font-mono">
+                For a typical RGB star with $\eta \approx 0.33$, $L \approx 3000 L_\odot$, $R \approx 100 R_\odot$, and $M \approx 0.8 M_\odot$:
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg text-xs space-y-2 font-mono text-center">
+                $$\dot{M} = -4 \times 10^{-13} \times (0.33) \times \frac{(3000) (100)}{0.8} \approx -4.95 \times 10^{-8} M_\odot / \text{year}$$
+              </div>
+              <p class="text-xs text-slate-400">
+                This high rate of mass loss determines the mass of the star on the Horizontal Branch, directly affecting the star's subsequent morphology and color on the HB.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-md">11</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Horizontal Branch Structure: ZAHB, Blue Loops & the Second Parameter Problem</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Once the flash cascade lifts core degeneracy, the star settles onto a well-defined locus of stable, non-degenerate $3\alpha$ ignition: the <strong>Zero Age Horizontal Branch (ZAHB)</strong> &mdash; a direct He-burning analogue of the Zero Age Main Sequence. Unlike the ZAMS, however, the ZAHB is not a single point per mass: its position in the HR diagram is set almost entirely by the envelope mass remaining after RGB mass loss.
+            </p>
+
+            <div class="p-6 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-3">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">The Envelope-Mass Parameter</span>
+              <p class="text-sm">
+                Because the degenerate He-core mass at ignition is nearly universal ($M_c^{\text{He}} \approx 0.5\,M_\odot$ for all $M<2.2\,M_\odot$ progenitors), essentially all of the star-to-star scatter in HB temperature comes from how much envelope survived Reimers&rsquo; mass loss on the RGB. This is captured by the parameter:
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-sm text-center text-blue-500 font-bold">
+                $$q = \frac{M_c}{M_E}$$
+              </div>
+              <p class="text-sm">
+                where $M_E$ is the residual envelope mass. A <strong>thin envelope (high $q$)</strong> exposes hotter, bluer layers &mdash; the star lands on the blue end of the HB. A <strong>thick envelope (low $q$)</strong> keeps the star cool and red. This single parameter is why HB morphology is such a sensitive diagnostic of a cluster&rsquo;s integrated RGB mass-loss history.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Second Parameter Problem</h3>
+            <p>
+              Age and metallicity alone predict $q$ reasonably well &mdash; older or more metal-poor populations lose relatively more envelope mass and should sit bluer on the HB. However, some globular clusters of essentially identical age and metallicity display starkly different HB morphologies (one all-red, one with a long blue tail). This unexplained residual is the <strong>Second Parameter Problem</strong>: some additional variable &mdash; candidates include helium abundance, cluster dynamical history, or unresolved variations in mass-loss efficiency $\eta$ &mdash; must be at play, and no consensus resolution exists.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Extreme Horizontal Branch (EHB) & AGB-Manqu&eacute; Stars</h3>
+            <p>
+              At the extreme blue (highest $q$) end, stars can lose so much envelope that almost no hydrogen remains at all. These <strong>EHB stars</strong> are so H-poor that after core He exhaustion they never develop the extended AGB double-shell structure of a normal post-HB star &mdash; instead evolving directly to hot, faint blue subdwarfs. This truncated pathway is called the <strong>AGB-Manqu&eacute;</strong> (&ldquo;failed AGB&rdquo;) channel, and the resulting hot subdwarf population is the leading explanation for the <strong>UV upturn</strong> observed in the integrated light of old elliptical galaxies and bulges.
+            </p>
+
+            <!-- Blue Loop SVG Diagram -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 my-6">
+              <svg viewBox="0 0 600 260" class="w-full max-w-xl h-auto">
+                <line x1="50" y1="220" x2="550" y2="220" class="stroke-slate-300 dark:stroke-slate-700 stroke-1"/>
+                <line x1="50" y1="220" x2="50" y2="30" class="stroke-slate-300 dark:stroke-slate-700 stroke-1"/>
+                <circle cx="480" cy="150" r="4" class="fill-slate-500"/>
+                <text x="475" y="170" class="fill-slate-900 dark:fill-white text-[10px] font-bold">ZAHB</text>
+                <path d="M 480,150 Q 350,90 220,80" class="stroke-blue-500 stroke-2 fill-none"/>
+                <text x="220" y="60" text-anchor="middle" class="fill-blue-500 text-[10px] font-bold">A: core convection expands &rarr; blueward</text>
+                <path d="M 220,80 Q 350,130 470,190" class="stroke-rose-500 stroke-2 fill-none"/>
+                <text x="330" y="215" text-anchor="middle" class="fill-rose-500 text-[10px] font-bold">B: core contracts &rarr; redward</text>
+                <circle cx="220" cy="80" r="4" class="fill-indigo-500"/>
+                <text x="180" y="65" class="fill-indigo-600 dark:fill-indigo-400 text-[10px] font-bold">Loop apex</text>
+                <text x="300" y="245" text-anchor="middle" class="fill-slate-500 text-xs font-bold font-mono">$\log T_{\text{eff}}$ (Decreasing $\rightarrow$)</text>
+                <text x="25" y="130" text-anchor="middle" class="fill-slate-500 text-xs font-bold font-mono" transform="rotate(-90, 25, 130)">$\log (L/L_\odot)$</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 3: The HB blue loop &mdash; Segment A (blueward) driven by core He-convection expansion, Segment B (redward) by post-He-peak core contraction.</span>
+            </div>
+
+            <p>
+              Intermediate-mass HB stars (with enough envelope for hydrogen shell activity) trace out this characteristic <strong>blue loop</strong>: <strong>Segment A</strong> occurs as central He-burning convection expands the core, pushing the H-shell outward into cooler layers and forcing the envelope to contract (star moves blueward); <strong>Segment B</strong> reverses this as the core contracts once central He is depleted, driving envelope re-expansion (star moves redward). EHB stars, having essentially no H-envelope left to respond, skip Segment A entirely.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Three-Zone Convective Core (Overshooting & Semi-Convection)</h3>
+            <p>
+              Central He-burning does not simply proceed with a clean convective core. As $^{12}$C and $^{16}$O accumulate from the triple-alpha and subsequent $\alpha$-capture reactions, the core&rsquo;s radiative opacity is increasingly dominated by <strong>free-free absorption</strong>:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 my-4">
+              $$\kappa_{\text{FF}} = \frac{D_{\text{FF}}(Z)}{u^3}, \quad D_{\text{FF}} \propto Z^2$$
+            </div>
+            <p class="text-sm">
+              Since $Z$ (here, the local C/O mass fraction) is rising in the core, $\kappa_{\text{FF}}$ increases, causing the convective core to grow throughout central He-burning &mdash; the opposite of the shrinking convective core seen during H-burning in massive MS stars (where falling opacity as He replaces H beats the rising $\mu$ effect).
+            </p>
+            <div class="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg space-y-2 text-sm">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-emerald-500">Three-Zone Structure</span>
+              <ol class="list-decimal list-inside space-y-1.5">
+                <li><strong>Overshooting</strong> &mdash; convective cells retain non-zero velocity past the formal Schwarzschild boundary, mixing C and O outward and fresh He inward, parametrized by an overshoot length $\Lambda_{\text{ov}}$; this locally depresses $\nabla_{\text{rad}}$.</li>
+                <li>As $\nabla_{\text{rad}}$ develops a local minimum that touches $\nabla_{\text{ad}}$, the nominally convective region splits.</li>
+                <li>The outer sub-region becomes marginally stable &mdash; <strong>semi-convective</strong>, partially mixed &mdash; yielding a final core structure of: fully convective core / semi-convective shell / radiative envelope above it.</li>
+              </ol>
+            </div>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500 font-mono">Exam Traps</span>
+              <ul class="list-disc list-inside text-sm space-y-2">
+                <li>The Second Parameter Problem is <strong>unresolved</strong> &mdash; never attribute HB morphology to age and metallicity alone in an exam answer.</li>
+                <li>HB stars are bolometrically nearly uniform in luminosity regardless of morphology; the apparent spread in visual/UV brightness across the HB is a <strong>bandpass effect</strong>, not a true luminosity difference &mdash; this is also why EHB stars look deceptively faint in the $R$-band.</li>
+                <li>Overshooting/semi-convection growing the convective core is specific to central <strong>He-burning</strong>. During <strong>H-burning</strong> on the massive main sequence, the convective core does the opposite &mdash; it shrinks.</li>
+                <li>ZAHB position is fixed by the envelope mass ratio $q=M_c/M_E$, not by the star&rsquo;s total mass directly &mdash; since $M_c$ is essentially fixed at $\sim0.5\,M_\odot$, all HB temperature spread traces back to how much envelope mass loss removed.</li>
+              </ul>
+            </div>
+
+            <p class="text-sm">
+              Because the ZAHB luminosity depends only weakly on $q$, its near-constant magnitude in metal-poor globular clusters ($M_V(\text{ZAHB}) \approx +0.5$) provides a second, independent standard-candle distance indicator alongside the TRGB.
+            </p>
+          </div>
+        </section>
+
+        <!-- QUIZ CHALLENGE SECTION -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-amber-500/10 text-amber-500 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall & Focus Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of key physics concepts from the slides.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
+            
+            <!-- Question 1 -->
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What are the two physical ingredients required to trigger the rapid expansion of the stellar envelope?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Core chemical dichotomy and an active shell source.
+                </button>
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Pure Helium core chemical composition and electron degeneracy.
+                </button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! An active shell burning source ($u \ge 0.3$) and a chemical dichotomy ($\mu_e < \mu_i$) are both mathematically required to drop the density gradient, forcing envelope expansion.
+              </p>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does the Helium Flash ignite off-center in degenerate cores under $2.2 M_\odot$?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Centrifugal forces from stellar rotation push Helium outward.
+                </button>
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Highly efficient neutrino emission cools the innermost core.
+                </button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Neutrinos carry energy directly out of the densest central core, creating a temperature inversion that shifts the maximum temperature point outward.
+              </p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What physical interaction directly causes the temporary luminosity drop known as the RGB Bump?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The H-burning shell crossing the chemical discontinuity left by dredge-up.
+                </button>
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) The sudden lifting of electron degeneracy pressure inside the envelope.
+                </button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! When the thin outward-burning shell crosses into the hydrogen-rich envelope, the mean molecular weight drops ($\mu \downarrow$), causing a temporary drop in luminosity.
+              </p>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical core mass fraction limit defined by the Schönberg-Chandrasekhar limit?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Around 8-10% of the total stellar mass.
+                </button>
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Exactly 50% of the total stellar mass.
+                </button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! An isothermal gas core can only support about 8--10% of the star's total mass before contracting rapidly.
+              </p>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">In a non-relativistic electron degenerate core, how does pressure relate to temperature?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Pressure is completely independent of temperature ($P \propto \rho^{5/3}$).
+                </button>
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Pressure is directly proportional to temperature ($P \propto \rho T$).
+                </button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Degeneracy pressure is completely decoupled from temperature, which is what allows the thermonuclear runaway to occur during Helium ignition.
+              </p>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What observational change occurs at the stellar surface due to the First Dredge-Up?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Absolute surface temperature increases by 5000 Kelvin.
+                </button>
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Carbon abundance drops while Nitrogen and Helium abundances increase.
+                </button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The deepening convective envelope brings CNO-processed material (rich in Helium and Nitrogen, depleted in Carbon) to the surface.
+              </p>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the approximate absolute I-band magnitude of the Tip of the Red Giant Branch (TRGB)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) $M_I \approx -4.0$
+                </button>
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) $M_I \approx +4.8$
+                </button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! $M_I \approx -4.0$ is incredibly stable against variations in age and metallicity, making it a stellar standard candle.
+              </p>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does Reimers' law scale mass loss with stellar parameters?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Mass-loss rate is proportional to $\frac{L R}{M}$.
+                </button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Mass-loss rate is proportional to $\frac{M^2}{L}$.
+                </button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Reimers' formula shows that mass-loss rate increases with high luminosity and radius, and decreases with higher mass.
+              </p>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why are very few stars caught traversing the Subgiant Branch (SGB) in young clusters?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The transition timescale is extremely rapid for higher-mass stars.
+                </button>
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Stars bypass this branch entirely by collapsing into black holes.
+                </button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Higher-mass stars traverse this phase in $\le 10^5$ years, creating the unpopulated gap known as the Hertzsprung Gap.
+              </p>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-amber-500">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Where does the triple-alpha Helium ignition reaction rate scale with temperature?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Linearly, proportional to $T$.
+                </button>
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Extremely sensitively, proportional to $T^{25}$.
+                </button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The $T^{25}$ temperature dependency is what drives the explosive nature of the runaway core Helium Flash.
+              </p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-amber-500">0 / 10 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (timerRunning) {
+        clearInterval(timerId);
+        btn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        btn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = true;
+      }
+      lucide.createIcons();
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+      
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = dashOffset;
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-blue-50/50', 'dark:bg-blue-900/20', 'text-blue-600', 'dark:text-blue-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-blue-50/50', 'dark:bg-blue-900/20', 'text-blue-600', 'dark:text-blue-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+      
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 10 Correct`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAIA — Agent Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #1c2128;
+      --border:    #30363d;
+      --border-hi: #484f58;
+
+      /* Agents */
+      --argus:          #38bdf8;
+      --argus-bg:       #0b2030;
+      --argus-border:   rgba(56,189,248,.35);
+
+      --apollo:         #fbbf24;
+      --apollo-bg:      #201a06;
+      --apollo-border:  rgba(251,191,36,.35);
+
+      --athena:         #a78bfa;
+      --athena-bg:      #1a1230;
+      --athena-border:  rgba(167,139,250,.35);
+
+      --coeus:          #4ade80;
+      --coeus-bg:       #0b2216;
+      --coeus-border:   rgba(74,222,128,.35);
+
+      --metis:          #2dd4bf;
+      --metis-bg:       #062018;
+      --metis-border:   rgba(45,212,191,.35);
+
+      --iris:           #f472b6;
+      --iris-bg:        #20082e;
+      --iris-border:    rgba(244,114,182,.35);
+
+      --themis:         #fb923c;
+      --themis-bg:      #201208;
+      --themis-border:  rgba(251,146,60,.35);
+
+      --gaia:           #94a3b8;
+      --gaia-bg:        #161b22;
+      --gaia-border:    rgba(148,163,184,.3);
+
+      --src:            #64748b;
+      --src-bg:         #0f1318;
+      --src-border:     rgba(100,116,139,.35);
+
+      --out:            #c084fc;
+      --out-bg:         #190d2e;
+      --out-border:     rgba(192,132,252,.35);
+
+      --text:       #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim:   #484f58;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      padding: 3.5rem 2rem 3rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(167,139,250,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    header h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      color: var(--text);
+      position: relative;
+    }
+    header h1 span { color: var(--athena); }
+    header p {
+      margin-top: .5rem;
+      font-size: .9rem;
+      color: var(--text-muted);
+      letter-spacing: .02em;
+      position: relative;
+    }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      overflow-x: auto;
+      padding: 0 1.5rem;
+      gap: 0;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar { display: none; }
+    nav a {
+      padding: .8rem 1.1rem;
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .03em;
+      color: var(--text-muted);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+    nav a:hover { color: var(--text); border-bottom-color: var(--athena); }
+
+    /* ── Layout ── */
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+    section { margin-bottom: 3.5rem; }
+
+    /* ── Section heading ── */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+    }
+
+    /* ── Two-layer diagram ── */
+    .two-layer {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: .9rem;
+    }
+    .layer-label {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      padding: 1.2rem .7rem;
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      min-width: 30px;
+    }
+    .layer-content {
+      padding: 1rem 1.25rem;
+    }
+    .layer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      align-items: center;
+    }
+    .layer-sep {
+      border-top: 1px solid var(--border);
+    }
+    .layer-label.l1 { background: #0e1a0e; }
+    .layer-label.l2 { background: #150d26; }
+    .layer-content.l1 { background: #0b160b; }
+    .layer-content.l2 { background: #110a20; }
+    .layer-item {
+      padding: .35rem .75rem;
+      border-radius: 6px;
+      font-size: .76rem;
+      font-weight: 500;
+      border: 1px solid;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .layer-arrow {
+      color: var(--text-dim);
+      font-size: .85rem;
+      padding: 0 .15rem;
+    }
+    .layer-note {
+      font-size: .74rem;
+      color: var(--text-dim);
+      padding: .8rem 1.25rem;
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      border-radius: 0 0 12px 0;
+    }
+
+    /* ── Pipeline ── */
+    .pipeline-wrap {
+      overflow-x: auto;
+      padding-bottom: .5rem;
+    }
+    .pipeline {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-width: 820px;
+    }
+    .pl-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .pl-label {
+      font-size: .63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: .6rem;
+    }
+    .pl-items { display: flex; flex-direction: column; gap: .4rem; }
+    .pl-item {
+      border-radius: 8px;
+      padding: .55rem .8rem;
+      font-size: .78rem;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.3;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-muted);
+    }
+    .pl-item small { display: block; font-size: .68rem; font-weight: 400; opacity: .8; margin-top: .15rem; }
+
+    .pl-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 .5rem;
+      align-self: center;
+      color: var(--text-dim);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .flow-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .25rem;
+      font-size: .65rem;
+      color: var(--text-dim);
+      padding: 0 .35rem;
+      flex-shrink: 0;
+      align-self: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    .flow-connector .arr { font-size: 1.1rem; line-height: 1; }
+    .flow-connector .lbl { font-size: .6rem; white-space: nowrap; }
+
+    /* color variants */
+    .c-src    { background: var(--src-bg);    border-color: var(--src-border);    color: #94a3b8; }
+    .c-argus  { background: var(--argus-bg);  border-color: var(--argus-border);  color: #7dd3fc; }
+    .c-gaia   { background: var(--gaia-bg);   border-color: var(--gaia-border);   color: #cbd5e1; }
+    .c-apollo { background: var(--apollo-bg); border-color: var(--apollo-border); color: #fde68a; }
+    .c-athena { background: var(--athena-bg); border-color: var(--athena-border); color: #c4b5fd; }
+    .c-coeus  { background: var(--coeus-bg);  border-color: var(--coeus-border);  color: #86efac; }
+    .c-metis  { background: var(--metis-bg);  border-color: var(--metis-border);  color: #5eead4; }
+    .c-iris   { background: var(--iris-bg);   border-color: var(--iris-border);   color: #f9a8d4; }
+    .c-themis { background: var(--themis-bg); border-color: var(--themis-border); color: #fdba74; }
+    .c-out    { background: var(--out-bg);    border-color: var(--out-border);    color: #d8b4fe; }
+
+    /* GAIA centre card */
+    .pl-gaia {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      min-height: 90px;
+    }
+    .pl-gaia strong { font-size: .95rem; display: block; }
+    .pl-dim { opacity: .45; }
+
+    .pipeline-footer {
+      margin-top: 1.25rem;
+      padding-top: 1.1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .6rem;
+    }
+    .pipeline-footer-label {
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: var(--text-dim);
+      margin-right: .25rem;
+    }
+    .pipeline-footer-note {
+      font-size: .76rem;
+      color: var(--text-dim);
+      margin-left: auto;
+      font-style: italic;
+    }
+
+    /* ── Agent grid ── */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: .9rem;
+    }
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top-width: 2px;
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem 1.25rem;
+      transition: border-color .15s, background .15s;
+    }
+    .agent-card:hover { background: var(--surface2); }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      margin-bottom: .65rem;
+    }
+    .agent-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .agent-name { font-size: .92rem; font-weight: 700; }
+    .agent-desc {
+      font-size: .8rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: .8rem;
+    }
+    .io-block { display: flex; flex-direction: column; gap: .3rem; }
+    .io-row { display: flex; gap: .6rem; font-size: .76rem; }
+    .io-lbl {
+      font-size: .64rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--text-dim);
+      min-width: 32px; padding-top: .1rem;
+    }
+    .io-val { color: var(--text-muted); line-height: 1.4; }
+
+    /* ── Mode cards ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    .mode-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-top-width: 2px;
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem 1.25rem;
+    }
+    .mode-head {
+      margin-bottom: .9rem;
+      padding-bottom: .6rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .mode-trigger {
+      display: inline-flex;
+      align-items: center;
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: .18rem .55rem;
+      border-radius: 4px;
+      margin-bottom: .45rem;
+    }
+    .mode-title { font-size: .9rem; font-weight: 600; }
+
+    .steps { display: flex; flex-direction: column; gap: .5rem; }
+    .step { display: flex; gap: .6rem; align-items: flex-start; }
+    .step-n {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--text-muted);
+      font-size: .64rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: .1rem;
+    }
+    .step-body { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
+    .step-body strong { color: var(--text); }
+
+    .info-box {
+      margin-top: .9rem;
+      padding: .6rem .85rem;
+      border-radius: 7px;
+      font-size: .77rem;
+      line-height: 1.5;
+    }
+
+    /* ── Builder table ── */
+    .builder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: .7rem;
+      margin-top: .5rem;
+    }
+    .builder-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .8rem 1rem;
+    }
+    .builder-script {
+      font-family: "JetBrains Mono", monospace;
+      font-size: .74rem;
+      color: var(--argus);
+      margin-bottom: .4rem;
+      display: block;
+    }
+    .builder-in  { font-size: .74rem; color: var(--text-dim); margin-bottom: .15rem; }
+    .builder-out { font-size: .74rem; color: var(--text-muted); }
+
+    /* ── Table ── */
+    .ref-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: .8rem;
+    }
+    .ref-table th {
+      padding: .65rem 1rem;
+      background: var(--surface2);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+    .ref-table th:first-child { border-radius: 10px 0 0 0; }
+    .ref-table th:last-child  { border-radius: 0 10px 0 0; }
+    .ref-table td {
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    .ref-table tr:last-child td { border-bottom: none; }
+    .ref-table tr:hover td { background: var(--surface2); }
+    .ref-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+
+    /* ── Badges ── */
+    .badge {
+      display: inline-block;
+      padding: .17rem .55rem;
+      border-radius: 4px;
+      font-size: .68rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .b-pre    { background: var(--argus-bg);  color: var(--argus);  border: 1px solid var(--argus-border); }
+    .b-apollo { background: var(--apollo-bg); color: var(--apollo); border: 1px solid var(--apollo-border); }
+    .b-athena { background: var(--athena-bg); color: var(--athena); border: 1px solid var(--athena-border); }
+    .b-work   { background: var(--coeus-bg);  color: var(--coeus);  border: 1px solid var(--coeus-border); }
+    .b-both   { background: var(--themis-bg); color: var(--themis); border: 1px solid var(--themis-border); }
+    .b-demand { background: #1a1a1a; color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* ── Code ── */
+    code {
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: .75rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: .07rem .35rem;
+      border-radius: 4px;
+      color: var(--argus);
+    }
+
+    /* ── On-demand callout strip ── */
+    .ondemand-strip {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+      padding: .65rem .9rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: .75rem;
+      font-size: .77rem;
+      color: var(--text-dim);
+    }
+    .ondemand-strip strong { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<!-- ══ Header ══════════════════════════════════ -->
+<header>
+  <h1><span>GAIA</span> — Agent Architecture</h1>
+  <p>Study orchestration system &nbsp;·&nbsp; Dispatch flow &nbsp;·&nbsp; Inputs / Outputs</p>
+</header>
+
+<!-- ══ Nav ═════════════════════════════════════ -->
+<nav>
+  <a href="#overview">Overview</a>
+  <a href="#two-layer">Two-Layer Rule</a>
+  <a href="#agents">Agents</a>
+  <a href="#athena">Athena Builders</a>
+  <a href="#themis">Themis Pipeline</a>
+  <a href="#iris">Iris Modes</a>
+  <a href="#reference">Reference</a>
+</nav>
+
+<main>
+
+<!-- ══ 1. Overview Pipeline ════════════════════ -->
+<section id="overview">
+  <div class="section-title">Overview — Dispatch Pipeline</div>
+  <div class="card">
+    <div class="pipeline-wrap">
+      <div class="pipeline">
+
+        <!-- Sources -->
+        <div class="pl-stage">
+          <div class="pl-label">Sources</div>
+          <div class="pl-items">
+            <div class="pl-item c-src">📄 PDFs</div>
+            <div class="pl-item c-src">🔧 Fortran</div>
+            <div class="pl-item c-src">📊 XLSX</div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="arr">→</div></div>
+
+        <!-- Preprocessing -->
+        <div class="pl-stage">
+          <div class="pl-label">Preprocessing</div>
+          <div class="pl-items">
+            <div class="pl-item c-argus">
+              🔭 Argus
+              <small>Gemini CLI · default</small>
+            </div>
+            <div class="pl-item c-argus pl-dim">
+              👁 Claude Vision
+              <small>fallback</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector">
+          <div class="arr">→</div>
+          <div class="lbl" style="color:var(--argus);opacity:.7">_hifi.md</div>
+        </div>
+
+        <!-- GAIA -->
+        <div class="pl-stage" style="max-width:155px;">
+          <div class="pl-label">Orchestrator</div>
+          <div class="pl-items">
+            <div class="pl-item c-gaia pl-gaia">
+              <strong>⚙ GAIA</strong>
+              <small>Dispatches agents<br>Manages sessions</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector"><div class="arr">→</div></div>
+
+        <!-- Apollo -->
+        <div class="pl-stage" style="max-width:140px;">
+          <div class="pl-label">Note Taker</div>
+          <div class="pl-items">
+            <div class="pl-item c-apollo pl-gaia">
+              <strong>🌞 Apollo</strong>
+              <small>Reads _hifi.md<br>+ Fortran</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector">
+          <div class="arr">→</div>
+          <div class="lbl" style="color:var(--apollo);opacity:.7">notes.md</div>
+        </div>
+
+        <!-- Athena -->
+        <div class="pl-stage" style="max-width:145px;">
+          <div class="pl-label">HTML Builder</div>
+          <div class="pl-items">
+            <div class="pl-item c-athena pl-gaia">
+              <strong>🦉 Athena</strong>
+              <small>build.py<br>sole HTML producer</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-connector">
+          <div class="arr">→</div>
+          <div class="lbl" style="color:var(--athena);opacity:.7">HTML</div>
+        </div>
+
+        <!-- STUDY PATH -->
+        <div class="pl-stage">
+          <div class="pl-label">STUDY PATH</div>
+          <div class="pl-items">
+            <div class="pl-item c-out">notes.html</div>
+            <div class="pl-item c-out">quiz.html</div>
+            <div class="pl-item c-out">summary.html</div>
+            <div class="pl-item c-out">flashcards.html</div>
+            <div class="pl-item c-out">question_bank.html</div>
+            <div class="pl-item c-out">transcript – date.html</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- On-demand agents footer -->
+    <div class="pipeline-footer">
+      <span class="pipeline-footer-label">On-demand agents</span>
+      <div class="pl-item c-coeus"  style="flex:none">🧠 Coeus — Quiz</div>
+      <div class="pl-item c-metis"  style="flex:none">🃏 Metis — Flashcards</div>
+      <div class="pl-item c-iris"   style="flex:none">🌸 Iris — Summary</div>
+      <div class="pl-item c-themis" style="flex:none">⚖ Themis — Examiner</div>
+      <span class="pipeline-footer-note">All read Apollo/*.md → write markdown → Athena converts to HTML</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. Two-Layer Rule ════════════════════════ -->
+<section id="two-layer">
+  <div class="section-title">The Two-Layer Rule</div>
+
+  <div class="two-layer">
+    <!-- Layer 1 -->
+    <div class="layer-label l1">Layer 1 — Internal</div>
+    <div class="layer-content l1">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#4ade80;margin-bottom:.6rem;">Agent Folders — Markdown only · not for students</div>
+      <div class="layer-row">
+        <span class="layer-item" style="background:var(--apollo-bg);border-color:var(--apollo-border);color:#fde68a">Apollo/session – notes.md</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--coeus-bg);border-color:var(--coeus-border);color:#86efac">Coeus/session – quiz.md</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--metis-bg);border-color:var(--metis-border);color:#5eead4">Metis/session – flashcards.txt</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--iris-bg);border-color:var(--iris-border);color:#f9a8d4">Iris/session – summary.md</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--themis-bg);border-color:var(--themis-border);color:#fdba74">Themis/question_bank.md</span>
+      </div>
+    </div>
+
+    <!-- Layer 2 -->
+    <div class="layer-label l2 layer-sep">Layer 2 — Student</div>
+    <div class="layer-content l2 layer-sep">
+      <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--athena);margin-bottom:.6rem;">STUDY PATH/ — HTML only · Athena is the only producer</div>
+      <div class="layer-row">
+        <span class="layer-item" style="background:var(--athena-bg);border-color:var(--athena-border);color:#c4b5fd">notes.html</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--athena-bg);border-color:var(--athena-border);color:#c4b5fd">quiz.html</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--athena-bg);border-color:var(--athena-border);color:#c4b5fd">summary.html</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--athena-bg);border-color:var(--athena-border);color:#c4b5fd">flashcards.html</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--athena-bg);border-color:var(--athena-border);color:#c4b5fd">question_bank.html</span>
+        <span class="layer-arrow">·</span>
+        <span class="layer-item" style="background:var(--athena-bg);border-color:var(--athena-border);color:#c4b5fd">transcript – date.html</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box" style="background:var(--athena-bg);border:1px solid var(--athena-border);color:#c4b5fd">
+    <strong>Rule:</strong>&nbsp; No agent other than Athena ever writes <code>.html</code>.
+    Every agent writes markdown to its own folder. Athena always fully regenerates the HTML from all markdowns — the old HTML is completely replaced on each run. <code>STUDY PATH/</code> is the only folder the student ever needs to open.
+  </div>
+</section>
+
+<!-- ══ 3. Agent Cards ════════════════════════════ -->
+<section id="agents">
+  <div class="section-title">Agents</div>
+  <div class="agent-grid">
+
+    <!-- Argus -->
+    <div class="agent-card" style="border-top-color:var(--argus)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--argus-bg)">🔭</div>
+        <div>
+          <div class="agent-name" style="color:var(--argus)">Argus</div>
+          <span class="badge b-pre">Preprocessor</span>
+        </div>
+      </div>
+      <p class="agent-desc">Gemini CLI invocation that converts PDFs into High-Fidelity markdown with perfect LaTeX rendering and detailed inline figure descriptions. Output is cached — never re-run unless <code>--force</code> is passed.</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val"><code>StudyMaterials/pdfs/*.pdf</code></span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val"><code>StudyMaterials/ocr/*_hifi.md</code></span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Argus</code></span></div>
+        <div class="io-row"><span class="io-lbl">Alt</span><span class="io-val">Claude Vision — reads PDF directly; no cache, higher token cost</span></div>
+      </div>
+    </div>
+
+    <!-- Apollo -->
+    <div class="agent-card" style="border-top-color:var(--apollo)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--apollo-bg)">🌞</div>
+        <div>
+          <div class="agent-name" style="color:var(--apollo)">Apollo</div>
+          <span class="badge b-apollo">Note Taker</span>
+        </div>
+      </div>
+      <p class="agent-desc">Exhaustive study note taker. Reads <code>_hifi.md</code> + paired Fortran source. Every concept, formula, algorithm step, and code behaviour is captured and fully explained — nothing omitted, nothing summarised. Always sequential — never dispatched in parallel.</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val"><code>*_hifi.md</code> + paired Fortran — or raw PDF (Vision fallback)</span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val"><code>Apollo/session – notes.md</code> (up to 3 parts per session)</span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Apollo</code></span></div>
+        <div class="io-row"><span class="io-lbl">Rule</span><span class="io-val">One session at a time. Never reads raw PDFs when <code>_hifi.md</code> is available.</span></div>
+      </div>
+    </div>
+
+    <!-- Athena -->
+    <div class="agent-card" style="border-top-color:var(--athena)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--athena-bg)">🦉</div>
+        <div>
+          <div class="agent-name" style="color:var(--athena)">Athena</div>
+          <span class="badge b-athena">HTML Builder</span>
+        </div>
+      </div>
+      <p class="agent-desc">The sole HTML producer. Runs a Python builder script on any agent's markdown files to produce themed, searchable, paged HTML. Always fully regenerates — no partial injection. Never reads raw PDFs or source code.</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val">Processed markdown from any agent folder</span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val">HTML in <code>STUDY PATH/</code> — one file per agent type, fully rebuilt each run</span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Athena</code></span></div>
+        <div class="io-row"><span class="io-lbl">Auto</span><span class="io-val">Triggered automatically after every working agent completes</span></div>
+      </div>
+    </div>
+
+    <!-- Coeus -->
+    <div class="agent-card" style="border-top-color:var(--coeus)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--coeus-bg)">🧠</div>
+        <div>
+          <div class="agent-name" style="color:var(--coeus)">Coeus</div>
+          <span class="badge b-work">On-demand</span>
+        </div>
+      </div>
+      <p class="agent-desc">Quiz maker. Mixed format: MCQ, true/false, open-ended. Reads only Apollo's markdown — never raw PDFs or Fortran. Output follows strict format required by <code>coeus_build.py</code>.</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val"><code>Apollo/session – notes.md</code> only</span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val"><code>Coeus/session – quiz.md</code></span></div>
+        <div class="io-row"><span class="io-lbl">HTML</span><span class="io-val">Athena → <code>STUDY PATH/quiz.html</code> via <code>coeus_build.py</code></span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Coeus</code></span></div>
+      </div>
+    </div>
+
+    <!-- Metis -->
+    <div class="agent-card" style="border-top-color:var(--metis)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--metis-bg)">🃏</div>
+        <div>
+          <div class="agent-name" style="color:var(--metis)">Metis</div>
+          <span class="badge b-work">On-demand</span>
+        </div>
+      </div>
+      <p class="agent-desc">Flashcard maker. Produces Anki-compatible tab-separated <code>.txt</code> files (<code>Front\tBack</code> per line). Reads only Apollo's markdown. The <code>.txt</code> file is copied to <code>STUDY PATH/</code> for direct Anki import.</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val"><code>Apollo/session – notes.md</code> only</span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val"><code>Metis/session – flashcards.txt</code> (also copied to <code>STUDY PATH/</code>)</span></div>
+        <div class="io-row"><span class="io-lbl">HTML</span><span class="io-val">Athena → <code>STUDY PATH/flashcards.html</code> via <code>metis_build.py</code></span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Metis</code></span></div>
+      </div>
+    </div>
+
+    <!-- Iris -->
+    <div class="agent-card" style="border-top-color:var(--iris)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--iris-bg)">🌸</div>
+        <div>
+          <div class="agent-name" style="color:var(--iris)">Iris</div>
+          <span class="badge b-work">On-demand / Auto</span>
+        </div>
+      </div>
+      <p class="agent-desc">Summariser. Compact exam-prep summary — ~10–15% the length of the source. Four sections: Key Concepts, Key Equations, Key Algorithms, Watch Out For. Two modes: Standard (student-triggered) or Question-Aware (auto after Themis Phase 1).</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val"><code>Apollo/*.md</code> + optionally <code>Themis/question_bank.md</code></span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val"><code>Iris/session – summary.md</code> or <code>Iris/exam_summary.md</code></span></div>
+        <div class="io-row"><span class="io-lbl">HTML</span><span class="io-val">Athena → <code>STUDY PATH/summary.html</code> via <code>iris_build.py</code></span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Iris</code></span></div>
+      </div>
+    </div>
+
+    <!-- Themis -->
+    <div class="agent-card" style="border-top-color:var(--themis)">
+      <div class="agent-header">
+        <div class="agent-icon" style="background:var(--themis-bg)">⚖</div>
+        <div>
+          <div class="agent-name" style="color:var(--themis)">Themis</div>
+          <span class="badge b-both">Working + Responsive</span>
+        </div>
+      </div>
+      <p class="agent-desc">Oral examiner. Phase 1 (working): builds a Q&amp;A reference bank from XLSX + Apollo notes, then auto-triggers Iris in Question-Aware mode. Phase 2 (responsive): live oral exam graded on two independent dimensions — source accuracy and knowledge depth.</p>
+      <div class="io-block">
+        <div class="io-row"><span class="io-lbl">In</span><span class="io-val">Ph1: xlsx + <code>Apollo/*.md</code> &nbsp;|&nbsp; Ph2: <code>question_bank.md</code></span></div>
+        <div class="io-row"><span class="io-lbl">Out</span><span class="io-val"><code>Themis/question_bank.md</code> + <code>Themis/sessions/</code> transcripts</span></div>
+        <div class="io-row"><span class="io-lbl">HTML</span><span class="io-val">Athena → <code>question_bank.html</code> + <code>transcript – date.html</code></span></div>
+        <div class="io-row"><span class="io-lbl">Cmd</span><span class="io-val"><code>/Themis</code></span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 4. Athena Builder Scripts ════════════════ -->
+<section id="athena">
+  <div class="section-title">Athena — Builder Scripts</div>
+
+  <div class="card" style="margin-bottom:.9rem">
+    <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:1.2rem;line-height:1.6">
+      Athena runs a Python builder script per agent type. Each script reads all available markdowns for that agent, sorts them, and produces a single fully-regenerated HTML file in <code>STUDY PATH/</code>.
+      The old HTML is replaced on every run — no merging, no partial updates.
+    </p>
+    <div class="builder-grid">
+
+      <div class="builder-card">
+        <span class="builder-script">build.py</span>
+        <div class="builder-in">Source: <code>Apollo/*.md</code></div>
+        <div class="builder-out">→ <code>STUDY PATH/notes.html</code></div>
+        <div style="font-size:.7rem;color:var(--text-dim);margin-top:.4rem">Multi-tab, searchable, themed</div>
+      </div>
+
+      <div class="builder-card">
+        <span class="builder-script">coeus_build.py</span>
+        <div class="builder-in">Source: <code>Coeus/*–quiz.md</code></div>
+        <div class="builder-out">→ <code>STUDY PATH/quiz.html</code></div>
+        <div style="font-size:.7rem;color:var(--text-dim);margin-top:.4rem">MCQ/T-F/Open · score chip · sidebar</div>
+      </div>
+
+      <div class="builder-card">
+        <span class="builder-script">iris_build.py</span>
+        <div class="builder-in">Source: <code>Iris/*.md</code></div>
+        <div class="builder-out">→ <code>STUDY PATH/summary.html</code></div>
+        <div style="font-size:.7rem;color:var(--text-dim);margin-top:.4rem">Tabs per session · exam callouts</div>
+      </div>
+
+      <div class="builder-card">
+        <span class="builder-script">metis_build.py</span>
+        <div class="builder-in">Source: <code>Metis/*–flashcards.txt</code></div>
+        <div class="builder-out">→ <code>STUDY PATH/flashcards.html</code></div>
+        <div style="font-size:.7rem;color:var(--text-dim);margin-top:.4rem">Template TBD</div>
+      </div>
+
+      <div class="builder-card">
+        <span class="builder-script">themis_build.py</span>
+        <div class="builder-in">Source: <code>Themis/*.md</code></div>
+        <div class="builder-out">→ <code>question_bank.html</code> · <code>transcript–date.html</code></div>
+        <div style="font-size:.7rem;color:var(--text-dim);margin-top:.4rem">Q&amp;A bank + session transcripts</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="info-box" style="background:var(--gaia-bg);border:1px solid var(--gaia-border);color:var(--text-muted)">
+    <strong>Command pattern:</strong>&nbsp;
+    <code>python3 "GAIA/Athena/build.py" "/abs/path/file1.md" "/abs/path/file2.md" … -o "GAIA/STUDY PATH/notes.html" --themes "GAIA/Athena/themes"</code>
+    — all input paths are absolute, files sorted alphabetically within each session.
+  </div>
+</section>
+
+<!-- ══ 5. Themis Pipeline ════════════════════════ -->
+<section id="themis">
+  <div class="section-title">Themis — Two-Phase Pipeline</div>
+  <div class="two-col">
+
+    <!-- Phase 1 -->
+    <div class="mode-card" style="border-top-color:var(--coeus)">
+      <div class="mode-head">
+        <div class="mode-trigger" style="background:var(--coeus-bg);color:var(--coeus);border:1px solid var(--coeus-border)">Working Agent</div>
+        <div class="mode-title">Phase 1 — Preparation</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body">Read <code>Themis/*.xlsx</code> — extract every question verbatim, preserving numbering</div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body">Find answers in priority order:<br><strong>Apollo/*.md</strong> → <strong>ocr/*.md</strong> → <strong>Fortran source</strong></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body">Write <code>Themis/question_bank.md</code> — one entry per question with full answer + source attribution. Unanswered → <em>Not found in study materials</em></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body">Report gaps to student. Offer re-dispatch of Apollo for missing topics.</div></div>
+        <div class="step"><div class="step-n">5</div><div class="step-body">Auto-dispatch <strong>Iris in Question-Aware mode</strong> — always, no user prompt required</div></div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="mode-card" style="border-top-color:var(--themis)">
+      <div class="mode-head">
+        <div class="mode-trigger" style="background:var(--themis-bg);color:var(--themis);border:1px solid var(--themis-border)">Responsive Agent</div>
+        <div class="mode-title">Phase 2 — Oral Exam</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body">Read <code>question_bank.md</code> — refuse and abort if file does not exist</div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body">Ask a question (student picks topic or Themis selects)</div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body">Student answers (voice or text)</div></div>
+        <div class="step"><div class="step-n">4a</div><div class="step-body"><strong>Source grade</strong> — strict comparison against the <code>question_bank.md</code> answer field</div></div>
+        <div class="step"><div class="step-n">4b</div><div class="step-body"><strong>Knowledge grade</strong> — Themis's own live inference of what a complete answer requires</div></div>
+        <div class="step"><div class="step-n">5</div><div class="step-body">Both grades shown together. If they diverge, Themis notes the reason explicitly.</div></div>
+        <div class="step"><div class="step-n">6</div><div class="step-body">Loop or end — save graded transcript to <code>Themis/sessions/YYYY-MM-DD.md</code></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6. Iris Modes ════════════════════════════ -->
+<section id="iris">
+  <div class="section-title">Iris — Two Modes</div>
+  <div class="two-col">
+
+    <!-- Standard -->
+    <div class="mode-card" style="border-top-color:var(--iris)">
+      <div class="mode-head">
+        <div class="mode-trigger" style="background:var(--iris-bg);color:var(--iris);border:1px solid var(--iris-border)">Student-triggered</div>
+        <div class="mode-title">Standard Mode</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body">Read specified <code>Apollo/*.md</code> files</div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body">Produce 4-section exam-prep summary (~10–15% of source):<br><strong>Key Concepts · Key Equations · Key Algorithms · Watch Out For</strong></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body">Write <code>Iris/session – summary.md</code></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body">GAIA dispatches Athena → <code>STUDY PATH/summary.html</code></div></div>
+      </div>
+      <div class="info-box" style="background:var(--iris-bg);border:1px solid var(--iris-border);color:#f9a8d4">
+        Not dispatched automatically per session — only on explicit student request.
+      </div>
+    </div>
+
+    <!-- Question-Aware -->
+    <div class="mode-card" style="border-top-color:var(--themis)">
+      <div class="mode-head">
+        <div class="mode-trigger" style="background:var(--themis-bg);color:var(--themis);border:1px solid var(--themis-border)">Auto — after Themis Phase 1</div>
+        <div class="mode-title">Question-Aware Mode</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-n">1</div><div class="step-body">Read <code>question_bank.md</code> — build internal topic index from every question</div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body">Read all <code>Apollo/*.md</code> for content</div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body">Same 4 sections as Standard Mode</div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body">Add inline exam callouts for matched items:<br><em style="color:var(--text-dim)">EXAM QUESTION — Q3, Q7: "Describe the cooling instability criterion."</em></div></div>
+        <div class="step"><div class="step-n">5</div><div class="step-body">Add <strong>Coverage Map table</strong> — every Q# mapped to where it appears in the summary; gaps flagged explicitly</div></div>
+        <div class="step"><div class="step-n">6</div><div class="step-body">Write <code>Iris/exam_summary.md</code> — included in next <code>summary.html</code> rebuild</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7. Reference Table ════════════════════════ -->
+<section id="reference">
+  <div class="section-title">Agent Quick Reference</div>
+  <div class="card" style="padding:0;overflow:hidden;border-radius:12px">
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Type</th>
+          <th>Command</th>
+          <th>Reads from</th>
+          <th>Writes to (markdown)</th>
+          <th>STUDY PATH output</th>
+          <th>Key rules</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Argus</td>
+          <td><span class="badge b-pre">Preprocessor</span></td>
+          <td><code>/Argus</code></td>
+          <td><code>StudyMaterials/pdfs/</code></td>
+          <td><code>StudyMaterials/ocr/*_hifi.md</code></td>
+          <td>—</td>
+          <td>Gemini CLI. Cached — skip if <code>_hifi.md</code> exists. Force with <code>--force</code>.</td>
+        </tr>
+        <tr>
+          <td>Apollo</td>
+          <td><span class="badge b-apollo">Note Taker</span></td>
+          <td><code>/Apollo</code></td>
+          <td><code>*_hifi.md</code> + paired Fortran</td>
+          <td><code>Apollo/session – notes.md</code> (up to 3 parts)</td>
+          <td><code>notes.html</code></td>
+          <td>Always sequential. Completeness non-negotiable. Never reads raw PDFs when _hifi.md exists.</td>
+        </tr>
+        <tr>
+          <td>Athena</td>
+          <td><span class="badge b-athena">HTML Builder</span></td>
+          <td><code>/Athena</code></td>
+          <td>Any agent's markdown folder</td>
+          <td>— (produces HTML only)</td>
+          <td>All HTML files</td>
+          <td>Sole HTML producer. Always full regeneration. Never reads PDFs or source code.</td>
+        </tr>
+        <tr>
+          <td>Coeus</td>
+          <td><span class="badge b-demand">On-demand</span></td>
+          <td><code>/Coeus</code></td>
+          <td><code>Apollo/session – notes.md</code> only</td>
+          <td><code>Coeus/session – quiz.md</code></td>
+          <td><code>quiz.html</code></td>
+          <td>Never reads raw PDFs or Fortran. Strict output format required by coeus_build.py.</td>
+        </tr>
+        <tr>
+          <td>Metis</td>
+          <td><span class="badge b-demand">On-demand</span></td>
+          <td><code>/Metis</code></td>
+          <td><code>Apollo/session – notes.md</code> only</td>
+          <td><code>Metis/session – flashcards.txt</code></td>
+          <td><code>flashcards.html</code></td>
+          <td>Anki-compatible <code>Front\tBack</code> format. .txt also copied to STUDY PATH for direct import.</td>
+        </tr>
+        <tr>
+          <td>Iris</td>
+          <td><span class="badge b-demand">On-demand / Auto</span></td>
+          <td><code>/Iris</code></td>
+          <td><code>Apollo/*.md</code> + <code>question_bank.md</code> (QA mode)</td>
+          <td><code>Iris/session – summary.md</code> or <code>exam_summary.md</code></td>
+          <td><code>summary.html</code></td>
+          <td>Not auto-dispatched per session. QA mode auto-triggered by Themis Phase 1 only.</td>
+        </tr>
+        <tr>
+          <td>Themis</td>
+          <td><span class="badge b-both">Working + Responsive</span></td>
+          <td><code>/Themis</code></td>
+          <td>Ph1: xlsx + <code>Apollo/*.md</code> &nbsp;|&nbsp; Ph2: <code>question_bank.md</code></td>
+          <td><code>Themis/question_bank.md</code> + <code>sessions/*.md</code></td>
+          <td><code>question_bank.html</code> · <code>transcript – date.html</code></td>
+          <td>Ph1 auto-triggers Iris QA. Ph2 dual grades: source + knowledge. Phase 2 requires Phase 1 to have run.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+</body>
+</html>

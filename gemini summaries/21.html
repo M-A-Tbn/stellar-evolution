@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Sequence Evolution & the Zero Age Main Sequence - 30-Min Masterclass</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons for premium visual depth -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf3e4;
+      color: #43331f;
+    }
+    .theme-sepia .card-bg {
+      background-color: #f5e8cf;
+      border-color: #e4cd9c;
+    }
+    .theme-sepia .text-muted {
+      color: #6e5b3f;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d0ae76;
+    }
+
+    /* Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #fed7aa;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #ea580c;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #7c2d12;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-orange-500/10 text-orange-500 rounded-lg">
+          <i data-lucide="sun" class="w-6 h-6 animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Main Sequence Evolution <span class="text-orange-500">Part II</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Masterclass (21.MS_evolution.pdf)</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-orange-500/10 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-lg border border-orange-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-orange-800 dark:hover:text-orange-200">
+            <i data-lucide="play" id="timer-icon-play" class="w-3.5 h-3.5 inline"></i>
+            <i data-lucide="pause" id="timer-icon-pause" class="w-3.5 h-3.5 inline hidden"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-orange-500 to-amber-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-orange-600 dark:text-orange-400 font-semibold bg-orange-50/50 dark:bg-orange-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-orange-500 text-white text-xs">1</span>
+              <span class="truncate">The Zero Age Main Sequence</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
+              <span class="truncate">Mass Cut-Off Limits</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
+              <span class="truncate">The Eddington Luminosity</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
+              <span class="truncate">pp Chain vs. CNO Cycle</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
+              <span class="truncate">CNO Burning &amp; Convective Cores</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
+              <span class="truncate">Three Structural Regimes</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
+              <span class="truncate">Mass-Luminosity Relation</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
+              <span class="truncate">Metallicity &amp; Helium Effects</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
+              <span class="truncate">The MS as an Evolutionary Phase</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
+              <span class="truncate">Solar Evolution Across the MS</span>
+            </a>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">11</span>
+              <span class="truncate">Track Morphology: Segment 1&ndash;2</span>
+            </a>
+            <a href="#sec-12" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">12</span>
+              <span class="truncate">The Turn-Off &amp; the Hook</span>
+            </a>
+            <a href="#sec-13" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">13</span>
+              <span class="truncate">The Isothermal Helium Core</span>
+            </a>
+            <a href="#sec-14" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">14</span>
+              <span class="truncate">Sch&ouml;nberg-Chandrasekhar Limit</span>
+            </a>
+            <a href="#sec-15" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">15</span>
+              <span class="truncate">Post-MS Fate &amp; Degeneracy</span>
+            </a>
+            <a href="#sec-16" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">16</span>
+              <span class="truncate">The Central Organizing Principle</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-orange-500 text-white text-xs"><i data-lucide="award" class="w-3 h-3"></i></span>
+              <span class="truncate font-semibold">Active Recall Mastery Test</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-orange-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-orange-400"></i>
+            <h4 class="font-bold text-sm text-orange-200 uppercase tracking-wider">ZAMS Constants</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-slate-300">
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
+              <span>Mass range:</span>
+              <span class="text-orange-300">$0.08\text{--}90\,M_\odot$</span>
+            </div>
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
+              <span>pp/CNO transition:</span>
+              <span class="text-orange-300">$1.2\,M_\odot$</span>
+            </div>
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
+              <span>Fully convective below:</span>
+              <span class="text-orange-300">$0.3\,M_\odot$</span>
+            </div>
+            <div class="flex justify-between border-b border-orange-900 pb-1.5">
+              <span>MS lifetime:</span>
+              <span class="text-orange-300">$t\!\sim\!10^{10}M^{-3}$ yr</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>SC core limit:</span>
+              <span class="text-orange-300">$M_c\le0.10\,M_{tot}$</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-slate-100 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="sun" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-orange-500/10 text-orange-500 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics Core Course</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              Main Sequence Evolution: Structure, Burning, and the Road Off the ZAMS
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive study companion covering slide lecture series "21.MS_evolution.pdf" verbatim, detailing the Zero Age Main Sequence, the pp chain/CNO cycle dichotomy, mass-dependent stellar structure, and the growth of the isothermal helium core toward the Sch&ouml;nberg-Chandrasekhar limit.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Zero Age Main Sequence (ZAMS)</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The Zero Age Main Sequence (ZAMS) is a reference locus in the Hertzsprung-Russell (HR) diagram connecting stars of different masses at the exact instant they ignite hydrogen burning in their cores. "Zero age" refers literally to time zero of a star's nuclear-burning life: a star is placed on the ZAMS the moment its core reaches the temperature required to sustain hydrogen-to-helium fusion.
+            </p>
+            <p>
+              It is essential to understand what the ZAMS is <strong>not</strong>: it is not an evolutionary track. A track shows how a single star of fixed mass moves through the HR diagram over time. The ZAMS, by contrast, is a snapshot locus that simultaneously shows stars of wildly different masses, all at time zero of their nuclear lives. Once evolution begins, each star departs from its ZAMS position along its own individual track.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: ZAMS &ne; Evolutionary Track</span>
+              </div>
+              <p class="text-sm">
+                This is one of the most common conflations in the subject. The ZAMS is a snapshot across masses at $t=0$; an evolutionary track is the time-history of one single mass. Never describe "moving along the ZAMS" &mdash; stars move <em>away</em> from it, along tracks.
+              </p>
+            </div>
+            <p>
+              A key physical property of every ZAMS star is <strong>chemical homogeneity</strong>: the composition is uniform throughout the entire volume. This arises because, during the pre-main-sequence (pre-MS) phase, deep convection thoroughly mixed the stellar material. When the star arrives on the ZAMS there is no abundance gradient from centre to surface.
+            </p>
+            <p>
+              The ZAMS is the <strong>only</strong> location in the HR diagram where a firm, straightforward mass-luminosity relation can be established, precisely because all ZAMS stars are freshly ignited and have not yet accumulated the complications of chemical evolution or structural change.
+            </p>
+            <p>
+              The ZAMS spans effective temperatures from roughly $T_{eff}\approx2700$ K (low-mass end) to $T_{eff}\approx53{,}000$ K (high-mass end) &mdash; a factor of $\sim$20 &mdash; while mass varies from $0.08\,M_\odot$ to $90\,M_\odot$, a factor of over 1000. This enormous mass range compresses into only a factor of $\sim$20 in surface temperature, illustrating how strongly stellar structure moderates the response to mass.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Mass Cut-Off Limits: Brown Dwarfs to Eddington Instability</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-2">The Lower Cut-Off: $M_{low}\approx0.08\,M_\odot$</h3>
+            <p>
+              Below this critical mass, a forming object never reaches the central temperature required to ignite the full pp chain:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-orange-600 dark:text-orange-400 font-bold">
+              $$M_{crit} = 0.08\,M_\odot \approx 0.1\,M_\odot$$
+            </div>
+            <p>
+              Objects with $M&lt;M_{crit}$ are not stars in the astrophysical sense &mdash; they are <strong>brown dwarfs</strong>, "failed stars" whose cores never sustain a self-regulating thermonuclear furnace. They simply radiate away gravitational potential energy and cool over time, lying along the Hayashi (pre-MS) track without ever converging onto the true ZAMS.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Upper Cut-Off: $M_{up}\sim90\,M_\odot$</h3>
+            <p>
+              At the other extreme, very massive stars become structurally unstable. This limit is not an absolute, rigorous cut-off &mdash; it depends on metallicity &mdash; but it captures a real physical message: forming a stable star with $M\gtrsim100\,M_\odot$ is extremely difficult, because radiation pressure becomes comparable to gravity, threatening hydrostatic equilibrium in the outer layers (the Eddington luminosity, Section 3).
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Eddington Luminosity: A Derivation from First Principles</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In the outer envelopes of very hot, luminous stars, radiation pressure can dominate over gas pressure. The pressure gradient is then driven by the radiative flux $F_{rad}=L/4\pi r^2$:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{dP}{dr} = -\frac{\kappa\rho}{c}F_{rad}$$
+            </div>
+            <p>Hydrostatic equilibrium simultaneously requires the pressure gradient to balance gravity:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{dP}{dr} = -\frac{GM\rho}{r^2}$$
+            </div>
+            <p>Setting these equal, at the point where radiation force exactly counterbalances gravity, both $\rho$ and $r^2$ cancel:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
+              $$L_{ed} = \frac{4\pi GMc}{\kappa}$$
+            </div>
+            <p>
+              This is the <strong>maximum luminosity</strong> a star of mass $M$ can radiate while maintaining hydrostatic equilibrium at opacity $\kappa$. If $L>L_{ed}$, radiation pressure exceeds gravity in the outer regions and mass loss can be driven.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Numerical Evaluation and the $90\,M_\odot$ Connection</h3>
+            <p>
+              For hot, massive stars the dominant opacity source is electron (Thomson) scattering, $\kappa=0.2(1+X)$. With $X=0.7$: $\kappa=0.34\ \text{cm}^2\text{g}^{-1}$. Substituting CGS constants:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-orange-600 dark:text-orange-400 font-bold">
+              $$\frac{L_{ed}}{L_\odot} \approx 3.8\times10^4\,\frac{M}{M_\odot}$$
+            </div>
+            <p>
+              For a $90\,M_\odot$ star this gives $L_{ed}\approx3.5\times10^6\,L_\odot$. Crucially, the observed/theoretical luminosity of a $90\,M_\odot$ ZAMS star is only about a factor of 3 below $L_{ed}$ &mdash; a near-coincidence explaining why forming stars above $\sim90\,M_\odot$ at solar metallicity is so difficult: their own luminosity sits close enough to the Eddington limit that radiative forces destabilize the structure.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: The $90\,M_\odot$ Limit Is Not a Hard Wall</span>
+              </div>
+              <p class="text-sm">
+                Do not quote $90\,M_\odot$ as a rigorous universal ceiling. It is metallicity-dependent (lower $Z$ &rarr; lower opacity &rarr; the star can push closer to $L_{ed}$ at higher mass) and stems entirely from proximity to $L_{ed}$, not from a separate hard physical law.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Hydrogen Burning Modes: the pp Chain vs. the CNO Cycle</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Every star on the ZAMS is a core hydrogen-burning star, via one of two thermonuclear chains with different activation temperatures:
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2">
+                <span class="text-xs uppercase font-extrabold text-orange-500">pp Chain (Proton-Proton)</span>
+                <p class="text-sm">Ignites at $T_c\approx1.4\times10^7$ K. Dominant in low-mass stars including the Sun.</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-2.5 rounded text-center font-mono text-xs text-orange-600 dark:text-orange-400 font-bold">
+                  $$\epsilon_{pp}\propto\rho X^2 T_6^5$$
+                </div>
+              </div>
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2">
+                <span class="text-xs uppercase font-extrabold text-amber-600">CNO Cycle (Carbon-Nitrogen-Oxygen)</span>
+                <p class="text-sm">Ignites at $T_c\approx1.8\times10^7$ K. Requires slightly higher $T$, but overwhelmingly dominant at higher masses.</p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-2.5 rounded text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">
+                  $$\epsilon_{CNO}\propto\rho X Z_{CNO}T_6^{15}$$
+                </div>
+              </div>
+            </div>
+            <p>
+              Because core temperature $T_c$ rises with stellar mass, there is a transition mass above which CNO takes over, at a surprisingly low value:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-orange-600 dark:text-orange-400 font-bold">
+              $$M_{transition}\approx1.2\,M_\odot$$
+            </div>
+            <p>
+              At $1\,M_\odot$, $T_c=1.4\times10^7$ K and pp dominates; at $15\,M_\odot$, $T_c=3.4\times10^7$ K and CNO dominates entirely. In the Sun, $\epsilon_{pp}/\epsilon_{CNO}\sim100$ &mdash; the pp chain supplies about 99% of solar luminosity.
+            </p>
+            <p>
+              The exponent $n\sim15$ for CNO versus $n\sim5$ for pp is the central fact driving all subsequent structural differences. Although core temperatures differ only modestly between low- and high-mass ZAMS stars (both a few $\times10^7$ K), the CNO cycle's extreme temperature sensitivity ($T_6^{15}$) makes $\epsilon_{CNO}$ enormously larger than $\epsilon_{pp}$ even for modest $T$ increases. In $M>1.2\,M_\odot$ stars, $\sim$90% of the luminosity is generated within the innermost 10% of stellar mass, versus 70% within the innermost 20% in the Sun.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: It's the Exponent, Not the Temperature</span>
+              </div>
+              <p class="text-sm">
+                The transition mass $\approx1.2\,M_\odot$ looks deceptively low given how close $1.4\times10^7$ K and $1.8\times10^7$ K are. What matters is not the absolute core temperature but the $T^{15}$ vs. $T^5$ exponent &mdash; a small $T$ increase produces a disproportionate $\epsilon_{CNO}$ jump. Never justify the transition by "temperature difference" alone.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Why CNO Burning Forces a Convective Core</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The concentrated energy production of the CNO cycle directly causes central convection in massive stars. Convection is triggered when the radiative gradient exceeds the adiabatic gradient:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\nabla_{rad} > \nabla_{ad}, \qquad \left.\frac{dT}{dr}\right|_{rad} = -\frac{3\kappa\rho}{4acT^3}\frac{L_r}{4\pi r^2}$$
+            </div>
+            <p>
+              When $\epsilon_{CNO}$ is large due to its steep temperature dependence, $L_r$ rises very steeply near the centre. Combined with the concentrated nature of the energy production (a large $L_r/r^2$ term), $\nabla_{rad}$ exceeds $\nabla_{ad}$ in the core, triggering convection:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
+              $$\text{H-burning via CNO} \implies \text{convective core}$$
+            </div>
+            <p>
+              In contrast, the pp chain distributes energy production over a larger volume, so $L_r$ rises more gradually and the core remains radiative. The type of hydrogen burning &mdash; determined entirely by stellar mass &mdash; therefore determines whether the core is convective or radiative, and this single branch point cascades through nearly every property discussed in later sections.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Stellar Structure Along the ZAMS: Three Regimes</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The internal structure of a ZAMS star &mdash; specifically where convection occurs &mdash; depends on mass. Two transition masses define three structural regimes, arising from two distinct physical mechanisms:
+            </p>
+
+            <!-- Three-Regime Structural SVG -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-orange-100 dark:border-slate-800">
+              <svg viewBox="0 0 600 220" class="w-full max-w-2xl h-auto">
+                <!-- Regime 1: M > 1.2 Msun -->
+                <circle cx="100" cy="100" r="80" class="fill-none stroke-slate-300 dark:stroke-slate-700 stroke-[2px]"/>
+                <circle cx="100" cy="100" r="30" class="fill-orange-500/70 stroke-orange-600 stroke-[2px]"/>
+                <text x="100" y="196" text-anchor="middle" class="fill-slate-900 dark:fill-white text-[11px] font-mono font-bold">$M &gt; 1.2\,M_\odot$</text>
+                <text x="100" y="30" text-anchor="middle" class="fill-slate-500 text-[10px] font-mono">Radiative envelope</text>
+                <text x="100" y="104" text-anchor="middle" class="fill-white text-[9px] font-mono font-bold">Conv. core</text>
+
+                <!-- Regime 2: 0.3-1.2 Msun -->
+                <circle cx="300" cy="100" r="65" class="fill-none stroke-amber-500/60 stroke-[10px]"/>
+                <circle cx="300" cy="100" r="55" class="fill-slate-200 dark:fill-slate-800 stroke-slate-400 dark:stroke-slate-600 stroke-[2px]"/>
+                <text x="300" y="196" text-anchor="middle" class="fill-slate-900 dark:fill-white text-[11px] font-mono font-bold">$0.3 &lt; M/M_\odot &lt; 1.2$</text>
+                <text x="300" y="30" text-anchor="middle" class="fill-amber-600 text-[10px] font-mono">Convective envelope</text>
+                <text x="300" y="104" text-anchor="middle" class="fill-slate-600 dark:fill-slate-300 text-[9px] font-mono font-bold">Rad. core</text>
+
+                <!-- Regime 3: M < 0.3 Msun -->
+                <circle cx="490" cy="100" r="55" class="fill-amber-500/50 stroke-amber-600 stroke-[3px]"/>
+                <text x="490" y="196" text-anchor="middle" class="fill-slate-900 dark:fill-white text-[11px] font-mono font-bold">$M &lt; 0.3\,M_\odot$</text>
+                <text x="490" y="104" text-anchor="middle" class="fill-slate-900 dark:fill-white text-[9px] font-mono font-bold">Fully convective</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig. 1: The three ZAMS structural regimes, defined by two transition masses.</span>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">$M>1.2\,M_\odot$: Convective Core, Radiative Envelope</h3>
+            <p>
+              For a $5\,M_\odot$ star, the innermost $\sim$10% by radius is the H-burning/convective region, driven by the intense concentrated CNO flux; the outer 70% is a radiative envelope. This convective core homogenizes the composition within it, enlarging the effective fuel reservoir and producing flat-topped H-abundance profiles (Section 12).
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">$0.3\,M_\odot&lt;M&lt;1.2\,M_\odot$: Radiative Core, Convective Envelope</h3>
+            <p>
+              For a $1\,M_\odot$ star, the pp-burning core ($\sim$20% by radius) is radiative, while the outer $\sim$30% is convective. Two effects cooperate to produce this outer convection:
+            </p>
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+              <li>Low surface temperatures raise opacity via the Kramers law, $\kappa\propto T^{-3.5}$, elevating $\nabla_{rad}$.</li>
+              <li>Partial ionization zones near the surface depress $\nabla_{ad}=1-1/\gamma$ from $\sim$0.4 toward $\sim$0.1, since ionization absorbs energy that would otherwise raise $c_P,c_V$ toward $\gamma\to1$.</li>
+            </ol>
+            <p>Both effects together make the outer layers of the Sun (and all stars in this mass range) convective.</p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">$M&lt;0.3\,M_\odot$: Fully Convective</h3>
+            <p>
+              This is an extreme version of the convective-envelope mechanism operating throughout the entire star: uniformly low temperature keeps opacity high and $\nabla_{ad}$ suppressed everywhere. The Hayashi (pre-MS) track for these stars nearly coincides with the ZAMS, since the convective structure barely changes upon H-ignition.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Core Temperature and the Mass-Luminosity Relation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              If all stars burned only via the pp chain, core temperature would need to rise steeply with mass to sustain higher luminosities. The CNO cycle's enormously stronger temperature dependence lets the same (or larger) luminosity be produced at much lower core temperatures: a $1.5\,M_\odot$ star has $T_c\approx1.81\times10^7$ K, while a $7\,M_\odot$ star (a $\sim$5&times; mass increase) has only $T_c\approx2.91\times10^7$ K &mdash; a factor of $\sim$1.6.
+            </p>
+            <p>
+              A crucial secondary consequence: as mass increases, <strong>central density decreases</strong>. From the ZAMS data table: $\rho_c\approx402.5\ \text{g cm}^{-3}$ at $0.1\,M_\odot$, but only $\rho_c\approx13.5\ \text{g cm}^{-3}$ at $7.0\,M_\odot$. High-mass stars have significantly less dense cores than low-mass stars &mdash; a fact that will govern whether the post-MS core ever becomes electron-degenerate (Section 15).
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: Higher Mass &ne; Higher Central Density</span>
+              </div>
+              <p class="text-sm">
+                It is tempting to assume a more massive, more luminous, hotter star also has a denser core. The opposite is true: $\rho_c$ <em>falls</em> with increasing mass because CNO burning limits $T_c$ growth. Low central density is precisely why high-mass cores avoid electron degeneracy ($T/\rho^{2/3}&lt;D$ is much harder to satisfy at low $\rho$) &mdash; connect this trend directly to the degeneracy condition when reasoning about post-MS fate.
+              </p>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Broken Power Law</h3>
+            <p>The different burning processes modify the mass-luminosity relation into three distinct regimes:</p>
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th class="px-4 py-3">Regime</th>
+                    <th class="px-4 py-3">Mass Range</th>
+                    <th class="px-4 py-3">Burning Mode</th>
+                    <th class="px-4 py-3">$L\propto M^n$</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Upper main sequence</td>
+                    <td class="px-4 py-3">$M\gtrsim1.2\,M_\odot$</td>
+                    <td class="px-4 py-3">CNO</td>
+                    <td class="px-4 py-3">$n\approx3.6$ (shallower)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Lower main sequence</td>
+                    <td class="px-4 py-3">$M\lesssim1.2\,M_\odot$</td>
+                    <td class="px-4 py-3">pp</td>
+                    <td class="px-4 py-3">$n\approx4$&ndash;$4.5$ (steeper)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Very low mass</td>
+                    <td class="px-4 py-3">$M\ll1\,M_\odot$</td>
+                    <td class="px-4 py-3">pp</td>
+                    <td class="px-4 py-3">$n\approx2.6$ (shallowest)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              The shallower upper-MS slope reflects the CNO cycle limiting core-temperature growth: each added unit of mass buys a smaller fractional luminosity gain than it would under pure pp burning. Four distinct effects, all traceable to the CNO cycle's $T^{15}$ sensitivity, follow from this single mechanism: (1) sets convective cores above $1.2\,M_\odot$; (2) limits $T_c$ growth with mass; (3) reduces the mass-luminosity exponent; (4) shapes the post-MS "hook" signature (Section 12).
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: There Is No Single Mass-Luminosity Exponent</span>
+              </div>
+              <p class="text-sm">
+                Do not quote "$L\propto M^4$" as a universal law. It is a broken power law with three distinct regimes above &mdash; the exponent depends on which burning mode and mass range applies.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Metallicity and Helium Abundance Effects on the ZAMS</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-2">Metallicity ($Z\nearrow$, $Y$ fixed)</h3>
+            <p>
+              Higher $Z$ raises opacity (more bound-free/bound-bound absorbers), steepening $\nabla_{rad}$, so the star must be fainter and cooler to maintain hydrostatic equilibrium. The ZAMS shifts down and to the right; fainter, cooler stars radiate more slowly and so have <strong>longer MS lifetimes</strong>.
+            </p>
+            <p>
+              Lower $Z$ shifts the ZAMS up and to the left; at very low $Z$ ($Z=0.0001$), scarce CNO catalysts suppress CNO burning, so pp dominates to higher masses, requiring hotter cores &mdash; low-metallicity stars are systematically <strong>hotter-cored</strong> at fixed mass.
+            </p>
+            <p>
+              At fixed population age, higher-$Z$ populations (fainter, longer-lived) have a <strong>larger turnoff mass</strong>: at 13 Gyr, $Z=0.0001$ gives $M_{TO}=0.77\,M_\odot$ vs. $Z=0.02$ giving $M_{TO}=0.85\,M_\odot$.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Helium Abundance ($Y\nearrow$, $Z$ fixed)</h3>
+            <p>Helium acts through two channels: (1) reduced opacity as $X=1-Y-Z$ falls, and (2) increased mean molecular weight $\mu$ (He nuclei are heavier per electron), making the gas more compact and hotter. Since $L\approx\mu^7$, even modest He enhancements drive large luminosity increases &mdash; a brighter, hotter star.</p>
+            <p>
+              Since He-enhanced stars burn faster, they have <strong>shorter</strong> lifetimes, so at fixed age a He-rich population has a <strong>smaller</strong> turnoff mass: at 13 Gyr, $Z=0.002$, $Y=0.24$ gives $M_{TO}=0.79\,M_\odot$ vs. $Y=0.40$ giving only $M_{TO}=0.59\,M_\odot$.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: "Brighter/Hotter" Is Not One Mechanism</span>
+              </div>
+              <p class="text-sm">
+                Higher $Z$ and higher $Y$ both look like they push "brighter/hotter" in some sense, but they act through entirely different physics and have <strong>opposite</strong> effects on turnoff mass at fixed population age: higher $Z\Rightarrow$ longer lifetime $\Rightarrow$ <strong>larger</strong> $M_{TO}$; higher $Y\Rightarrow$ shorter lifetime $\Rightarrow$ <strong>smaller</strong> $M_{TO}$. Never conflate the two.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Main Sequence as an Evolutionary Phase</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              As an evolutionary phase, the MS spans core hydrogen burning from H-ignition (<strong>Point 1</strong>, the ZAMS) to core H-exhaustion (<strong>Point 2</strong>, defined as $X_c&lt;0.05$). The set of all Point-2 positions across mass tracks forms the "terminal age main sequence" (TAMS), running roughly parallel to the ZAMS.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Why the MS Is the Longest Phase</h3>
+            <p>Core H-burning is the most energetically efficient thermonuclear reaction operating on the largest available fuel reservoir. MS lifetimes at solar metallicity:</p>
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr><th class="px-4 py-3">$M/M_\odot$</th><th class="px-4 py-3">15.0</th><th class="px-4 py-3">9.0</th><th class="px-4 py-3">5.0</th><th class="px-4 py-3">3.0</th><th class="px-4 py-3">2.25</th><th class="px-4 py-3">1.5</th><th class="px-4 py-3">1.0</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr><td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">$t_{MS}$ (yr)</td><td class="px-4 py-3">$10^7$</td><td class="px-4 py-3">$2.2\times10^7$</td><td class="px-4 py-3">$7\times10^7$</td><td class="px-4 py-3">$2\times10^8$</td><td class="px-4 py-3">$5\times10^8$</td><td class="px-4 py-3">$1.7\times10^9$</td><td class="px-4 py-3">$9\times10^9$</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>A simple scaling law, from $t_{MS}\propto M/L$ and $L\propto M^4$ (roughly):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
+              $$t_{MS}\cong10^{10}\,M^{-3}\ \text{yr}$$
+            </div>
+            <p>
+              This falls extremely steeply with mass. An intriguing cosmological corollary: a $\sim0.8\,M_\odot$ star's MS lifetime is comparable to the Hubble time ($\sim13.8\times10^9$ yr) &mdash; <strong>all stars with $M\lesssim0.8\,M_\odot$ formed near the Big Bang are still on the main sequence today</strong>, still burning hydrogen.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Solar Evolution During the Main Sequence &amp; the Role of $\mu$</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Although the MS is the most quiescent phase, properties change slowly. Over the Sun's $\sim4.6$ Gyr lifetime: luminosity rose from $\sim0.7\,L_\odot$ to today's $1.0\,L_\odot$ ($\sim$30% increase); radius increased modestly; $T_{eff}$ rose from $\sim5650$ K to $\sim5780$ K. The luminosity profile plateaus at $L_r=L_\odot$ by $r/R_\odot\approx0.25$ &mdash; <strong>no energy is produced in the outer 75&ndash;80% of the Sun by radius.</strong>
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Driving Mechanism: Rising Mean Molecular Weight</h3>
+            <p>As four H nuclei combine into one He nucleus, the number of free particles drops, raising $\mu$ in a fully ionized plasma:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\mu = \frac{1}{2X+\tfrac34Y+\tfrac12Z}, \qquad P=\frac{k\rho T}{\mu H}$$
+            </div>
+            <p>Since $P=k\rho T/\mu H$, rising $\mu$ at fixed $T$ lowers pressure, initiating a chain of consequences:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
+              $$\mu\nearrow \implies P\searrow \implies \text{core contracts} \implies \rho\nearrow,\,T\nearrow \implies \epsilon\nearrow,\,L\nearrow$$
+            </div>
+            <p>
+              The star is virialized, so contraction converts gravitational potential energy into thermal energy, raising $T_c$ and burning efficiency &mdash; extremely slowly (the thermonuclear timescale), but inexorably throughout the entire MS.
+            </p>
+            <p>
+              A notable feature is the $^3$He abundance peak: the pp chain produces $^3$He via $H^2+H^1\to{^3\text{He}}+\gamma$, but the follow-on reaction $^3\text{He}+{^3\text{He}}\to{^4\text{He}}+H^1+H^1$ is slow at moderate temperature, causing a visible bump in the abundance profile &mdash; a direct observational signature of the incomplete pp chain at those depths.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">11</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Track Morphology During Segment 1&ndash;2: Low- vs. High-Mass</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>In both mass regimes, rising $T$ dominates over falling $X$, so $\epsilon\nearrow$ and $L\nearrow$ during the MS. What differs is <strong>where</strong> the burning happens, and this geometry decides the direction the star moves in the HR diagram.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-orange-500">Low Mass ($M&lt;1.2\,M_\odot$): pp Chain</span>
+                <p class="mt-2 text-sm">
+                  The pp chain burns over a large volume ($\sim$20&ndash;30% by radius), so $\mu$-driven core contraction affects a significant mass fraction and partially counteracts envelope expansion. $R$ increases only modestly; since $L$ still grows faster than $R^2$ can compensate, $T_{eff}$ <strong>rises slightly</strong>. The track moves <strong>up and to the left</strong> (hotter).
+                </p>
+              </div>
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-amber-600">High Mass ($M&gt;1.2\,M_\odot$): CNO Cycle</span>
+                <p class="mt-2 text-sm">
+                  CNO burning is confined to $\sim$10% by radius, so $\mu$-driven contraction is localized and essentially unopposed by any counteracting envelope contraction. The envelope expands substantially; since $R^2$ now grows faster than $L$, $T_{eff}$ <strong>falls</strong>. The track moves <strong>up and to the right</strong> (cooler) &mdash; visible as the rightward slope of upper-MS tracks in the HR diagram.
+                </p>
+              </div>
+            </div>
+            <p>
+              The fundamental explanation is the different spatial extent of the burning region (20&ndash;30% vs. $\sim$10% of the radius) &mdash; not any difference in total luminosity or temperature per se.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: The Sign of $\Delta T_{eff}$ Flips With Mass</span>
+              </div>
+              <p class="text-sm">
+                Do not assume both mass regimes redden or both bluen during the MS. Low-mass tracks shift hotter, high-mass tracks shift cooler &mdash; the sign flips because burning-region geometry determines whether core contraction can counteract envelope expansion. And remember: increasing $R$ does not automatically mean cooling &mdash; only if $R^2$ outpaces $L$'s growth. In low-mass stars $L$ outpaces $R^2$, so $T_{eff}$ still rises even as $R$ grows.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 12 -->
+        <section id="sec-12" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">12</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Segment 2&ndash;3: H-Profile Shape and the Turnoff Hook</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Point 2 marks core H-exhaustion ($X_c&lt;0.05$). What happens next depends entirely on the H-abundance profile left behind &mdash; which in turn depends on whether the core was radiative (low mass) or convective (high mass).
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Low Mass: Smooth Gradient, Seamless Transition</h3>
+            <p>
+              The pp chain burns hydrogen in a smooth, diffuse region with no sharp mixing boundary, so $X$ decreases monotonically from surface to centre. When the centre first reaches $X\approx0$, the adjacent shell already has fuel and is nearly at ignition temperature &mdash; H-shell burning ignites without pause. Points 2 and 3 effectively coincide, and the track shows a smooth, continuous curve off the MS with <strong>no hook</strong>.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">High Mass: Step Profile, Gravitational Contraction, and the Hook</h3>
+            <p>
+              Continuous convective mixing keeps the core's H-abundance flat at all times, producing a step-shaped profile: $X\approx$ const inside the convective boundary, then a sharp jump to the initial abundance. The convective boundary retreats inward over time as the He-rich mixture's lower opacity shrinks $\nabla_{rad}$ below $\nabla_{ad}$ (via $\kappa_{FF}\propto10^{22}(X+Y)(1+X)\rho/T^{3.5}$). At Point 2, the <strong>entire convective core reaches $X=0$ simultaneously</strong>.
+            </p>
+            <p>
+              This creates a structural crisis: the core is too cool to ignite helium ($T\sim10^8$ K required, far above $T_c\sim$ few$\times10^7$ K), and the overlying shell is also too cool to immediately ignite. With no nuclear energy source anywhere, the star contracts under gravity on the <strong>Kelvin-Helmholtz timescale</strong>, radiating entirely from gravitational contraction until the shell heats enough to ignite at Point 3.
+            </p>
+
+            <!-- HR Diagram Hook SVG -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-orange-100 dark:border-slate-800">
+              <svg viewBox="0 0 560 260" class="w-full max-w-xl h-auto">
+                <line x1="60" y1="220" x2="520" y2="220" class="stroke-slate-400 stroke-1"/>
+                <line x1="60" y1="220" x2="60" y2="30" class="stroke-slate-400 stroke-1"/>
+                <text x="290" y="248" text-anchor="middle" class="fill-slate-500 text-[10px] font-mono">Effective Temperature (decreasing &rarr;)</text>
+                <text x="30" y="120" text-anchor="middle" class="fill-slate-500 text-[10px] font-mono" transform="rotate(-90 30 120)">Luminosity</text>
+                <!-- Low-mass smooth track (no hook) -->
+                <path d="M 480 200 C 420 175, 340 150, 260 120" class="fill-none stroke-orange-500 stroke-[3px]"/>
+                <text x="480" y="216" class="fill-orange-600 dark:fill-orange-400 text-[10px] font-mono font-bold">Low mass: smooth (2&asymp;3)</text>
+                <!-- High-mass track with hook -->
+                <path d="M 460 100 C 410 85, 380 90, 360 105 C 345 115, 350 130, 370 128 C 395 124, 410 100, 400 75 C 392 55, 355 40, 300 34" class="fill-none stroke-amber-600 stroke-[3px]"/>
+                <circle cx="360" cy="105" r="4" class="fill-amber-600"/>
+                <text x="230" y="30" class="fill-amber-700 dark:fill-amber-400 text-[10px] font-mono font-bold">High mass: gravitational-contraction hook</text>
+                <text x="330" y="145" class="fill-slate-500 text-[9px] font-mono">Point 2</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig. 2: Schematic HR-diagram turnoff &mdash; smooth low-mass track vs. the convective-core "hook".</span>
+            </div>
+
+            <p class="text-sm">
+              <strong>Observational confirmation:</strong> the Color-Magnitude Diagram of globular cluster NGC 1978 (HST/ACS, age $\sim2$ Gyr, $M_{TO}\approx1.5\,M_\odot$) shows a prominent turnoff hook &mdash; one of the clearest observational validations of the convective-core scenario in intermediate-mass stars.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: The Hook Tracks Convection, Not "Bigness"</span>
+              </div>
+              <p class="text-sm">
+                The hook is diagnostic of a <strong>convective core</strong> during the MS, not of high mass in some vague sense &mdash; it appears only for $M\gtrsim1.2\,M_\odot$ and is most visible in the $2.2$&ndash;$6\,M_\odot$ range (Section 15). Do not describe it as a generic "massive star feature" without tying it to the underlying convective mixing.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 13 -->
+        <section id="sec-13" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">13</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Growing Isothermal Helium Core</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              From Point 3 onward, every star has a thermonuclearly inactive helium core: $\epsilon=0$, $L(r)=0$ within it. Because there is no energy source, the radiative temperature gradient vanishes:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\left.\frac{dT}{dr}\right|_{rad} = -\frac{3\kappa\rho}{4acT^3}\frac{L(r)}{4\pi r^2} = 0$$
+            </div>
+            <p>
+              A zero gradient means the core is <strong>isothermal</strong> &mdash; uniform temperature throughout, surrounded by an actively burning thick H-shell that continuously deposits fresh He onto the core surface, growing its mass over time.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: Isothermal &ne; Unsupported</span>
+              </div>
+              <p class="text-sm">
+                "Isothermal" only means $dT/dr=0$ &mdash; it does not mean the core lacks pressure support. Hydrostatic equilibrium is still satisfied via a <strong>density</strong> gradient rather than a temperature gradient:
+                $$-\frac{GM\rho}{r^2} = \frac{dP}{dr} = \frac{kT}{\mu H}\frac{d\rho}{dr}$$
+                Higher central density provides the outward pressure gradient needed at fixed $T$. This balance has a physical maximum &mdash; the Sch&ouml;nberg-Chandrasekhar limit (Section 14).
+              </p>
+            </div>
+            <p>
+              The key diagnostic is the core mass fraction $q=M_c/M_{tot}$, which grows continuously as the shell deposits mass. As $q$ increases, the core must supply ever more pressure to support the overlying envelope &mdash; a demand it eventually cannot meet.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 14 -->
+        <section id="sec-14" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">14</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Sch&ouml;nberg-Chandrasekhar Mass Limit</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Derived analytically by Sch&ouml;nberg and Chandrasekhar in 1942, the SC limit is the maximum mass an isothermal, ideal-gas core can support against the overlying envelope while in hydrostatic equilibrium. It reflects a competition between thermal pressure (supporting the core) and the core's own self-gravity (working against that support) &mdash; as the core grows, its self-gravity increases and the maximum pressure it can supply falls.
+            </p>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Two Equivalent Formulations</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2">
+                <span class="text-xs uppercase font-extrabold text-orange-500">Mass-Fraction Form</span>
+                <div class="bg-slate-50 dark:bg-slate-950 p-2.5 rounded text-center font-mono text-xs text-orange-600 dark:text-orange-400 font-bold">
+                  $$q\le q_0 = 0.37\left(\frac{\mu_e}{\mu_{ic}}\right)^2 \approx 0.08$$
+                </div>
+                <p class="text-xs text-slate-500">With $\mu_e\approx0.62$ (H-rich envelope), $\mu_{ic}\approx1.33$ (He-rich core).</p>
+              </div>
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2">
+                <span class="text-xs uppercase font-extrabold text-amber-600">Absolute-Mass Form</span>
+                <div class="bg-slate-50 dark:bg-slate-950 p-2.5 rounded text-center font-mono text-xs text-amber-600 dark:text-amber-400 font-bold">
+                  $$M_c \le M_{sc} = 0.10\,M_{tot}$$
+                </div>
+                <p class="text-xs text-slate-500">The commonly quoted "10% rule" &mdash; a practical rounding of the compositional result.</p>
+              </div>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Derivation Sketch</h3>
+            <ol class="list-decimal list-inside space-y-3 text-sm pl-2">
+              <li>Integrate hydrostatic equilibrium over the isothermal core mass, yielding a virial-like relation, $4\pi R_{ic}^3P_{ic}-2K_{ic}=U_{ic}$; maximizing $P_{ic}$ over $R_{ic}$ gives $P_{ic}^{max}\propto1/M_{ic}^2$ &mdash; a more massive core is inherently less able to support itself.</li>
+              <li>Integrate hydrostatic equilibrium over the envelope (using $M_{ic}^2\ll M^2$) to estimate the pressure the envelope exerts on the core: $P_{env}\propto1/M^2$.</li>
+              <li>Equate $P_{ic}^{max}=P_{env}$ and solve for $M_{ic}/M$; the coefficient scales as $(\mu_{env}/\mu_{ic})^2$.</li>
+            </ol>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
+              $$\frac{M_{ic}}{M} \approx 0.7\left(\frac{\mu_{env}}{\mu_{ic}}\right)^2 \quad\text{(course estimate; accepted value: }0.37\text{)}$$
+            </div>
+            <p>
+              The SC limit scales as $(\mu_{env}/\mu_{ic})^2$; since the He-rich core has higher $\mu$ than the H-rich envelope, $q_0&lt;0.37$. The limit is fundamentally a consequence of the <strong>chemical contrast</strong> between the He-rich core (product of nuclear burning) and the H-rich envelope &mdash; if the two had identical composition, there would be no chemically distinct "core" to speak of.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: Two Numbers, Not Interchangeable</span>
+              </div>
+              <p class="text-sm">
+                $q_0\approx0.08$ is the compositionally-derived mass fraction; $M_c\le0.10\,M_{tot}$ is the commonly-quoted rounded practical form &mdash; know both exist and which is being asked for. Also: the textbook one-zone derivation above gives coefficient 0.7, not the accepted 0.37 &mdash; the discrepancy comes from approximations in estimating $P_{env}$ and $R$; the $(\mu_{env}/\mu_{ic})^2$ <em>scaling</em> is the exact, examinable part, not the coefficient itself.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 15 -->
+        <section id="sec-15" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">15</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Post-MS Core Fate: Three Mass Regimes &amp; Electron Degeneracy</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>Whether the growing He core stays ideal gas or becomes electron-degenerate before hitting the SC limit is the pivotal question determining the entire subsequent evolutionary path:</p>
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr><th class="px-4 py-3">Regime</th><th class="px-4 py-3">Mass Range</th><th class="px-4 py-3">Core Behavior</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">1 &mdash; No isothermal core</td>
+                    <td class="px-4 py-3">$M&gt;6\,M_\odot$</td>
+                    <td class="px-4 py-3">Contraction begins immediately at H-exhaustion; core stays ideal-gas throughout; direct He ignition, no developed RGB.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">2 &mdash; Temporary isothermal core</td>
+                    <td class="px-4 py-3">$2.2\,M_\odot&lt;M&lt;6\,M_\odot$</td>
+                    <td class="px-4 py-3">Core grows in ideal-gas conditions until it hits the SC limit ($M_c\approx0.10M$), then contracts, heats, and ignites He; small hook in the track.</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-amber-600 font-bold">3 &mdash; Long-lasting degenerate core</td>
+                    <td class="px-4 py-3">$M&lt;2.2\,M_\odot$</td>
+                    <td class="px-4 py-3">Core crosses the degeneracy line before reaching the SC limit; supported by $P\propto\rho^{5/3}$, grows far beyond the SC limit without heating; long RGB ascent, delayed He ignition (helium flash).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Electron Degeneracy Condition</h3>
+            <p>Degeneracy occurs when all states below the Fermi energy are filled. Requiring thermal energy to fall below the Fermi energy:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac32kT < \epsilon_F = \frac{\hbar^2}{2m_e}\left[3\pi^2\left(\frac{Z}{A}\right)\frac{\rho}{m_H}\right]^{2/3}$$
+            </div>
+            <p>rearranges to the simple degeneracy criterion:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-orange-500/40 text-orange-600 dark:text-orange-400 font-extrabold my-4">
+              $$\frac{T}{\rho^{2/3}} < D \approx 10^5\ ^\circ\text{K cm}^2\text{g}^{-2/3}$$
+            </div>
+            <p>In the $\log\rho$-$\log T$ plane, the degeneracy boundary is $\log T=\tfrac23\log\rho+5.11$; below and to the right of this line, matter is degenerate.</p>
+
+            <!-- log rho - log T phase diagram SVG -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-orange-100 dark:border-slate-800">
+              <svg viewBox="0 0 560 300" class="w-full max-w-xl h-auto">
+                <line x1="60" y1="260" x2="520" y2="260" class="stroke-slate-400 stroke-1"/>
+                <line x1="60" y1="260" x2="60" y2="20" class="stroke-slate-400 stroke-1"/>
+                <text x="290" y="286" text-anchor="middle" class="fill-slate-500 text-[10px] font-mono">$\log\rho$</text>
+                <text x="25" y="140" text-anchor="middle" class="fill-slate-500 text-[10px] font-mono" transform="rotate(-90 25 140)">$\log T$</text>
+                <!-- Degeneracy boundary line -->
+                <line x1="90" y1="240" x2="480" y2="60" class="stroke-amber-600 stroke-[2px] stroke-dasharray-4"/>
+                <text x="420" y="70" class="fill-amber-700 dark:fill-amber-400 text-[9px] font-mono font-bold">Degeneracy boundary</text>
+                <text x="140" y="230" class="fill-slate-500 text-[9px] font-mono">Degenerate (lower right)</text>
+                <text x="380" y="200" class="fill-slate-500 text-[9px] font-mono">Ideal gas</text>
+                <!-- High-mass core trajectory -->
+                <path d="M 150 220 C 220 180, 300 140, 380 100" class="fill-none stroke-orange-500 stroke-[3px]"/>
+                <text x="230" y="170" class="fill-orange-600 dark:fill-orange-400 text-[9px] font-mono font-bold">15-35 $M_\odot$: stays ideal gas</text>
+                <!-- Low-mass core trajectory crossing boundary -->
+                <path d="M 130 235 C 180 232, 240 220, 300 190" class="fill-none stroke-slate-700 dark:stroke-slate-300 stroke-[3px]"/>
+                <text x="220" y="250" class="fill-slate-600 dark:fill-slate-300 text-[9px] font-mono font-bold">$1\,M_\odot$: crosses into degeneracy</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig. 3: The $\log\rho$-$\log T$ diagram &mdash; high-mass cores stay in the ideal-gas "passageway"; low-mass cores cross into degeneracy.</span>
+            </div>
+            <p>
+              The different core trajectories trace directly back to the very different ZAMS central densities from Section 7 ($\rho_c\sim13$ g cm$^{-3}$ at $7\,M_\odot$ vs. $\rho_c\sim400$ g cm$^{-3}$ at $0.1\,M_\odot$): low-mass stars start much closer to the degeneracy boundary.
+            </p>
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-2">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: Two Different Limits Separate the Three Regimes</span>
+              </div>
+              <p class="text-sm">
+                Regimes 1/2 are separated from Regime 3 by the <strong>degeneracy boundary</strong>, while Regimes 1 and 2 are separated by whether the core ever needs to obey the <strong>Sch&ouml;nberg-Chandrasekhar limit</strong> at all. These are two distinct physical limits, not the same limit applied twice at different masses &mdash; always identify which boundary is crossed first for a given mass.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 16 -->
+        <section id="sec-16" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-md">16</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Key Evolutionary Points &amp; the Central Organizing Principle</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr><th class="px-4 py-3">Point</th><th class="px-4 py-3">Physical Event</th><th class="px-4 py-3">Notes</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr><td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Point 1</td><td class="px-4 py-3">H-ignition in the core (ZAMS)</td><td class="px-4 py-3">Chemically homogeneous star</td></tr>
+                  <tr><td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Point 2</td><td class="px-4 py-3">H-exhaustion in the core</td><td class="px-4 py-3">End of MS; $X_c&lt;0.05$</td></tr>
+                  <tr><td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Point 3</td><td class="px-4 py-3">H-ignition in the thick shell</td><td class="px-4 py-3">Coincides w/ Pt. 2 (low mass); after contraction/hook (high mass)</td></tr>
+                  <tr><td class="px-4 py-3 text-orange-600 dark:text-orange-400 font-bold">Point 6</td><td class="px-4 py-3">He-ignition in the core</td><td class="px-4 py-3">End of RGB ascent; onset of horizontal branch</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              Every aspect of main-sequence and immediate post-MS evolution follows from one physical chain: <strong>mass determines the burning mechanism; the burning mechanism determines everything else.</strong>
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2 text-sm">
+                <span class="text-xs uppercase font-extrabold text-orange-500 block">Mass &gt; $1.2\,M_\odot$</span>
+                <p>CNO dominates &rarr; concentrated energy &rarr; convective core &rarr; flat H-profile &rarr; hook at Points 2&ndash;3 &rarr; lower central density (CNO limits $T_c$ growth) &rarr; avoids degeneracy &rarr; direct He ignition, no flash.</p>
+              </div>
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2 text-sm">
+                <span class="text-xs uppercase font-extrabold text-amber-600 block">Mass &lt; $1.2\,M_\odot$</span>
+                <p>pp dominates &rarr; diffuse energy &rarr; radiative core &rarr; smooth H-profile &rarr; no hook, seamless shell ignition &rarr; higher central density &rarr; SC limit never reached before degeneracy &rarr; degenerate core &rarr; long RGB &rarr; helium flash.</p>
+              </div>
+            </div>
+            <p class="text-sm">
+              The four effects of CNO burning (structure, core temperature, mass-luminosity slope, post-MS morphology) are not independent phenomena &mdash; they all trace back to the same root cause: the extreme temperature sensitivity ($T^{15}$) of the CNO cycle. This single fact is the key to understanding all of main-sequence stellar evolution.
+            </p>
+          </div>
+        </section>
+
+        <!-- ACTIVE RECALL MASTERCLASS QUIZ -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-orange-500/10 text-orange-500 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall &amp; Focus Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of key physics concepts from the slides.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
+
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What best describes the Zero Age Main Sequence (ZAMS)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) The evolutionary track followed by a single star of fixed mass over time.</button>
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) A snapshot locus connecting stars of different masses at the instant of core H-ignition.</button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! The ZAMS is a $t=0$ snapshot across masses, not an evolutionary track.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why is a $\sim100\,M_\odot$ star so difficult to form stably at solar metallicity?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Its luminosity approaches the Eddington luminosity, destabilizing hydrostatic equilibrium.</button>
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) Its core temperature exceeds the pair-instability threshold immediately at birth.</button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! A $90\,M_\odot$ ZAMS star's luminosity is only a factor of ~3 below $L_{ed}$.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the true reason the pp/CNO transition mass ($\approx1.2\,M_\odot$) is so low despite similar core temperatures?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) CNO stars have a much higher absolute core temperature than pp stars.</button>
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) The CNO cycle's $T^{15}$ dependence vs. the pp chain's $T^5$ makes small temperature increases hugely consequential.</button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! It's the exponent, not the absolute temperature, that matters.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does central density $\rho_c$ change as ZAMS stellar mass increases?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $\rho_c$ decreases, because CNO burning limits $T_c$ growth.</button>
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) $\rho_c$ increases in step with the higher luminosity.</button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Higher mass means lower central density, which is why high-mass cores avoid degeneracy.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Higher helium abundance $Y$ (at fixed $Z$) has what effect on the turnoff mass of a population at fixed age?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) Smaller turnoff mass, because He-rich stars burn faster and live shorter lives.</button>
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) Larger turnoff mass, the same direction as higher metallicity $Z$.</button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Higher $Y$ and higher $Z$ push turnoff mass in opposite directions.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Approximately how does main-sequence lifetime scale with mass?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $t_{MS}\cong10^{10}\,M^{-3}$ yr.</button>
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) $t_{MS}\cong10^{10}\,M^{+3}$ yr.</button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Lifetime falls steeply with mass since $t_{MS}\propto M/L\propto M^{-3}$.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">During Segment 1&ndash;2, why does a low-mass star's track shift up and to the <em>left</em> (hotter) while a high-mass star's track shifts up and to the <em>right</em> (cooler)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) The spatial extent of the burning region (20&ndash;30% of radius vs. ~10%) determines whether core contraction can counteract envelope expansion.</button>
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) High-mass stars simply have a much larger total luminosity increase than low-mass stars.</button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! It's the geometry of the burning region, not the size of the luminosity increase, that flips the sign.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why does a high-mass star's evolutionary track show a "hook" at the main-sequence turnoff, while a low-mass star's does not?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) A convective core empties simultaneously, forcing a gravitational-contraction phase before shell ignition.</button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) High-mass stars simply have larger radii, which bends the track visually.</button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! The step-function H-profile of a convective core forces a Kelvin-Helmholtz contraction phase, producing the hook.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What does "isothermal" mean for the growing helium core, and how is it still held up against gravity?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) $dT/dr=0$; hydrostatic support comes from a density gradient instead of a temperature gradient.</button>
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) $dT/dr=0$ means the core has no pressure support at all and is in free-fall.</button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Isothermal only removes the temperature gradient; density gradient still supplies pressure support.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What does the Sch&ouml;nberg-Chandrasekhar limit represent?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) The maximum mass an isothermal, ideal-gas core can support against the overlying envelope.</button>
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) The maximum mass a degenerate white dwarf can hold before collapsing.</button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! (That's the Chandrasekhar limit, a different concept, for degenerate cores.)</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 11</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why do stars below $\sim2.2\,M_\odot$ develop a long-lasting degenerate core and a well-developed Red Giant Branch?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(11, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) The core crosses the electron degeneracy boundary before reaching the SC limit, so it grows without heating.</button>
+                <button onclick="checkQuiz(11, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) The core exceeds the SC limit long before it could ever become degenerate.</button>
+              </div>
+              <p id="q11-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! Crossing the degeneracy boundary first is what produces the long RGB ascent and eventual helium flash.</p>
+            </div>
+
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-orange-500">Question 12</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What single physical fact underlies all four major effects of CNO burning (structure, $T_c$-mass relation, mass-luminosity slope, and post-MS "hook")?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(12, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">A) The CNO cycle's extreme temperature sensitivity, $\epsilon_{CNO}\propto T^{15}$.</button>
+                <button onclick="checkQuiz(12, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">B) The higher total mass of stars that use the CNO cycle.</button>
+              </div>
+              <p id="q12-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">Correct! The $T^{15}$ sensitivity is the single root cause of all four downstream effects.</p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-orange-500 font-bold">0 / 12 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const playIcon = document.getElementById('timer-icon-play');
+      const pauseIcon = document.getElementById('timer-icon-pause');
+      if (timerRunning) {
+        clearInterval(timerId);
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        playIcon.classList.add('hidden');
+        pauseIcon.classList.remove('hidden');
+        timerRunning = true;
+      }
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText =
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = Math.max(0, dashOffset);
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-orange-50/50', 'dark:bg-orange-900/20', 'text-orange-600', 'dark:text-orange-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-orange-50/50', 'dark:bg-orange-900/20', 'text-orange-600', 'dark:text-orange-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 12 Correct`;
+    }
+  </script>
+</body>
+</html>

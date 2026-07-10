@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interacting Binary Systems & Mass Transfer - 30-Min Masterclass</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons for high-fidelity indicators -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #f5efe2;
+      color: #3d3425;
+    }
+    .theme-sepia .card-bg {
+      background-color: #eae1cc;
+      border-color: #d9cca8;
+    }
+    .theme-sepia .text-muted {
+      color: #6a5c48;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #c0b08c;
+    }
+
+    /* Circular Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #ccfbf1;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #0d9488;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #115e59;
+    }
+    .theme-sepia .circle-bg {
+      stroke: #e0d0b3;
+    }
+  </style>
+</head>
+<body class="bg-teal-50/20 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-teal-100 dark:border-teal-950 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-lg">
+          <i data-lucide="orbit" class="w-6 h-6 animate-spin-slow"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Interacting Binaries <span class="text-teal-600 dark:text-teal-400">Part VI</span></h1>
+          <p class="text-xs text-slate-500 dark:text-teal-500 font-medium font-mono">Exam Masterclass (Prof. F. R. Ferraro)</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-teal-100/50 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-teal-100/50 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-teal-600 dark:text-teal-400" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-teal-600 dark:text-teal-400" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-teal-600 dark:text-teal-400" title="Sepia Eye-Saver Theme">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 px-3 py-1.5 rounded-lg border border-teal-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-teal-800 dark:hover:text-teal-200">
+            <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-teal-100 dark:bg-teal-950 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-teal-500 to-emerald-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-teal-600 dark:text-teal-400 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-teal-600 dark:text-teal-400 font-semibold bg-teal-50/50 dark:bg-teal-950/30">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-600 text-white text-xs">1</span>
+              <span class="truncate">The Single-Star Limit</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">2</span>
+              <span class="truncate">Blue Stragglers CMD Puzzle</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">3</span>
+              <span class="truncate">Roche Potential Derivation</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">4</span>
+              <span class="truncate">Lagrangian Points Mechanics</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">5</span>
+              <span class="truncate">Roche Lobe Configurations</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">6</span>
+              <span class="truncate">The Algol Paradox</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">7</span>
+              <span class="truncate">Modes of Mass Transfer</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">8</span>
+              <span class="truncate">Common Envelope (CE)</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">9</span>
+              <span class="truncate">Case Study: HS2231+2441</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">10</span>
+              <span class="truncate">Blue Straggler Formation</span>
+            </a>
+            <a href="#sec-11" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">11</span>
+              <span class="truncate">Reduced Mass & Orbital Dynamics</span>
+            </a>
+            <a href="#sec-12" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">12</span>
+              <span class="truncate">Conservative Mass-Transfer Stability</span>
+            </a>
+            <a href="#sec-13" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">13</span>
+              <span class="truncate">Cataclysmic Variables & Novae</span>
+            </a>
+            <a href="#sec-14" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">14</span>
+              <span class="truncate">Accretion Efficiency & X-ray Binaries</span>
+            </a>
+            <a href="#sec-15" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-teal-50/20 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-teal-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 text-xs">15</span>
+              <span class="truncate">Post-SN Survival & HMXB Pipeline</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-emerald-600 text-white text-xs"><i data-lucide="award" class="w-3.5 h-3.5"></i></span>
+              <span class="truncate font-semibold">Active Recall Quiz</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-teal-950 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <!-- Ring indicator -->
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-teal-900 to-emerald-950 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-teal-300"></i>
+            <h4 class="font-bold text-sm text-teal-200 uppercase tracking-wider">Binary Constants</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-teal-100">
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Roche Potential:</span>
+              <span class="text-teal-300">$\Phi_{\text{eff}}$ eq.</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Roche Lobe Limit:</span>
+              <span class="text-teal-300">$R_L \propto a \cdot q^{2/3}$</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Kepler's 3rd Law:</span>
+              <span class="text-teal-300">$P^2 \propto a^3$</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>CE Drag Efficiency:</span>
+              <span class="text-teal-300">$\alpha_{\text{CE}} \sim 0.1\text{--}1.0$</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Reduced Mass:</span>
+              <span class="text-teal-300">$\mu = \frac{M_1 M_2}{M_1+M_2}$</span>
+            </div>
+            <div class="flex justify-between border-b border-teal-850 pb-1.5">
+              <span>Mass-Transfer Orbit:</span>
+              <span class="text-teal-300">$\dot a/a \propto \dot M_1(M_1{-}M_2)$</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>SN Survival Limit:</span>
+              <span class="text-teal-300">$\delta m &lt; M_{\text{tot}}/2$</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+        
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-teal-100 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-teal-100/50 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="orbit" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics Core Course</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              Interacting Binary Systems: Evolution, Mechanics, & Mass Transfer
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive academic companion for slide series "27.binary_systems.pdf", tracing the physics of Roche Lobe potentials, Lagrangian balance points, conservative and non-conservative mass transfer, Common Envelope evolution, and the formation of Blue Stragglers.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-teal-100 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Limits of Single-Star Evolution Paradigm</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In canonical stellar astrophysics, stars are modeled as isolated, self-gravitating, spheres of gas whose evolutionary timescales and pathways are dictated uniquely by their initial mass on the Zero-Age Main Sequence (ZAMS):
+              $$\tau_{\text{MS}} \propto M^{-\alpha} \quad \text{where } \alpha \approx 2\text{--}3$$
+            </p>
+            <p>
+              Under this single-star paradigm, stars evolve passively through nuclear phases without external interference. However, observational stellar astronomy reveals a large variety of cosmic phenomena—such as **Cataclysmic Variables, Type Ia Supernovae, X-ray Binaries, Millisecond Pulsars, and Blue Stragglers**—that cannot be explained by single-star evolution.
+            </p>
+            <div class="bg-teal-500/5 border border-teal-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-teal-600 dark:text-teal-400 font-mono">The Binary Multiplicity Reality</span>
+              <p class="text-sm">
+                Observational surveys indicate that **more than 50% of solar-type stars**, and **up to 70-80% of massive O and B stars**, reside in binary or multiple systems. In tight orbits, stars cannot evolve passively; they inevitably exchange mass and angular momentum, fundamentally altering their internal structures and lifetimes.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Blue Stragglers: The CMD Puzzle</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The most direct evidence of binary interactions in star clusters is the presence of **Blue Straggler Stars (BSSs)**. Discovered by Allan Sandage in 1953 in the globular cluster M3, Blue Stragglers appear as a sparse population of stars extending along the main sequence above the **Main Sequence Turn-Off (MS-TO)** point.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-teal-600 dark:text-teal-400">The Single-Star CMD Constraint</span>
+                <p class="leading-relaxed text-xs">
+                  In a coeval, homogeneous stellar population (such as a globular or open cluster), all stars formed simultaneously. Since more massive stars evolve faster, any star with a mass greater than the turn-off mass ($M > M_{\text{TO}}$) must have already evolved off the Main Sequence to become a Red Giant, White Dwarf, or Supernova.
+                </p>
+                <p class="leading-relaxed text-xs font-semibold text-slate-500">
+                  Therefore, no stars should exist brighter and bluer than the MS-TO point in a cluster's Color-Magnitude Diagram (CMD).
+                </p>
+              </div>
+
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">The Blue Straggler Reality</span>
+                <p class="leading-relaxed text-xs">
+                  BSSs clearly violate this constraint. Their positions on the CMD show that they are more massive than the turn-off mass ($M_{\text{BSS}} \approx 1.2\text{--}2 M_{\text{TO}}$) yet they remain on the Main Sequence, burning Hydrogen in their cores.
+                </p>
+                <p class="leading-relaxed text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                  This implies BSSs were formed via mass-transfer or stellar mergers that rejuvenated a lower-mass star mid-way through its life, creating a new, more massive star with a reset MS clock.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Strict Derivation of the Roche Potential</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              To analyze the mechanics of mass transfer in close binary systems, we adopt the **Roche Model**. We assume the two stars (masses $M_1$ and $M_2$) move in a circular orbit about their common center of mass with a constant orbital angular velocity vector $\mathbf{\omega}$.
+            </p>
+            <p>
+              We formulate the equations of motion in a **rotating coordinate system** with its origin at the center of mass, where both stars remain stationary at coordinates $\mathbf{r}_1$ and $\mathbf{r}_2$ along the x-axis. The total effective acceleration felt by a test particle at position $\mathbf{r}$ is:
+              $$\mathbf{a} = -\nabla \Phi_{\text{eff}} - 2(\mathbf{\omega} \times \mathbf{v})$$
+              where $-2(\mathbf{\omega} \times \mathbf{v})$ represents the velocity-dependent Coriolis force, and $\Phi_{\text{eff}}$ is the **effective Roche Potential**, defined as:
+              $$\Phi_{\text{eff}}(\mathbf{r}) = \Phi_{\text{grav}}(\mathbf{r}) + \Phi_{\text{cent}}(\mathbf{r})$$
+            </p>
+            <p>
+              Substituting the mathematical expressions for the gravitational potentials of both point masses and the centrifugal potential:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-teal-600 dark:text-teal-400 font-bold my-4">
+              $$\Phi_{\text{eff}}(x,y,z) = -\frac{G M_1}{r_1} - \frac{G M_2}{r_2} - \frac{1}{2}\omega^2 (x^2 + y^2)$$
+            </div>
+            <p class="text-sm">
+              where $r_1 = \sqrt{(x-x_1)^2 + y^2 + z^2}$ and $r_2 = \sqrt{(x-x_2)^2 + y^2 + z^2}$ are the distances from the test particle to the centers of $M_1$ and $M_2$ respectively, and $x^2 + y^2$ represents the distance from the rotation axis (z-axis passing through the center of mass).
+            </p>
+            <p class="text-sm">
+              According to Kepler's Third Law, the orbital angular velocity $\omega$ is related to the semi-major axis $a$ by:
+              $$\omega^2 = \frac{G(M_1+M_2)}{a^3}$$
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Lagrangian Points & Gravitational Equilibrium</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The stationary points of the effective potential where the net acceleration on a co-rotating test particle is zero are known as the **Lagrangian Points**:
+              $$\nabla \Phi_{\text{eff}} = 0 \implies \frac{\partial \Phi_{\text{eff}}}{\partial x} = \frac{\partial \Phi_{\text{eff}}}{\partial y} = \frac{\partial \Phi_{\text{eff}}}{\partial z} = 0$$
+            </p>
+            <p>
+              There are five Lagrangian points ($L_1, L_2, L_3, L_4, L_5$), which dictate the boundaries of gravitational stability in binary systems:
+            </p>
+
+            <!-- Inline SVG Diagram: Roche Lobe and Lagrange points -->
+            <div class="flex flex-col items-center justify-center p-6 bg-slate-100 dark:bg-slate-900/50 rounded-2xl border border-teal-100 dark:border-slate-800 my-6">
+              <svg viewBox="0 0 600 320" class="w-full max-w-xl h-auto">
+                <!-- Outer Equipotentials -->
+                <path d="M 120,40 C 40,80 40,240 120,280 C 180,310 240,240 300,160 C 240,80 180,10 120,40 Z" class="fill-none stroke-teal-500/10 stroke-1"/>
+                <path d="M 480,40 C 560,80 560,240 480,280 C 420,310 360,240 300,160 C 360,80 420,10 480,40 Z" class="fill-none stroke-teal-500/10 stroke-1"/>
+                
+                <!-- Inner Critical Lobe (Roche Lobe) -->
+                <!-- Lobe 1 -->
+                <path d="M 300,160 C 240,210 170,220 120,210 C 60,200 60,120 120,110 C 170,100 240,110 300,160 Z" class="fill-none stroke-teal-600 stroke-2"/>
+                <!-- Lobe 2 -->
+                <path d="M 300,160 C 360,210 430,220 480,210 C 540,200 540,120 480,110 C 430,100 360,110 300,160 Z" class="fill-none stroke-teal-600 stroke-2"/>
+
+                <!-- Stars -->
+                <circle cx="180" cy="160" r="15" class="fill-teal-700/80 stroke-teal-600 stroke-2"/>
+                <circle cx="420" cy="160" r="10" class="fill-teal-500/80 stroke-teal-400 stroke-2"/>
+                <text x="180" y="164" text-anchor="middle" class="fill-white font-mono font-bold text-xs">M1</text>
+                <text x="420" y="163" text-anchor="middle" class="fill-white font-mono font-bold text-[10px]">M2</text>
+
+                <!-- Lagrange points -->
+                <!-- L1 -->
+                <circle cx="300" cy="160" r="4" class="fill-emerald-500"/>
+                <text x="300" y="180" text-anchor="middle" class="fill-emerald-600 dark:fill-emerald-400 font-bold text-xs font-mono">L1</text>
+
+                <!-- L2 -->
+                <circle cx="530" cy="160" r="3" class="fill-teal-500"/>
+                <text x="535" y="175" class="fill-teal-600 dark:fill-teal-400 font-bold text-xs font-mono">L2</text>
+
+                <!-- L3 -->
+                <circle cx="50" cy="160" r="3" class="fill-teal-500"/>
+                <text x="45" y="175" class="fill-teal-600 dark:fill-teal-400 font-bold text-xs font-mono">L3</text>
+
+                <!-- L4 -->
+                <circle cx="300" cy="60" r="3" class="fill-teal-500"/>
+                <text x="300" y="50" text-anchor="middle" class="fill-teal-600 dark:fill-teal-400 font-bold text-xs font-mono">L4</text>
+
+                <!-- L5 -->
+                <circle cx="300" cy="260" r="3" class="fill-teal-500"/>
+                <text x="300" y="278" text-anchor="middle" class="fill-teal-600 dark:fill-teal-400 font-bold text-xs font-mono">L5</text>
+              </svg>
+              <span class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">Fig 1: Equipotential contours of the Roche potential showing the five Lagrangian points and the critical inner Roche Lobes.</span>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono">Physical Analysis of Lagrange Points</h3>
+            <ul class="list-disc list-inside space-y-3 text-sm pl-2">
+              <li>
+                <strong>Inner Lagrangian Point ($L_1$):</strong> Located on the x-axis between the two stellar centers. This point acts as a low-acceleration siphon. When a star expands and fills its critical boundary, mass flows directly through $L_1$ to its companion.
+              </li>
+              <li>
+                <strong>Collinear Points ($L_2, L_3$):</strong> Located on the x-axis outside the binary orbit. If both stars overfill their critical potential boundaries, gas escapes the system through these outer points, carrying away bulk angular momentum.
+              </li>
+              <li>
+                <strong>Trojan Points ($L_4, L_5$):</strong> Located at the vertices of equilateral triangles with the two stars as bases ($60^\circ$ ahead and behind in orbit). These represent local potential maxima that can trap interstellar dust and minor bodies.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Roche Lobe Configurations & Eggleton's Approximation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The equipotential surfaces that pass through the inner Lagrangian point $L_1$ form two lobes that touch at $L_1$. These boundaries are the **Roche Lobes**. 
+            </p>
+            <p>
+              Since the lobes are non-spherical, we define an equivalent spherical radius, the **Roche Lobe Radius ($R_L$)**, representing a sphere of equal volume. Peter Eggleton (1983) derived a highly precise analytical fit for $R_L$ across all mass ratios $q = M_1/M_2$:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-emerald-600 dark:text-emerald-400 font-bold my-4">
+              $$\frac{R_L}{a} \approx \frac{0.49 q^{2/3}}{0.6 q^{2/3} + \ln(1 + q^{1/3})}$$
+            </div>
+            <p class="text-sm">
+              where $a$ is the orbital semi-major axis. Close binary systems are classified into three distinct physical states based on this radius limit:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6 text-xs">
+              <div class="p-4 rounded-2xl bg-teal-50/50 dark:bg-slate-900/50 border border-teal-100 dark:border-slate-800">
+                <span class="font-bold text-teal-600 dark:text-teal-400 uppercase">1. Detached Binary</span>
+                <p class="mt-2 text-slate-500">
+                  Both stars are smaller than their respective Roche Lobes ($R_1 < R_{L1}$ and $R_2 < R_{L2}$). They evolve independently as single stars, influenced only by mutual tidal forces.
+                </p>
+              </div>
+              <div class="p-4 rounded-2xl bg-teal-50/50 dark:bg-slate-900/50 border border-teal-100 dark:border-slate-800">
+                <span class="font-bold text-emerald-600 dark:text-emerald-400 uppercase">2. Semi-Detached Binary</span>
+                <p class="mt-2 text-slate-500">
+                  One star (the donor) expands to fill its Roche Lobe ($R_1 = R_{L1}$). Its surface material overflows through the $L_1$ point, transferring mass to its companion.
+                </p>
+              </div>
+              <div class="p-4 rounded-2xl bg-teal-50/50 dark:bg-slate-900/50 border border-teal-100 dark:border-slate-800">
+                <span class="font-bold text-blue-500 uppercase">3. Contact / Common Envelope</span>
+                <p class="mt-2 text-slate-500">
+                  Both stars have expanded to overfill their Roche Lobes ($R_1 > R_{L1}$ and $R_2 > R_{L2}$). They share a common, outer convective envelope of gas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Algol Paradox & Mass Ratio Inversion</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The **Algol Paradox** is a classic puzzle in stellar evolution. In the eclipsing binary system Algol (Beta Persei), we observe:
+            </p>
+            <ul class="list-disc list-inside text-sm pl-2 space-y-1">
+              <li><strong>Algol A (Primary):</strong> A massive Main Sequence star ($M \approx 3.7 M_\odot$).</li>
+              <li><strong>Algol B (Secondary):</strong> A low-mass Subgiant star ($M \approx 0.8 M_\odot$).</li>
+            </ul>
+            <p>
+              This is a paradox because single-star evolution dictates that more massive stars evolve faster than lower-mass stars. Algol B is more evolved (already a subgiant) despite being much less massive than its Main Sequence companion, Algol A.
+            </p>
+
+            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-5 mt-4 text-sm space-y-3">
+              <span class="text-xs uppercase font-extrabold text-emerald-600 dark:text-emerald-400 block font-mono">The Mass-Transfer Resolution</span>
+              <p>
+                The paradox is resolved by **mass transfer**. Originally, Algol B was the more massive star ($M_{\text{init, B}} \approx 4.0 M_\odot$) and evolved faster.
+              </p>
+              <p>
+                As it expanded off the Main Sequence, it filled its Roche Lobe. It transferred the bulk of its envelope to Algol A via the $L_1$ point. This reversed the mass ratio, leaving Algol B as a stripped, low-mass subgiant and making Algol A a massive, rejuvenated Main Sequence star.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Modes of Mass Transfer: Cases A, B, and C</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Astrophysicists classify mass transfer events into three distinct phases—**Case A, Case B, and Case C**—based on the evolutionary state of the donor star when it first fills its Roche Lobe:
+            </p>
+
+            <div class="space-y-6 mt-4">
+              <!-- Case A -->
+              <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 card-bg flex flex-col md:flex-row gap-6 items-start">
+                <div class="bg-teal-500/10 text-teal-500 p-3 rounded-xl">
+                  <i data-lucide="activity" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-2">
+                  <h4 class="font-bold text-slate-950 dark:text-white">Case A Mass Transfer (Main Sequence)</h4>
+                  <p class="text-sm">
+                    Mass transfer begins while the donor star is still in the **Hydrogen core-burning** stage. This occurs in very close binary systems with orbital periods of less than a few days. The transfer is slow and gradual, allowing the companion to comfortably assimilate the incoming fuel.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Case B -->
+              <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 card-bg flex flex-col md:flex-row gap-6 items-start">
+                <div class="bg-teal-500/10 text-teal-500 p-3 rounded-xl">
+                  <i data-lucide="chevrons-up" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-2">
+                  <h4 class="font-bold text-slate-950 dark:text-white">Case B Mass Transfer (Hydrogen Shell Burning)</h4>
+                  <p class="text-sm">
+                    Mass transfer begins after core Hydrogen exhaustion, while the donor is expanding rapidly during the **Hydrogen shell-burning** phase (crossing the subgiant branch toward the Red Giant Branch). This is the most common mass transfer mode, characterized by high transfer rates because of the donor's rapid thermal expansion.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Case C -->
+              <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-teal-100 dark:border-slate-800 card-bg flex flex-col md:flex-row gap-6 items-start">
+                <div class="bg-teal-500/10 text-teal-500 p-3 rounded-xl">
+                  <i data-lucide="flame" class="w-6 h-6"></i>
+                </div>
+                <div class="space-y-2">
+                  <h4 class="font-bold text-slate-950 dark:text-white">Case C Mass Transfer (Helium Shell Burning)</h4>
+                  <p class="text-sm">
+                    Mass transfer begins during the **Helium shell-burning** phase on the Asymptotic Giant Branch (AGB), after core Helium is exhausted. Because of the enormous radius of the donor, these systems have long orbital periods. Mass transfer is often highly unstable and leads to Common Envelope evolution.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Common Envelope (CE) Evolution & Orbital Decay</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              When mass transfer is highly asymmetric ($M_{\text{donor}} \gg M_{\text{accretor}}$) or occurs when the donor has a deep convective envelope (like a Red Giant), mass transfer becomes unstable. 
+            </p>
+            <p>
+              The accretor cannot assimilate the incoming material fast enough, and the transferred gas swells to engulf both stars. This forms a **Common Envelope (CE)**:
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono text-teal-600 dark:text-teal-400">CE Thermodynamics & Energy Equations</h3>
+            <p>
+              As the two stellar cores orbit inside the shared gas envelope, gas friction (drag force) extracts orbital energy from the binary, converting it into heat:
+              $$\Delta E_{\text{orb}} = -\frac{G M_{\text{don,core}} M_{\text{comp}}}{2 a_f} + \frac{G M_{\text{donor}} M_{\text{comp}}}{2 a_i}$$
+            </p>
+            <p>
+              This heating continues until the energy deposited is sufficient to overcome the gravitational binding energy of the envelope, ejecting it into space:
+              $$E_{\text{bind}} = -\frac{G M_{\text{donor}} M_{\text{env}}}{\lambda R_{\text{donor}}}$$
+              We define the envelope ejection efficiency parameter $\alpha_{\text{CE}}$ as:
+              $$\alpha_{\text{CE}} \Delta E_{\text{orb}} = E_{\text{bind}}$$
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-sm border border-teal-100 dark:border-teal-950 text-teal-600 dark:text-teal-400 font-bold my-4">
+              $$\alpha_{\text{CE}} \left( \frac{G M_{\text{don,core}} M_{\text{comp}}}{2 a_f} - \frac{G M_{\text{donor}} M_{\text{comp}}}{2 a_i} \right) = \frac{G M_{\text{donor}} M_{\text{env}}}{\lambda R_{\text{donor}}}$$
+            </div>
+            <p class="text-xs text-slate-500">
+              where $\lambda$ is a structural parameter reflecting the donor's core-envelope density profile, and $a_f \ll a_i$ is the final, highly shrunk semi-major axis.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Case Study: HS2231+2441 & Envelope Stripping</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The close binary system **HS2231+2441** is an extreme case of Common Envelope evolution. The system consists of:
+            </p>
+            <ul class="list-disc list-inside text-sm pl-2 space-y-1">
+              <li>A low-mass **White Dwarf** ($M \approx 0.2\text{--}0.3 M_\odot$).</li>
+              <li>A **Brown Dwarf** companion ($M \approx 0.04 M_\odot \approx 40 M_{\text{Jupiter}}$).</li>
+            </ul>
+            <p>
+              The orbital period of this system is incredibly short: **only 0.1 days** ($\approx 2.4 \text{ hours}$), corresponding to an orbital separation of $a \approx 0.6 R_\odot$.
+            </p>
+
+            <div class="bg-teal-500/5 border border-teal-500/20 rounded-2xl p-5 mt-4 text-sm space-y-2">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 block font-mono">The Physical Explanation</span>
+              <p>
+                Originally, the progenitor of the White Dwarf was a $1 M_\odot$ Main Sequence star, while the companion was a $40 M_{\text{Jupiter}}$ Brown Dwarf. 
+              </p>
+              <p>
+                When the $1 M_\odot$ star evolved and climbed the Red Giant Branch, its radius expanded, engulfing the Brown Dwarf.
+              </p>
+              <p class="font-semibold text-teal-700 dark:text-teal-400">
+                The orbital motion of the Brown Dwarf inside the giant's convective envelope generated immense friction. This friction transferred orbital energy to the envelope, completely ejecting it into space. This stripped the giant down to its degenerate Helium core (now a low-mass White Dwarf) and left the system in its current, ultra-tight orbit.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Blue Straggler Formation: Mass Transfer vs. Collisions</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Detailed observational and dynamical modeling reveals that Blue Stragglers are formed via two primary physical channels:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
+              <!-- Mass Transfer Channel -->
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-teal-600 dark:text-teal-400">1. The Mass Transfer Channel</span>
+                <p class="leading-relaxed text-xs">
+                  In semi-detached binaries, slow, stable mass transfer from an evolved giant donor to a Main Sequence companion increases the companion's mass above the MS-TO limit.
+                </p>
+                <p class="leading-relaxed text-xs font-semibold text-teal-600 dark:text-teal-400">
+                  This channel dominates in low-density regions (such as the outer halos of globular clusters and open clusters) where stellar collisions are extremely rare.
+                </p>
+              </div>
+
+              <!-- Collisional Channel -->
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">2. The Collisional Channel</span>
+                <p class="leading-relaxed text-xs">
+                  In dense stellar environments (like the cores of globular clusters), close gravitational encounters can trigger direct, physical collisions and mergers between stars.
+                </p>
+                <p class="leading-relaxed text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                  This channel produces highly massive, rapidly rotating BSSs with distinct chemical signatures, such as a lack of carbon-oxygen surface depletion compared to mass-transfer BSSs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 11 -->
+        <section id="sec-11" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">11</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Reduced Mass & Orbital Dynamics</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Before mass transfer can be treated quantitatively, the two-body orbital problem itself must be reduced to a single-body form. For two masses $M_1$ and $M_2$ orbiting their common barycentre, the entire relative motion is equivalent to one effective body of the **reduced mass** $\mu$ orbiting a fixed centre of mass $M = M_1+M_2$:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-teal-600 dark:text-teal-400 font-bold my-4">
+              $$\mu = \frac{M_1 M_2}{M_1+M_2}$$
+            </div>
+            <p class="text-sm">
+              This substitution is what allows Kepler's laws — derived originally for a single test mass around a fixed centre — to be applied rigorously to a two-body binary. The orbital angular momentum of the reduced one-body system on an eccentric orbit ($e$, semi-major axis $a$, total mass $M$) is:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-emerald-600 dark:text-emerald-400 font-bold my-4">
+              $$L = \mu\sqrt{GMa(1-e^2)}$$
+            </div>
+            <p class="text-sm">
+              which collapses to the simpler $L=\mu\sqrt{GMa}$ for a circular orbit ($e=0$) — the case used throughout the mass-transfer derivation in the next section. Combining angular-momentum conservation at perihelion/aphelion with energy conservation gives the velocity ratio at the orbit's turning points:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-sm border border-teal-100 dark:border-teal-950 text-teal-600 dark:text-teal-400 font-bold my-4">
+              $$\frac{v_p}{v_a}=\frac{r_a}{r_p}=\frac{1+e}{1-e}, \qquad v_p^2=\frac{GM}{a}\,\frac{1+e}{1-e}$$
+            </div>
+            <p class="text-sm">
+              Physically, $\mu$ is always smaller than the lighter component's mass and approaches $M_2$ in the limit $M_1\gg M_2$ — meaning that for a very unequal-mass pair, the orbital dynamics are dominated by the lighter star orbiting an effectively fixed heavy one, recovering the familiar single-body limit.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 12 -->
+        <section id="sec-12" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">12</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Conservative Mass Transfer & Orbital Stability</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In the idealized **conservative** limit, mass transfer through $L_1$ loses no mass and no angular momentum from the system — everything that leaves the donor lands on the accretor. Starting from $L=\mu\sqrt{GMa}$ with $M=M_1+M_2$ held fixed, and differentiating under $\dot L = 0$, yields the central result governing every Roche-lobe-overflow binary:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-emerald-600 dark:text-emerald-400 font-bold my-4">
+              $$\boxed{\frac{1}{a}\frac{da}{dt} = \frac{2\dot M_1(M_1-M_2)}{M_1 M_2}}$$
+            </div>
+            <p class="text-sm">
+              This is coupled to Kepler's third law, $\omega^2 = GM/a^3$, whose logarithmic derivative shows that a shrinking orbit necessarily speeds up the rotation and vice versa:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-sm border border-teal-100 dark:border-teal-950 text-teal-600 dark:text-teal-400 font-bold my-4">
+              $$\frac{1}{\omega}\frac{d\omega}{dt}=-\frac{3}{2}\frac{1}{a}\frac{da}{dt}$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono">Sign Analysis: Runaway vs. Self-Regulating Transfer</h3>
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+              <li><strong>Identify the donor</strong> — the sign of $\dot M_1$ (positive if $M_1$ is accreting, negative if $M_1$ is donating).</li>
+              <li><strong>Compare current masses</strong> — the sign of $(M_1-M_2)$.</li>
+              <li><strong>Multiply the signs</strong> — same-sign factors drive $\dot a>0$ (orbit widens: self-regulating, negative feedback); opposite-sign factors drive $\dot a<0$ (orbit shrinks: runaway, positive feedback).</li>
+              <li><strong>Feed the result back into the Roche lobe</strong> ($l_1\propto a$) — a shrinking lobe forces the donor further out of hydrostatic equilibrium, increasing the overflow rate further.</li>
+            </ol>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mt-4 text-sm space-y-2">
+              <span class="text-xs uppercase font-extrabold text-amber-600 dark:text-amber-400 block font-mono flex items-center gap-2">
+                <i data-lucide="triangle-alert" class="w-4 h-4"></i>Exam Trap: The Sign Flips Mid-Transfer
+              </span>
+              <p>
+                When the initially more massive donor has transferred enough mass to become the *less* massive star, $(M_1-M_2)$ changes sign. A runaway (shrinking) phase can therefore switch into a self-regulating (widening) phase automatically, once the mass ratio inverts — the system does not necessarily transfer mass indefinitely. Also watch the labelling convention: by convention the mass-**losing** star in a semidetached system is called "the secondary," regardless of which star was originally more massive.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 13 -->
+        <section id="sec-13" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">13</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Cataclysmic Variables & Classical Novae</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              A **Cataclysmic Variable (CV)** is the umbrella system type for a White Dwarf accreting from a low-mass, Roche-lobe-filling companion. "Cataclysmic" refers to the recurrent brightening events these systems display — but not all of them share the same physical trigger.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-teal-600 dark:text-teal-400">Dwarf Nova Outbursts</span>
+                <p class="leading-relaxed text-xs">
+                  Triggered by a **disk instability** — a thermal/viscous instability in the accretion disk itself that periodically dumps stored material onto the WD. No nuclear burning is involved at all; this is purely a gravitational/viscous energy release.
+                </p>
+              </div>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">Classical Nova Outbursts</span>
+                <p class="leading-relaxed text-xs">
+                  Triggered by a **thermonuclear runaway (TNR)** — an explosive Hydrogen flash in the degenerate layer accreted onto the WD surface. This is a genuine nuclear-burning event, physically distinct from a dwarf-nova disk instability despite occurring in the same class of binary.
+                </p>
+              </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono">The Nova Thermonuclear Runaway Sequence</h3>
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+              <li>Accreted Hydrogen builds up on the WD surface and becomes **electron-degenerate**.</li>
+              <li>The shell reaches a critical mass ($\sim10^{-4}\,M_\odot$).</li>
+              <li>CNO-cycle ignition begins once the base temperature reaches $T \gtrsim 2\times10^7$ K.</li>
+              <li>Because the fuel is degenerate, rising temperature does **not** raise the pressure — there is no thermostat, so burning runs away.</li>
+              <li>Degeneracy is eventually lifted by the temperature rise, and the layer expands and is explosively ejected at $\sim10^3$ km/s.</li>
+              <li>The WD itself **survives** intact; the whole cycle then repeats every $10^4$–$10^5$ years as accretion resumes.</li>
+            </ol>
+
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mt-4 text-sm space-y-2">
+              <span class="text-xs uppercase font-extrabold text-amber-600 dark:text-amber-400 block font-mono flex items-center gap-2">
+                <i data-lucide="triangle-alert" class="w-4 h-4"></i>Exam Trap: Nova ≠ Type Ia Supernova
+              </span>
+              <p>
+                A classical nova only burns the thin accreted surface layer and leaves the WD intact — it is fundamentally different from a **Type Ia supernova**, in which the entire WD is thermonuclearly disrupted after approaching the Chandrasekhar mass, either via continued accretion (single-degenerate channel: WD + non-degenerate donor) or a WD–WD merger (double-degenerate channel). Confusing "WD undergoes a thermonuclear event" with "WD is destroyed" is a common mistake — only the SN Ia case is destructive.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 14 -->
+        <section id="sec-14" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">14</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Accretion Efficiency & X-ray Binaries</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              When mass $m$ falls onto a compact accretor of radius $R$, the gravitational potential energy released is far larger, per unit mass, than any nuclear reaction can provide. The kinetic energy liberated by infall is simply:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-teal-600 dark:text-teal-400 font-bold my-4">
+              $$K = \frac{GMm}{R}$$
+            </div>
+            <p class="text-sm">
+              Because $K$ scales inversely with the accretor's radius, the smaller and denser the compact object, the more energy is released per gram of accreted material. Expressing this as a fraction of $mc^2$ gives an efficiency hierarchy that spans more than three orders of magnitude:
+            </p>
+
+            <!-- Accretion efficiency comparison bars -->
+            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-3 my-6">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono block mb-2">Fraction of $mc^2$ Released on Accretion</span>
+
+              <div class="flex items-center gap-3 text-xs">
+                <span class="w-36 shrink-0 font-semibold text-slate-600 dark:text-slate-300">H-burning (nuclear)</span>
+                <div class="flex-1 h-4 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-slate-400 dark:bg-slate-600 rounded-full" style="width: 2%; min-width: 3px;"></div>
+                </div>
+                <span class="w-20 text-right font-mono text-slate-500 dark:text-slate-400">0.007</span>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="w-36 shrink-0 font-semibold text-slate-600 dark:text-slate-300">WD accretion</span>
+                <div class="flex-1 h-4 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-slate-400 dark:bg-slate-600 rounded-full" style="width: 0.1%; min-width: 3px;"></div>
+                </div>
+                <span class="w-20 text-right font-mono text-slate-500 dark:text-slate-400">0.00025</span>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="w-36 shrink-0 font-semibold text-slate-600 dark:text-slate-300">Non-spinning BH</span>
+                <div class="flex-1 h-4 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-teal-500 rounded-full" style="width: 24%;"></div>
+                </div>
+                <span class="w-20 text-right font-mono text-teal-600 dark:text-teal-400">0.1</span>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="w-36 shrink-0 font-semibold text-slate-600 dark:text-slate-300">Neutron star</span>
+                <div class="flex-1 h-4 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-teal-500 rounded-full" style="width: 36%;"></div>
+                </div>
+                <span class="w-20 text-right font-mono text-teal-600 dark:text-teal-400">0.15</span>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="w-36 shrink-0 font-semibold text-slate-600 dark:text-slate-300">Maximally spinning BH</span>
+                <div class="flex-1 h-4 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-emerald-500 rounded-full" style="width: 100%;"></div>
+                </div>
+                <span class="w-20 text-right font-mono text-emerald-600 dark:text-emerald-400 font-bold">0.42</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 pt-1">Bar widths scaled linearly to the maximally-spinning-BH case (0.42); H-burning and WD accretion are rendered at a visible minimum width since their true values are near-invisible on this scale.</p>
+            </div>
+
+            <p class="text-sm">
+              Neutron-star accretion is roughly **30× more efficient** than Hydrogen burning per unit mass accreted, and a maximally spinning black hole can reach **0.42$\,mc^2$** — far beyond anything nuclear physics can supply. This is the energy source behind **X-ray binaries**: systems where a Neutron Star or Black Hole accretes from a companion and radiates the released gravitational energy predominantly as X-rays.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6 text-sm">
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-teal-600 dark:text-teal-400">Low-Mass X-ray Binaries (LMXBs)</span>
+                <p class="leading-relaxed text-xs">
+                  The companion is a low-mass star filling its Roche lobe; accretion proceeds via **RLOF through $L_1$** onto the compact object, forming a disk exactly as in the Roche-lobe framework already derived.
+                </p>
+              </div>
+              <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-teal-100 dark:border-slate-800 card-bg space-y-2">
+                <span class="text-xs font-extrabold uppercase text-emerald-600 dark:text-emerald-400">High-Mass X-ray Binaries (HMXBs)</span>
+                <p class="leading-relaxed text-xs">
+                  The companion is a massive, detached star; accretion proceeds via capture of the companion's **strong stellar wind**, with no Roche-lobe overflow required.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 15 -->
+        <section id="sec-15" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-teal-950 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-teal-100 dark:bg-teal-950 text-teal-600 dark:text-teal-400 rounded-md">15</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Post-Supernova Binary Survival & the HMXB Pipeline</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              When one member of a binary ends its life in a core-collapse supernova, the sudden, near-instantaneous ejection of mass $\delta m$ can unbind the system entirely. Because the explosion is fast compared to the orbital period, the stars' velocities do not have time to adjust — only the *gravity* holding them together changes. The binary remains bound only if:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-teal-100 dark:border-teal-950 text-emerald-600 dark:text-emerald-400 font-bold my-4">
+              $$\delta m < \frac{M_1+M_2}{2}$$
+            </div>
+            <div class="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-5 mt-4 text-sm space-y-2">
+              <span class="text-xs uppercase font-extrabold text-amber-600 dark:text-amber-400 block font-mono flex items-center gap-2">
+                <i data-lucide="triangle-alert" class="w-4 h-4"></i>Exam Trap: Half of the Total Mass, Not the Exploding Star's Mass
+              </span>
+              <p>
+                The criterion compares $\delta m$ to half the **total pre-explosion system mass**, not half the exploding star's own mass — a common factor-of-two error. In practice, prior Roche-lobe overflow that has already stripped the progenitor's envelope is often exactly what allows the ejecta to satisfy this criterion; without that earlier stripping, the ejected mass could easily exceed the bound-system threshold and disrupt the pair. A surviving system typically re-emerges on a **more eccentric orbit** than before the explosion.
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4 font-mono">Case-Study Pipeline: Massive Binary → HMXB</h3>
+            <ol class="list-decimal list-inside space-y-2 text-sm pl-2">
+              <li>A ZAMS binary begins with the initially more massive primary evolving fastest.</li>
+              <li>The primary fills its Roche lobe first (RLOF) — mass transfer is initially runaway, then self-regulating once the mass ratio inverts (Section 12).</li>
+              <li>The primary is stripped down to its He core; the secondary gains mass and the orbit widens.</li>
+              <li>The stripped He core collapses in a Type II supernova.</li>
+              <li>The survival criterion above is checked against the ejected mass $\delta m$.</li>
+              <li>If the system remains bound: a detached compact-object + MS-star phase follows, with wind accretion onto the compact object (an HMXB, Section 14).</li>
+              <li>As the secondary itself evolves and eventually fills its own Roche lobe, a full accretion disk forms onto the compact object and the system's X-ray luminosity rises sharply.</li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- QUIZ CHALLENGE SECTION -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-teal-100 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall Exam Preparation Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of the physical concepts before your exam.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-teal-100 dark:border-slate-800 shadow-sm card-bg space-y-8">
+            
+            <!-- Question 1 -->
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the defining observational signature of Blue Straggler Stars in a star cluster's Color-Magnitude Diagram?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) They form a population extending along the Main Sequence above the Main Sequence Turn-Off (MS-TO) point.
+                </button>
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) They sit strictly below the White Dwarf cooling sequence in the extreme ultraviolet region.
+                </button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Blue Stragglers are bluer and brighter than the Turn-Off point, mimicking young stars in an otherwise old, coeval cluster.
+              </p>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">In the rotating frame of a binary system, what is the mathematical expression for the centrifugal potential term in the effective Roche potential?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) $\Phi_{\text{cent}} = -\frac{GM_1 M_2}{a}$
+                </button>
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) $\Phi_{\text{cent}} = -\frac{1}{2}\omega^2 (x^2 + y^2)$
+                </button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! This term represents the potential of the centrifugal force directed outward from the axis of rotation (z-axis, where distance is $\sqrt{x^2+y^2}$).
+              </p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Through which Lagrangian point does mass transfer occur in semi-detached binary systems?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) L1 (the inner Lagrangian point between the two stellar centers).
+                </button>
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) L2 (the collinear Lagrangian point outside the less massive companion).
+                </button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! L1 represents the point where the gravitational pull of both stars balances, allowing gas to flow easily between them.
+              </p>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What defines a semi-detached binary system?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Both stars are smaller than their respective Roche Lobes.
+                </button>
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) One star fills its Roche Lobe, while the other remains smaller than its lobe.
+                </button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! When one star fills its Roche Lobe, its surface material overflows through the $L_1$ point onto its companion, forming a semi-detached system.
+              </p>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How is the Algol Paradox resolved in close binary systems?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Mass transfer from the originally more massive star reversed the mass ratio after it filled its Roche Lobe.
+                </button>
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Rapid magnetic winds from the companion stripped the convective envelope of the primary star.
+                </button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The originally more massive star evolved first and transferred its envelope to the companion, reversing the mass ratio.
+              </p>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is Case B mass transfer?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Mass transfer occurring during core Helium burning.
+                </button>
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Mass transfer initiating after core Hydrogen exhaustion, during the Hydrogen shell-burning phase.
+                </button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Case B mass transfer starts when the donor is crossing the subgiant branch toward the Red Giant Branch, driven by rapid Hydrogen shell burning.
+              </p>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What energy source drives the rapid ejection of the shared convective envelope during Common Envelope (CE) evolution?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Orbital energy extracted by gas friction as the two cores spiral closer together.
+                </button>
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Thermonuclear carbon-burning flares in the outer common atmosphere.
+                </button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Gas friction converts the orbital kinetic energy of the spiraling cores into thermal energy, which dynamically heats and ejects the envelope.
+              </p>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does the binary system HS2231+2441 achieve its ultra-short orbital period of 0.1 days?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) The drag of a companion Brown Dwarf during a Common Envelope phase stripped the primary's envelope, leaving the system in a tight orbit.
+                </button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Rapid mass transfer during Case A MS burning caused the stars to physically touch and coalesce.
+                </button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The friction of the companion Brown Dwarf ejected the giant's envelope, leaving its degenerate Helium core (now a White Dwarf) in an extremely tight orbit.
+              </p>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which Blue Straggler formation channel is most common in low-density regions like cluster halos or open clusters?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) The stable Mass Transfer channel in semi-detached binaries.
+                </button>
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) The Collisional channel driven by dynamical stellar encounters.
+                </button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Mass transfer in binary systems dominates BSS formation in lower-density environments where stellar collisions are extremely rare.
+              </p>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why are collinear Lagrangian points ($L_2$ and $L_3$) physically important during contact binary overfill stages?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) They serve as gravitational attractors that form Trojan-type asteroid belts.
+                </button>
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) They act as escape gateways for gas to leave the system, carrying away orbital angular momentum.
+                </button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! When gas exceeds the Roche boundaries at $L_2$ and $L_3$, it escapes the system, carrying away angular momentum and driving further orbital decay.
+              </p>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 11</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What does the reduced mass $\mu = M_1M_2/(M_1+M_2)$ physically represent?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(11, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) The effective one-body mass that reduces the two-body orbital problem to a single-body Kepler problem.
+                </button>
+                <button onclick="checkQuiz(11, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) The total mass lost by the donor star over one full mass-transfer episode.
+                </button>
+              </div>
+              <p id="q11-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The reduced mass lets Kepler's laws, derived for a single test mass around a fixed centre, be applied rigorously to the relative orbit of a two-body binary.
+              </p>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 12</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">In conservative mass transfer, when does the orbital separation $a$ shrink (runaway transfer) rather than widen?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(12, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) When $\dot M_1$ and $(M_1-M_2)$ have opposite signs.
+                </button>
+                <button onclick="checkQuiz(12, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) When $\dot M_1$ and $(M_1-M_2)$ have the same sign.
+                </button>
+              </div>
+              <p id="q12-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Opposite-sign factors in $\frac{1}{a}\frac{da}{dt} = \frac{2\dot M_1(M_1-M_2)}{M_1M_2}$ give $\dot a<0$ — a shrinking, runaway orbit that further increases the donor's Roche-lobe overflow rate.
+              </p>
+            </div>
+
+            <!-- Question 13 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 13</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What physically distinguishes a classical nova from a dwarf-nova outburst, even though both occur in Cataclysmic Variables?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(13, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) A classical nova is a thermonuclear runaway of accreted Hydrogen; a dwarf nova is a disk instability with no nuclear burning.
+                </button>
+                <button onclick="checkQuiz(13, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) A classical nova destroys the White Dwarf; a dwarf nova leaves it fully intact.
+                </button>
+              </div>
+              <p id="q13-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Dwarf novae are purely gravitational/viscous disk-instability events, while classical novae are explosive CNO-driven Hydrogen flashes on the WD surface — and neither one destroys the WD (only a Type Ia SN does that).
+              </p>
+            </div>
+
+            <!-- Question 14 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 14</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why can accretion onto a neutron star or black hole release far more energy per unit mass than Hydrogen burning?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(14, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) $K=GMm/R$ scales inversely with the accretor's radius, and compact objects are extremely small.
+                </button>
+                <button onclick="checkQuiz(14, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Compact objects convert accreted matter directly into additional nuclear fuel reserves.
+                </button>
+              </div>
+              <p id="q14-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Because $K=GMm/R$, the tiny radius of a neutron star or black hole makes accretion vastly more efficient (up to 0.42$\,mc^2$ for a maximally spinning BH) than the 0.007$\,mc^2$ from Hydrogen fusion.
+              </p>
+            </div>
+
+            <!-- Question 15 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 15</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What distinguishes a Low-Mass X-ray Binary (LMXB) from a High-Mass X-ray Binary (HMXB)?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(15, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) LMXBs accrete via Roche-lobe overflow from a low-mass donor; HMXBs accrete via wind capture from a massive, detached companion.
+                </button>
+                <button onclick="checkQuiz(15, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) LMXBs always host a Black Hole accretor, while HMXBs always host a Neutron Star.
+                </button>
+              </div>
+              <p id="q15-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The accretion mode — RLOF through $L_1$ versus capture of a massive companion's stellar wind — is what defines the LMXB/HMXB distinction, not the type of compact accretor.
+              </p>
+            </div>
+
+            <!-- Question 16 -->
+            <div class="space-y-3 pt-6 border-t border-teal-50/50 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-teal-600 dark:text-teal-400 font-mono">Question 16</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">A binary survives its supernova explosion only if the ejected mass $\delta m$ is less than:</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(16, false, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  A) Half of the exploding star's own pre-explosion mass.
+                </button>
+                <button onclick="checkQuiz(16, true, this)" class="w-full text-left p-3 rounded-xl border border-teal-100 dark:border-slate-800 hover:bg-teal-50/20 dark:hover:bg-slate-800 transition">
+                  B) Half of the total pre-explosion system mass, $(M_1+M_2)/2$.
+                </button>
+              </div>
+              <p id="q16-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! It's a common factor-of-two trap: the threshold is half of the combined pre-explosion mass of both stars, not half of the exploding star's own mass.
+              </p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-teal-600 dark:text-teal-400 font-bold">0 / 16 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (timerRunning) {
+        clearInterval(timerId);
+        btn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        btn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = true;
+      }
+      lucide.createIcons();
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+      
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = Math.max(0, dashOffset);
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-teal-50/50', 'dark:bg-teal-950/30', 'text-teal-600', 'dark:text-teal-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-teal-50/50', 'dark:bg-teal-950/30', 'text-teal-600', 'dark:text-teal-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0, 12: 0, 13: 0, 14: 0, 15: 0, 16: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+      
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 16 Correct`;
+    }
+  </script>
+</body>
+</html>

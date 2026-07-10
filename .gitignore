@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# tooling scratch
+.playwright-mcp/
+**/.playwright-mcp/
+
+# heavy binary inputs (not tracked — these are source materials, not work)
+GAIA/StudyMaterials/
+*.pdf
+*.xlsx
+
+# large raster assets (the interactive HTML is self-contained SVG; atlas images are inputs)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk diff *)",
+      "Bash(python3 '/Users/ali/Course Materials/Stellar Evolution/GAIA/Athena/build.py' '/Users/ali/Course Materials/Stellar Evolution/GAIA/Apollo/Introduction - notes.md' '/Users/ali/Course Materials/Stellar Evolution/GAIA/Apollo/Pre-Main Sequence Evolution - notes.md' '/Users/ali/Course Materials/Stellar Evolution/GAIA/Apollo/Main Sequence Evolution - notes.md' '/Users/ali/Course Materials/Stellar Evolution/GAIA/Apollo/Post-MS: RGB, HB & AGB - notes.md' -o '/Users/ali/Course Materials/Stellar Evolution/GAIA/STUDY PATH/notes.html' --themes '/Users/ali/Course Materials/Stellar Evolution/GAIA/Athena/themes')",
+      "Bash(open \"/Users/ali/Course Materials/Stellar Evolution/GAIA/STUDY PATH/notes.html\")"
+    ]
+  }
+}

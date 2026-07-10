@@ -1,0 +1,1107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metis — Flashcards</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']], processEscapes: true },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+<link rel="stylesheet" id="themeCSS" href="themes/deepdive.css">
+<link rel="stylesheet" href="themes/overrides.css">
+<style>
+/* ── Progress bar ── */
+.progress-wrap {
+  position: sticky; top: var(--topbar-h); z-index: 9;
+  height: 3px; background: var(--line-soft);
+}
+.progress-fill { height: 100%; width: 0%; background: var(--teal); transition: width .3s ease; }
+
+/* ── Score chip ── */
+.score-chip {
+  font-size: 13px; font-weight: 600; color: var(--ink);
+  background: var(--bg-soft); border: 1px solid var(--line);
+  border-radius: 999px; padding: 4px 14px;
+  white-space: nowrap; flex: none;
+}
+
+/* ── Theme picker ── */
+.theme-picker { display: flex; align-items: center; gap: 8px; }
+.theme-label { font-size: 11px; color: var(--mute); text-transform: uppercase; letter-spacing: .08em; }
+.theme-picker button {
+  width: 20px; height: 20px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; padding: 0;
+  transition: border-color .15s, transform .12s;
+}
+.theme-picker button:hover { transform: scale(1.15); }
+.theme-picker button[aria-pressed="true"] { border-color: var(--bronze); }
+.theme-picker button[data-theme="folio"]    { background: #ECE6D4; }
+.theme-picker button[data-theme="deepdive"] { background: #2B2D31; border-color: var(--line); }
+
+/* ── Sidebar card list ── */
+.c-list { padding: .5rem 0; }
+.c-link {
+  display: flex; align-items: center; gap: 9px;
+  padding: 5px 16px 5px 20px; font-size: 12.5px; color: var(--body);
+  cursor: pointer; transition: background .12s, color .12s;
+  border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+}
+.c-link:hover { background: var(--bg-soft); color: var(--ink); }
+.c-link.is-current { color: var(--ink); background: var(--bronze-soft); }
+.c-status {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--line); flex: none; transition: background .2s;
+}
+.c-link.is-known  .c-status { background: var(--teal); }
+.c-link.is-missed .c-status { background: #e05c5c; }
+.c-num { font-size: 10.5px; color: var(--mute); font-family: var(--mono, monospace); flex: none; min-width: 26px; }
+.c-front { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+
+/* ── Deck layout ── */
+.deck-wrap { display: none; padding: 2.5rem 2.5rem 3rem; max-width: 800px; }
+.deck-wrap.is-active { display: block; }
+
+/* ── 3D Card ── */
+.card-scene {
+  width: 100%;
+  height: 300px;
+  perspective: 1200px;
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  user-select: none;
+}
+.card-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .48s cubic-bezier(.4, 0, .2, 1);
+}
+.card-scene.is-flipped .card-inner { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  border: 1.5px solid var(--line);
+  background: var(--bg-elev);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+.card-scene:hover:not(.is-flipped) .card-face.card-front-face {
+  border-color: var(--bronze-edge);
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+.card-scene.is-flipped:hover .card-face.card-back-face {
+  border-color: var(--teal-edge);
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+
+.card-back-face { transform: rotateY(180deg); }
+
+/* Front: vertically centred */
+.card-front-face { justify-content: center; align-items: center; padding: 32px 44px; }
+/* Back: top-aligned, scrollable */
+.card-back-face { justify-content: flex-start; align-items: flex-start; padding: 28px 36px; overflow-y: auto; }
+
+.card-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--mute); margin-bottom: 14px; flex: none;
+}
+.card-front-face .card-label { align-self: flex-start; }
+
+.card-text {
+  font-size: 1.08rem; color: var(--ink); line-height: 1.7; width: 100%;
+}
+.card-front-face .card-text { text-align: center; }
+.card-back-face  .card-text { text-align: left; font-size: .95rem; }
+
+.card-tap-hint {
+  margin-top: auto; padding-top: 12px; align-self: flex-end;
+  font-size: 10.5px; color: var(--faint, var(--mute)); flex: none;
+}
+
+/* ── Flip hint ── */
+.flip-hint {
+  font-size: 12px; color: var(--mute); text-align: center;
+  margin-bottom: 1.2rem;
+}
+.flip-hint .kbd { font-family: var(--mono, monospace); font-size: 10.5px; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); background: var(--bg-soft); color: var(--mute); }
+
+/* ── Feedback buttons ── */
+.feedback-btns {
+  display: none;
+  flex-direction: row; gap: 12px; justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.feedback-btns.show { display: flex; }
+.fb-btn {
+  flex: 1; max-width: 220px; padding: 12px 20px; border-radius: 10px; cursor: pointer;
+  font: inherit; font-size: .92rem; font-weight: 700;
+  transition: opacity .15s, transform .1s; border: 1.5px solid;
+}
+.fb-btn:active { transform: scale(.97); }
+.fb-btn.know { border-color: var(--teal);  background: var(--teal-soft);        color: var(--teal); }
+.fb-btn.know:hover { opacity: .8; }
+.fb-btn.miss { border-color: #e05c5c; background: rgba(224,92,92,.1);  color: #e05c5c; }
+.fb-btn.miss:hover { opacity: .8; }
+
+/* ── Card nav bar ── */
+.card-nav {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.nav-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 20px; border-radius: 8px; cursor: pointer;
+  font: inherit; font-size: .85rem; font-weight: 600; color: var(--body);
+  border: 1px solid var(--line); background: var(--bg-elev);
+  transition: border-color .15s, background .15s, color .15s;
+}
+.nav-btn:hover:not(:disabled) { border-color: var(--bronze-edge); background: var(--bronze-soft); color: var(--ink); }
+.nav-btn:disabled { opacity: .32; cursor: default; }
+.card-pos { font-size: 13px; color: var(--mute); text-align: center; min-width: 72px; font-family: var(--mono, monospace); }
+
+/* ── Deck controls ── */
+.deck-controls { display: flex; gap: 8px; margin-top: 1.6rem; flex-wrap: wrap; }
+.ctrl-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  font: inherit; font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  border: 1px solid var(--line); background: transparent; color: var(--mute);
+  transition: border-color .15s, color .15s, background .15s;
+}
+.ctrl-btn:hover { border-color: var(--bronze-edge); color: var(--body); background: var(--bronze-soft); }
+.ctrl-btn.is-active { border-color: var(--teal-edge); color: var(--teal); background: var(--teal-soft); }
+
+/* ── Keyboard hints ── */
+.kbd-hint {
+  margin-top: 2rem; padding-top: 1rem;
+  border-top: 1px solid var(--line-soft);
+  display: flex; flex-wrap: wrap; gap: 10px 22px;
+}
+.kbd-item { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--mute); }
+.kbd-item .kbd { font-family: var(--mono, monospace); font-size: 10px; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--line); background: var(--bg-soft); color: var(--mute); }
+
+/* ── All-done banner ── */
+.all-done {
+  margin-top: 1.8rem; padding: 18px 22px; border-radius: 10px;
+  border: 1.5px solid var(--teal-edge); background: var(--teal-soft);
+  display: none;
+}
+.all-done.show { display: block; }
+.all-done-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.all-done-sub { font-size: .875rem; color: var(--body); }
+
+/* ── Math display ── */
+.display-math { text-align: center; margin: .5rem 0; }
+
+/* ── Responsive ── */
+@media (max-width: 660px) {
+  .deck-wrap { padding: 1.5rem 1.25rem 2rem; }
+  .card-scene { height: 260px; }
+  .card-front-face { padding: 24px 28px; }
+  .card-back-face  { padding: 20px 24px; }
+  .card-text { font-size: 1rem; }
+  .card-back-face .card-text { font-size: .9rem; }
+}
+
+/* ── Settings (font picker) button ── */
+.settings-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 6px; cursor: pointer;
+  font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--mute);
+  border: 1px solid var(--line); background: transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  white-space: nowrap;
+}
+.settings-btn:hover,
+.settings-btn.is-open { color: var(--ink); border-color: var(--bronze-edge); background: var(--bronze-soft); }
+
+/* ── Settings panel (slides down from topbar) ── */
+.settings-panel {
+  position: fixed;
+  top: var(--topbar-h);
+  right: 12px;
+  width: 256px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 14px 16px 16px;
+  z-index: 500;
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+  transform: translateY(-6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.settings-panel.is-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+.sp-label {
+  display: block;
+  font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--mute); margin-bottom: 10px;
+}
+.sp-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 9px;
+}
+.sp-row-label { font-size: 12px; color: var(--body); flex: none; }
+
+.sp-select {
+  flex: 1; min-width: 0;
+  font: inherit; font-size: 12px; color: var(--ink);
+  background: var(--bg-soft); border: 1px solid var(--line);
+  border-radius: 5px; padding: 4px 6px; cursor: pointer;
+  appearance: none;
+}
+.sp-select:focus { outline: none; border-color: var(--bronze-edge); }
+
+.sp-divider { border: none; border-top: 1px solid var(--line-soft); margin: 10px 0 11px; }
+
+.sp-size-row { display: flex; align-items: center; gap: 9px; flex: 1; }
+.sp-slider {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 3px; background: var(--line); border-radius: 2px;
+  outline: none; cursor: pointer;
+}
+.sp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--bronze); border: 2px solid var(--bg-elev); cursor: pointer;
+}
+.sp-slider::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--bronze); border: 2px solid var(--bg-elev); cursor: pointer; border: none;
+}
+.sp-size-val {
+  font-size: 12px; font-family: var(--mono, monospace);
+  color: var(--body); min-width: 34px; text-align: right; flex: none;
+}
+
+/* Apply --font-code variable to all code/pre elements */
+pre, code { font-family: var(--font-code, monospace); }
+
+/* ── Session nav ── */
+.session-nav   {
+  display: flex; align-items: stretch; gap: 0; flex: 1; justify-content: center;
+  min-width: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.session-nav::-webkit-scrollbar { display: none; }
+.tab-window    { display: flex; align-items: stretch; flex: none; }
+/* Push all topbar controls to the far right regardless of theme's flex-basis */
+.topbar-actions { flex: none; margin-left: auto; }
+
+/* ── Mobile: the theme's own responsive rules target a legacy `.topnav` class that
+   this sliding-window tab bar replaced, so `.session-nav` was never constrained and
+   forced the whole page wider than the viewport. Keep it scrollable-in-place instead,
+   with a guaranteed minimum width so it can't be squeezed out entirely by sibling
+   flex items (brand / search / actions) that carry their own content-based floors. ── */
+@media (max-width: 880px) {
+  .session-nav { justify-content: flex-start; min-width: 130px; }
+  .brand-name, .brand-issue { display: none; }
+  .session-tab {
+    max-width: 130px; padding: 0 12px; font-size: 12.5px;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  /* `build.py` hides these in its own <style> block on mobile, but iris_build.py /
+     coeus_build.py / metis_build.py never picked up that rule, so their theme-picker
+     (a full row of theme-swatch buttons) and settings-btn were left at full width —
+     the actual cause of most of the page-wide overflow on those pages. Centralize
+     the hide here so all four builders get it uniformly. */
+  .theme-picker, .settings-btn, .zen-btn { display: none !important; }
+  .topbar-actions { gap: 8px; }
+  /* With `.brand-name` hidden, `.brand` has nothing left to show but the icon —
+     but the theme's own `.brand { flex: 1; }` mobile override still gives it equal
+     grow priority against `.session-nav`, so it keeps claiming ~100px+ it doesn't
+     need. Let it size to content and hand that space to the tab bar instead. */
+  .brand { flex: 0 0 auto; }
+}
+@media (max-width: 480px) {
+  /* Themes set a fixed 28px/24px topbar padding+gap regardless of viewport; on a
+     phone that alone eats ~100px before any actual controls are laid out. */
+  .topbar { padding: 0 12px; gap: 10px; }
+  .session-nav { min-width: 110px; }
+  .session-tab { max-width: 96px; padding: 0 9px; font-size: 12px; }
+  .session-dropdown .drop-trigger { padding: 0 8px; }
+  /* Coeus quiz page: "New Test" button's un-wrapped text node can't be hidden by
+     itself, so collapse it via font-size and keep just the (fixed-px, unaffected) icon. */
+  .new-test-btn { font-size: 0; padding: 7px; gap: 0; }
+  .new-test-btn svg { width: 15px; height: 15px; }
+  /* Metis flashcards page: the progress "N / total" chip is visible by default
+     (unlike Coeus's score-chip, which starts `hidden`), so it must be compact
+     enough to coexist with the menu button in the remaining topbar space. */
+  .score-chip { padding: 3px 8px; font-size: 11.5px; }
+}
+
+/* ── MathJax overflow guard ──────────────────────────────────────────────────
+   `.display-math` paragraphs already scroll via their own overflow-x: auto, but
+   that only helps content the build scripts wrapped in that class. Any inline
+   formula living in ordinary flowing text (a `<p>`, list item, table cell, or an
+   Iris `.def-body` one-liner) renders its `mjx-container` as `display: inline`,
+   which browsers won't clip/scroll — a sufficiently wide equation just pushes the
+   whole page wider. Giving the block-level ancestor its own overflow-x: auto is a
+   no-op when nothing overflows, so it's safe to apply everywhere as a blanket
+   guard rather than track down every place math can appear. ── */
+.prose p, .intro-content p, .def-body, .prose li, .prose td {
+  max-width: 100%; overflow-x: auto;
+}
+
+
+@keyframes tabsExitLeft   { to   { opacity: 0; transform: translateX(-14px); } }
+@keyframes tabsExitRight  { to   { opacity: 0; transform: translateX(14px);  } }
+@keyframes tabsEnterLeft  { from { opacity: 0; transform: translateX(-14px); } }
+@keyframes tabsEnterRight { from { opacity: 0; transform: translateX(14px);  } }
+
+.tab-window.exit-left   { animation: tabsExitLeft   .13s ease forwards; pointer-events: none; }
+.tab-window.exit-right  { animation: tabsExitRight  .13s ease forwards; pointer-events: none; }
+.tab-window.enter-left  { animation: tabsEnterLeft  .15s ease; }
+.tab-window.enter-right { animation: tabsEnterRight .15s ease; }
+
+/* ── Individual tab ── */
+.session-tab {
+  padding: 0 16px; font-size: 13px; font-weight: 500;
+  color: var(--body); text-decoration: none;
+  display: flex; align-items: center;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s, background .15s;
+  white-space: nowrap; cursor: pointer;
+}
+.session-tab:hover    { color: var(--ink); background: rgba(0,0,0,.04); }
+.session-tab.is-active { color: var(--ink); border-bottom-color: var(--bronze); font-weight: 600; }
+
+/* ── Dropdown ── */
+.session-dropdown { position: relative; display: flex; align-items: center; margin-left: 4px; }
+
+.drop-trigger {
+  display: flex; align-items: center; gap: 4px;
+  height: 28px; padding: 0 10px; cursor: pointer;
+  font: inherit; font-size: 12px; color: var(--mute);
+  border: 1px solid var(--line); border-radius: 6px; background: transparent;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.drop-trigger:hover,
+.drop-trigger.is-open { color: var(--ink); border-color: var(--bronze-edge); background: var(--bronze-soft); }
+.drop-trigger svg { transition: transform .15s; flex: none; }
+.drop-trigger.is-open svg { transform: rotate(180deg); }
+
+.drop-list {
+  position: absolute; top: calc(100% + 6px); left: 0;
+  min-width: 200px; max-height: 280px; overflow-y: auto;
+  background: var(--bg-elev); border: 1px solid var(--line);
+  border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  padding: 4px 0; z-index: 300; list-style: none; margin: 0;
+}
+.drop-list[hidden] { display: none; }
+.drop-item-btn {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 8px 14px; font: inherit; font-size: 13px; color: var(--body);
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: background .1s, color .1s;
+}
+.drop-item-btn:hover  { background: var(--bg-soft); color: var(--ink); }
+.drop-item-btn.is-active { color: var(--ink); font-weight: 600; }
+.drop-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--bronze); flex: none; opacity: 0; transition: opacity .15s;
+}
+.drop-item-btn.is-active .drop-dot { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3" y="4" width="26" height="17" rx="2.5" stroke="currentColor" stroke-width="1.7" fill="none"/>
+  <line x1="3" y1="11.5" x2="29" y2="11.5" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.45"/>
+  <line x1="11" y1="4" x2="11" y2="11.5" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.45"/>
+  <line x1="13" y1="16" x2="23" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="13" y1="19.5" x2="20" y2="19.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M10 25 L16 28 L22 25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-opacity="0.6"/>
+</svg></span>
+    <span class="brand-name">METIS</span>
+    <span class="brand-issue">Flashcards</span>
+  </a>
+  <div class="session-nav" id="sessionNav">
+    <div class="tab-window" id="tabWindow"></div>
+  </div>
+  <div class="topbar-actions">
+    <span class="score-chip" data-project="exam-weighted-review" hidden>0 / 60 known</span>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <button class="settings-btn" id="settingsBtn" title="Font settings">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg> <span>Aa</span>
+    </button>
+    <div class="settings-panel" id="settingsPanel" role="dialog" aria-label="Font settings">
+      <span class="sp-label">Body font</span>
+      <div class="sp-row">
+        <select class="sp-select" id="spBodyFont">
+          <option value="theme">Theme default</option>
+          <option value="system">System UI</option>
+          <option value="georgia">Georgia</option>
+          <option value="palatino">Palatino</option>
+          <option value="inter">Inter</option>
+        </select>
+      </div>
+      <hr class="sp-divider">
+      <span class="sp-label">Code font</span>
+      <div class="sp-row">
+        <select class="sp-select" id="spCodeFont">
+          <option value="theme">Theme default</option>
+          <option value="mono">Monospace</option>
+          <option value="jetbrains">JetBrains Mono</option>
+          <option value="fira">Fira Code</option>
+        </select>
+      </div>
+      <hr class="sp-divider">
+      <span class="sp-label">Font size</span>
+      <div class="sp-row">
+        <div class="sp-size-row">
+          <input type="range" class="sp-slider" id="spFontSize" min="12" max="22" step="1" value="15">
+          <span class="sp-size-val" id="spFontSizeVal">15px</span>
+        </div>
+      </div>
+    </div>
+    <div class="theme-picker" role="group" aria-label="Theme">
+      <span class="theme-label">Theme</span>
+      <button data-theme="deepdive" aria-pressed="true" title="Deepdive"></button>
+      <button data-theme="forest" aria-pressed="false" title="Forest"></button>
+      <button data-theme="graphite" aria-pressed="false" title="Graphite"></button>
+      <button data-theme="paper" aria-pressed="false" title="Paper"></button>
+      <button data-theme="slate" aria-pressed="false" title="Slate"></button>
+    </div>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-fill" data-project="exam-weighted-review" hidden></div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-label" id="sideLabel">METIS · Cards</div>
+<div class="c-list" data-project="exam-weighted-review" hidden>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="0"><span class="c-status"></span><span class="c-num">#1</span><span class="c-front">What spectroscopic features distinguish supernova Types…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="1"><span class="c-status"></span><span class="c-num">#2</span><span class="c-front">What are the two progenitor scenarios for a Type Ia sup…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="2"><span class="c-status"></span><span class="c-num">#3</span><span class="c-front">Why is a pure detonation model ruled out for Type Ia su…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="3"><span class="c-status"></span><span class="c-num">#4</span><span class="c-front">What radioactive decay chain powers the SN Ia light cur…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="4"><span class="c-status"></span><span class="c-num">#5</span><span class="c-front">Why does a Type II supernova release about 300 times mo…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="5"><span class="c-status"></span><span class="c-num">#6</span><span class="c-front">What three processes drive the runaway collapse of a ma…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="6"><span class="c-status"></span><span class="c-num">#7</span><span class="c-front">What are the typical mass, radius, and central density …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="7"><span class="c-status"></span><span class="c-num">#8</span><span class="c-front">Why do measured neutron star masses cluster tightly aro…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="8"><span class="c-status"></span><span class="c-num">#9</span><span class="c-front">What is the Oppenheimer-Volkoff limit and why is it far…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="9"><span class="c-status"></span><span class="c-num">#10</span><span class="c-front">What is &quot;neutronization&quot; in a neutron star&#x27;s outer crus…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="10"><span class="c-status"></span><span class="c-num">#11</span><span class="c-front">What is the &quot;neutron drip&quot; point inside a neutron star?</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="11"><span class="c-status"></span><span class="c-num">#12</span><span class="c-front">Why does core collapse to a neutron star naturally prod…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="12"><span class="c-status"></span><span class="c-num">#13</span><span class="c-front">How do neutron stars, white dwarfs, and black holes dif…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="13"><span class="c-status"></span><span class="c-num">#14</span><span class="c-front">What are the defining observed properties of a pulsar, …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="14"><span class="c-status"></span><span class="c-num">#15</span><span class="c-front">How does the Crab Pulsar prove that pulsars power their…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="15"><span class="c-status"></span><span class="c-num">#16</span><span class="c-front">What physical process generates a pulsar&#x27;s coherent rad…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="16"><span class="c-status"></span><span class="c-num">#17</span><span class="c-front">What are the Light Cylinder and the &quot;lighthouse effect&quot;…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="17"><span class="c-status"></span><span class="c-num">#18</span><span class="c-front">What is the pulsar recycling scenario, and how does it …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="18"><span class="c-status"></span><span class="c-num">#19</span><span class="c-front">What are the mass limits bounding the ZAMS, and what se…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="19"><span class="c-status"></span><span class="c-num">#20</span><span class="c-front">What is the Eddington luminosity and why does it cap st…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="20"><span class="c-status"></span><span class="c-num">#21</span><span class="c-front">At what core temperatures do the pp chain and CNO cycle…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="21"><span class="c-status"></span><span class="c-num">#22</span><span class="c-front">Why does CNO-cycle burning produce a convective core wh…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="22"><span class="c-status"></span><span class="c-num">#23</span><span class="c-front">How does the mass-luminosity relation change above and …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="23"><span class="c-status"></span><span class="c-num">#24</span><span class="c-front">What are the three ZAMS structural regimes by mass?</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="24"><span class="c-status"></span><span class="c-num">#25</span><span class="c-front">What is the approximate scaling law for main-sequence l…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="25"><span class="c-status"></span><span class="c-num">#26</span><span class="c-front">How does a $1\,M_\odot$ star&#x27;s HR track differ from a $…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="26"><span class="c-status"></span><span class="c-num">#27</span><span class="c-front">Why do high-mass stars show a &quot;hook&quot; at the main-sequen…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="27"><span class="c-status"></span><span class="c-num">#28</span><span class="c-front">What is the Schonberg-Chandrasekhar limit?</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="28"><span class="c-status"></span><span class="c-num">#29</span><span class="c-front">How does increasing metallicity $Z$ (at fixed $Y$) affe…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="29"><span class="c-status"></span><span class="c-num">#30</span><span class="c-front">How does increasing helium abundance $Y$ (at fixed $Z$)…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="30"><span class="c-status"></span><span class="c-num">#31</span><span class="c-front">What is the Helium Flash and why is it a runaway?</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="31"><span class="c-status"></span><span class="c-num">#32</span><span class="c-front">Why does the Helium Flash occur off-center, and why is …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="32"><span class="c-status"></span><span class="c-num">#33</span><span class="c-front">Why do essentially all stars below $2.2\,M_\odot$ ignit…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="33"><span class="c-status"></span><span class="c-num">#34</span><span class="c-front">What determines whether a star&#x27;s helium core ignites vi…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="34"><span class="c-status"></span><span class="c-num">#35</span><span class="c-front">What is the Third Dredge-Up and how does it create carb…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="35"><span class="c-status"></span><span class="c-num">#36</span><span class="c-front">What are the two main neutron sources for the s-process…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="36"><span class="c-status"></span><span class="c-num">#37</span><span class="c-front">What is the complete mass-dependent final-fate table fo…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="37"><span class="c-status"></span><span class="c-num">#38</span><span class="c-front">What is the First Dredge-Up and what causes the RGB Bum…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="38"><span class="c-status"></span><span class="c-num">#39</span><span class="c-front">What is the $M^{up}=8\,M_\odot$ transition, and what do…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="39"><span class="c-status"></span><span class="c-num">#40</span><span class="c-front">What is the Chandrasekhar mass, and what three fundamen…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="40"><span class="c-status"></span><span class="c-num">#41</span><span class="c-front">What is the non-relativistic white dwarf mass-radius re…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="41"><span class="c-status"></span><span class="c-num">#42</span><span class="c-front">Why is the Chandrasekhar mass not exclusively a white-d…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="42"><span class="c-status"></span><span class="c-num">#43</span><span class="c-front">What is the layered internal structure of a typical whi…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="43"><span class="c-status"></span><span class="c-num">#44</span><span class="c-front">Why is the interior of a white dwarf essentially isothe…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="44"><span class="c-status"></span><span class="c-num">#45</span><span class="c-front">What is the Mestel cooling law for white dwarfs?</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="45"><span class="c-status"></span><span class="c-num">#46</span><span class="c-front">Why do more massive white dwarfs appear more luminous t…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="46"><span class="c-status"></span><span class="c-num">#47</span><span class="c-front">What causes the luminosity &quot;plateau&quot; seen in white dwar…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="47"><span class="c-status"></span><span class="c-num">#48</span><span class="c-front">What is the pressure-density relation for a non-relativ…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="48"><span class="c-status"></span><span class="c-num">#49</span><span class="c-front">What is the Period-Luminosity relation and why is it th…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="49"><span class="c-status"></span><span class="c-num">#50</span><span class="c-front">What physical relation underlies the Period-Luminosity …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="50"><span class="c-status"></span><span class="c-num">#51</span><span class="c-front">What drives sustained stellar pulsations (the $\kappa$-…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="51"><span class="c-status"></span><span class="c-num">#52</span><span class="c-front">What physically sets the blue and red edges of the Inst…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="52"><span class="c-status"></span><span class="c-num">#53</span><span class="c-front">Why are RR Lyrae stars useful as standard candles?</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="53"><span class="c-status"></span><span class="c-num">#54</span><span class="c-front">What is the &quot;onion-shell&quot; structure of a massive star j…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="54"><span class="c-status"></span><span class="c-num">#55</span><span class="c-front">What distinguishes an electron-capture supernova from a…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="55"><span class="c-status"></span><span class="c-num">#56</span><span class="c-front">Why does the prompt supernova shock stall, and how does…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="56"><span class="c-status"></span><span class="c-num">#57</span><span class="c-front">What are the three timescales governing stellar formati…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="57"><span class="c-status"></span><span class="c-num">#58</span><span class="c-front">What does the Virial Theorem imply about a contracting …</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="58"><span class="c-status"></span><span class="c-num">#59</span><span class="c-front">What is the Roche lobe and what triggers Roche lobe ove…</span></button>
+  <button class="c-link" data-project="exam-weighted-review" data-card-idx="59"><span class="c-status"></span><span class="c-num">#60</span><span class="c-front">What is the distinction between &quot;contraction&quot; and &quot;coll…</span></button>
+</div>
+  </aside>
+  <div class="main" style="padding: 0; align-items: start;">
+<div class="deck-wrap" data-project="exam-weighted-review">
+  <div class="card-scene" id="scene-exam-weighted-review" data-project="exam-weighted-review">
+    <div class="card-inner">
+      <div class="card-face card-front-face">
+        <span class="card-label">Question</span>
+        <div class="card-text" id="front-text-exam-weighted-review">What spectroscopic features distinguish supernova Types Ia, Ib, Ic, and II?</div>
+        <span class="card-tap-hint">tap to flip</span>
+      </div>
+      <div class="card-face card-back-face">
+        <span class="card-label">Answer</span>
+        <div class="card-text" id="back-text-exam-weighted-review">Type II shows hydrogen lines; Type I shows none. Among Type I, Ia shows Si II (thermonuclear WD explosion), Ib shows He but no Si (stripped-envelope core collapse), and Ic shows neither H, He, nor Si (fully stripped core collapse).</div>
+      </div>
+    </div>
+  </div>
+  <div class="flip-hint" id="flip-hint-exam-weighted-review">
+    Click card &nbsp;·&nbsp; <kbd class="kbd">Space</kbd> to flip
+  </div>
+  <div class="feedback-btns" id="feedback-exam-weighted-review">
+    <button class="fb-btn know" data-project="exam-weighted-review">✓ Know it</button>
+    <button class="fb-btn miss" data-project="exam-weighted-review">✗ Miss</button>
+  </div>
+  <div class="card-nav">
+    <button class="nav-btn prev-btn" data-project="exam-weighted-review" disabled>← Prev</button>
+    <span class="card-pos" id="card-pos-exam-weighted-review">1 / 60</span>
+    <button class="nav-btn next-btn" data-project="exam-weighted-review">Next →</button>
+  </div>
+  <div class="deck-controls">
+    <button class="ctrl-btn shuffle-btn" data-project="exam-weighted-review"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg> Shuffle</button>
+    <button class="ctrl-btn filter-btn"  data-project="exam-weighted-review"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="6" x2="2" y2="6"/><line x1="17" y1="12" x2="7" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg> Review Misses</button>
+    <button class="ctrl-btn reset-btn"   data-project="exam-weighted-review"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg> Reset</button>
+  </div>
+  <div id="all-done-exam-weighted-review" class="all-done">
+    <div class="all-done-title">Deck complete!</div>
+    <div class="all-done-sub">You've reviewed all 60 cards. Shuffle or reset to go again.</div>
+  </div>
+  <div class="kbd-hint">
+    <span class="kbd-item"><span class="kbd">Space</span> Flip</span>
+    <span class="kbd-item"><span class="kbd">→</span> Next</span>
+    <span class="kbd-item"><span class="kbd">←</span> Prev</span>
+    <span class="kbd-item"><span class="kbd">K</span> Know it</span>
+    <span class="kbd-item"><span class="kbd">M</span> Miss</span>
+    <span class="kbd-item"><span class="kbd">S</span> Shuffle</span>
+    <span class="kbd-item"><span class="kbd">R</span> Reset</span>
+  </div>
+</div>
+  </div>
+</div>
+
+<script>
+
+/* ── Theme picker ── */
+(function () {
+  const btns = document.querySelectorAll('.theme-picker button[data-theme]');
+  const css  = document.getElementById('themeCSS');
+  const hljsLink = document.getElementById('hljsCSS');
+  const HLJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/';
+  const HLJS_MAP = {
+    deepdive: 'atom-one-dark',
+    slate:    'nord',
+    forest:   'monokai-sublime',
+    paper:    'monokai',
+    graphite: 'github-dark',
+  };
+  function setTheme(t) {
+    if (css) css.href = 'themes/' + t + '.css';
+    if (hljsLink) hljsLink.href = HLJS_CDN + (HLJS_MAP[t] || 'github-dark-dimmed') + '.min.css';
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.theme === t)));
+    try { localStorage.setItem('gaia-theme', t); } catch(e) {}
+  }
+  btns.forEach(b => b.addEventListener('click', () => setTheme(b.dataset.theme)));
+  let saved = null;
+  try { saved = localStorage.getItem('gaia-theme'); } catch(e) {}
+  const valid = saved && document.querySelector('[data-theme="' + saved + '"]');
+  if (valid) setTheme(saved);
+})();
+
+
+
+/* ── Font / typography settings ── */
+(function () {
+  const BODY_FONTS = {
+    theme:    null,
+    system:   'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    georgia:  'Georgia, "Times New Roman", serif',
+    palatino: '"Palatino Linotype", Palatino, "Book Antiqua", serif',
+    inter:    '"Inter", system-ui, sans-serif',
+  };
+  const CODE_FONTS = {
+    theme:     null,
+    mono:      'ui-monospace, "Cascadia Code", "Fira Code", "Courier New", monospace',
+    jetbrains: '"JetBrains Mono", ui-monospace, monospace',
+    fira:      '"Fira Code", "Fira Mono", ui-monospace, monospace',
+  };
+  const DEF = { bodyFont: 'theme', codeFont: 'theme', fontSize: 15 };
+
+  function apply(s) {
+    const r = document.documentElement;
+    const bf = BODY_FONTS[s.bodyFont];
+    const cf = CODE_FONTS[s.codeFont];
+    if (bf) { r.style.setProperty('--font-body',    bf); r.style.setProperty('--font-heading', bf); }
+    else     { r.style.removeProperty('--font-body');      r.style.removeProperty('--font-heading'); }
+    if (cf) r.style.setProperty('--font-code', cf);
+    else    r.style.removeProperty('--font-code');
+    r.style.setProperty('--size-base', s.fontSize + 'px');
+    r.style.fontSize = s.fontSize + 'px';  /* makes 1rem = chosen size */
+  }
+
+  let s;
+  try { s = { ...DEF, ...JSON.parse(localStorage.getItem('gaia-font') || '{}') }; }
+  catch (e) { s = { ...DEF }; }
+  apply(s);
+
+  const panel = document.getElementById('settingsPanel');
+  const btn   = document.getElementById('settingsBtn');
+  if (!panel || !btn) return;
+
+  const bodyFSel = document.getElementById('spBodyFont');
+  const codeFSel = document.getElementById('spCodeFont');
+  const slider   = document.getElementById('spFontSize');
+  const sizeVal  = document.getElementById('spFontSizeVal');
+
+  if (bodyFSel) bodyFSel.value = s.bodyFont;
+  if (codeFSel) codeFSel.value = s.codeFont;
+  if (slider)   slider.value   = s.fontSize;
+  if (sizeVal)  sizeVal.textContent = s.fontSize + 'px';
+
+  function save() { localStorage.setItem('gaia-font', JSON.stringify(s)); }
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = panel.classList.toggle('is-open');
+    btn.classList.toggle('is-open', open);
+  });
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && !btn.contains(e.target)) {
+      panel.classList.remove('is-open'); btn.classList.remove('is-open');
+    }
+  });
+
+  if (bodyFSel) bodyFSel.addEventListener('change', e => { s.bodyFont = e.target.value; apply(s); save(); });
+  if (codeFSel) codeFSel.addEventListener('change', e => { s.codeFont = e.target.value; apply(s); save(); });
+  if (slider)   slider.addEventListener('input', e => {
+    s.fontSize = parseInt(e.target.value, 10);
+    if (sizeVal) sizeVal.textContent = s.fontSize + 'px';
+    apply(s); save();
+  });
+})();
+
+
+/* ── Card data ── */
+const DECKS = {
+  "exam-weighted-review": [{"front": "What spectroscopic features distinguish supernova Types Ia, Ib, Ic, and II?", "back": "Type II shows hydrogen lines; Type I shows none. Among Type I, Ia shows Si II (thermonuclear WD explosion), Ib shows He but no Si (stripped-envelope core collapse), and Ic shows neither H, He, nor Si (fully stripped core collapse)."}, {"front": "What are the two progenitor scenarios for a Type Ia supernova?", "back": "Double-degenerate: merger of two CO white dwarfs whose combined mass exceeds $M_{Ch}$, driven together by gravitational-wave inspiral. Single-degenerate: a CO WD accretes H-rich material from a non-degenerate companion until it reaches $M_{Ch}\\approx1.4\\,M_\\odot$."}, {"front": "Why is a pure detonation model ruled out for Type Ia supernovae?", "back": "A supersonic detonation burns the whole WD at high density into almost pure $^{56}$Ni (Fe-peak), leaving no intermediate-mass elements; but SN Ia spectra show Si, S, Ca, so the accepted picture is a delayed detonation: a slower deflagration first lets the star expand before a detonation ignites."}, {"front": "What radioactive decay chain powers the SN Ia light curve, and what are the half-lives?", "back": "$^{56}\\text{Ni}\\to{}^{56}\\text{Co}$ ($t_{1/2}=6.1$ days) $\\to{}^{56}\\text{Fe}$ ($t_{1/2}=77$ days). Ni decay drives the early rise and peak; Co decay powers the long radioactive tail."}, {"front": "Why does a Type II supernova release about 300 times more total energy than a Type Ia yet appear similarly bright optically?", "back": "Type II core collapse releases $\\sim3\\times10^{53}$ erg, but about 99% escapes as a neutrino burst; only $\\sim10^{49}$ erg emerges as optical light, comparable to or less than a Type Ia's optical output."}, {"front": "What three processes drive the runaway collapse of a massive star's iron core?", "back": "Electron capture on iron-group nuclei (removes degeneracy pressure), photodisintegration of Fe into He and free nucleons (endothermic, saps thermal pressure), and the URCA process $p^++e^-\\to n+\\nu_e$ on free protons, which removes both electrons and energy via escaping neutrinos."}, {"front": "What are the typical mass, radius, and central density of a neutron star?", "back": "$M\\approx1.2$-$2.5\\,M_\\odot$, $R\\approx10$-15 km, central density $\\rho_c\\approx10^{14}$-$10^{15}\\,\\text{g cm}^{-3}$, a few times nuclear density."}, {"front": "Why do measured neutron star masses cluster tightly around $1.4\\,M_\\odot$?", "back": "Nearly all NSs form from collapsing iron cores that were supported by electron degeneracy pressure, so those cores had masses close to the Chandrasekhar mass; most of that mass becomes the NS."}, {"front": "What is the Oppenheimer-Volkoff limit and why is it far less precisely known than the Chandrasekhar mass?", "back": "It is the maximum neutron star mass ($\\sim2.5$-$3\\,M_\\odot$) beyond which neutron degeneracy pressure cannot halt collapse; unlike $M_{Ch}$, it depends on the poorly known equation of state of matter above nuclear density (possible hyperons, pion or kaon condensates, quark matter)."}, {"front": "What is \"neutronization\" in a neutron star's outer crust?", "back": "In a fully degenerate electron sea, all low-energy states are filled, so the electron produced by $\\beta^-$ decay of a neutron-rich nucleus has no state to occupy; the decay is Pauli-blocked, stabilizing increasingly neutron-rich nuclei as density rises."}, {"front": "What is the \"neutron drip\" point inside a neutron star?", "back": "At $\\rho\\approx4\\times10^{11}\\,\\text{g cm}^{-3}$, electron capture $p^++e^-\\to n+\\nu_e$ becomes energetically favorable and free neutrons begin to exist outside nuclei, marking the boundary between the outer and inner crust."}, {"front": "Why does core collapse to a neutron star naturally produce a millisecond rotator with a magnetic field of $10^{13}$-$10^{14}$ G?", "back": "The core radius shrinks by a factor of about 500; conservation of angular momentum ($I\\omega=$const) spins up even a slow progenitor core to millisecond periods, and conservation of magnetic flux ($BR^2=$const) amplifies even a modest pre-collapse field by a factor of $500^2\\approx2.5\\times10^5$."}, {"front": "How do neutron stars, white dwarfs, and black holes differ in what supports them and their mass limits?", "back": "WDs are supported by electron degeneracy pressure up to $M_{Ch}\\approx1.4\\,M_\\odot$ ($R\\sim5000$ km); NSs are supported by neutron degeneracy pressure up to the Oppenheimer-Volkoff limit ($\\sim2.5$-$3\\,M_\\odot$, $R\\sim10$ km); black holes form above that limit, where no known pressure can halt collapse."}, {"front": "What are the defining observed properties of a pulsar, and how is its characteristic age estimated?", "back": "Extremely short, regular periods (mostly 0.2-2 s) that increase slowly over time ($\\dot P\\sim10^{-15}$); the characteristic (spindown) age is $\\tau=P/\\dot P\\sim10^7$ yr, assuming the initial period was much shorter than today's."}, {"front": "How does the Crab Pulsar prove that pulsars power their associated supernova remnants?", "back": "The Crab's rotational energy-loss rate, $dK/dt=-4\\pi^2I\\dot P/P^3\\approx5\\times10^{38}\\,\\text{erg s}^{-1}$, quantitatively matches the synchrotron luminosity needed to power the Crab Nebula, confirming rotational kinetic energy as the nebula's energy source."}, {"front": "What physical process generates a pulsar's coherent radio beam?", "back": "The rotating, strongly magnetized NS induces a huge surface electric field that tears charged particles from the surface; these accelerate along curved field lines emitting curvature-radiation gamma rays, which pair-produce $e^+e^-$, cascading into a coherent relativistic particle and radiation beam."}, {"front": "What are the Light Cylinder and the \"lighthouse effect\" in pulsar emission?", "back": "The Light Cylinder, $R_{lc}=cP/2\\pi$, is the radius where corotation would require $v=c$; field lines crossing it become open and channel escaping particles into a narrow relativistically beamed cone that sweeps past Earth once per rotation because the magnetic and spin axes are misaligned."}, {"front": "What is the pulsar recycling scenario, and how does it explain millisecond pulsars?", "back": "An old, spun-down pulsar in a binary accretes mass and angular momentum from an evolving companion via a disk (disrupted at the Alfven radius), spinning it back up to millisecond periods; this explains why MSPs show a very short period alongside a tiny $\\dot P$ (implying great age) and are typically found with a low-mass He-WD companion."}, {"front": "What are the mass limits bounding the ZAMS, and what sets each one?", "back": "Lower limit $\\approx0.08\\,M_\\odot$: below this, core temperature never reaches H-ignition and the object becomes a brown dwarf. Upper limit $\\approx90\\,M_\\odot$: above this, luminosity approaches the Eddington luminosity and radiation pressure destabilizes hydrostatic equilibrium."}, {"front": "What is the Eddington luminosity and why does it cap stellar mass?", "back": "$L_{Ed}=4\\pi GMc/\\kappa$, the maximum luminosity a star of mass $M$ can radiate while maintaining hydrostatic equilibrium against radiation pressure. Near $90\\,M_\\odot$, a star's actual luminosity approaches $L_{Ed}$, making more massive stars radiatively unstable."}, {"front": "At what core temperatures do the pp chain and CNO cycle ignite, and what is the transition mass between them?", "back": "pp chain ignites at $T_c\\approx1.4\\times10^7$ K; CNO cycle at $T_c\\approx1.8\\times10^7$ K. The CNO cycle overtakes the pp chain as the dominant source above $M\\approx1.2\\,M_\\odot$."}, {"front": "Why does CNO-cycle burning produce a convective core while pp-chain burning produces a radiative core?", "back": "CNO energy generation scales as $T^{15}$ versus $T^5$ for the pp chain, so CNO burning is far more centrally concentrated; the resulting steep luminosity gradient makes $\\nabla_{rad}>\\nabla_{ad}$ in the core, triggering convection, whereas the more diffuse pp-chain burning keeps the core radiative."}, {"front": "How does the mass-luminosity relation change above and below $1.2\\,M_\\odot$?", "back": "Upper main sequence (CNO burning, $M\\gtrsim1.2\\,M_\\odot$): $L\\approx M^{3.6}$ (shallower). Lower main sequence (pp chain): $L\\approx M^4$-$M^{4.5}$ (steeper), because the CNO cycle's extreme temperature sensitivity limits how much $T_c$ must rise with mass."}, {"front": "What are the three ZAMS structural regimes by mass?", "back": "$M>1.2\\,M_\\odot$: convective core, radiative envelope. $0.3<M/M_\\odot<1.2$: radiative core, convective envelope. $M<0.3\\,M_\\odot$: fully convective throughout."}, {"front": "What is the approximate scaling law for main-sequence lifetime, and why?", "back": "$t_{MS}\\approx10^{10}M^{-3}$ yr (M in solar masses), arising because $t_{MS}\\propto M/L$ and $L\\propto M^4$ roughly, so fuel supply grows linearly with mass but is consumed far faster at higher luminosity."}, {"front": "How does a $1\\,M_\\odot$ star's HR track differ from a $5\\,M_\\odot$ star's track during core H-burning (segment 1-2)?", "back": "The $1\\,M_\\odot$ (pp-chain, diffuse burning) track moves slightly up and to the left (modest brightening, slightly hotter) because core contraction partly counteracts envelope expansion. The $5\\,M_\\odot$ (CNO, compact burning) track moves up and strongly to the right (much cooler, larger radius) because the localized core contraction barely opposes envelope expansion."}, {"front": "Why do high-mass stars show a \"hook\" at the main-sequence turnoff but low-mass stars do not?", "back": "A convective core exhausts hydrogen simultaneously everywhere, leaving the core too cool for He-ignition and the overlying shell too cool for H-ignition; the resulting gravitational contraction phase briefly raises $T_{eff}$, producing the hook. Low-mass stars have a smooth radiative H-profile, so shell burning ignites seamlessly with no gap or hook."}, {"front": "What is the Schonberg-Chandrasekhar limit?", "back": "The maximum mass fraction ($q_0\\approx0.08$, or $M_c\\lesssim0.10\\,M_{tot}$) that an isothermal, ideal-gas helium core can support against the overlying envelope; once the growing He core exceeds this limit it begins to contract on the Kelvin-Helmholtz timescale."}, {"front": "How does increasing metallicity $Z$ (at fixed $Y$) affect a ZAMS star's luminosity, temperature, and lifetime?", "back": "Higher $Z$ raises opacity, making the star fainter and cooler (ZAMS shifts down and right in the HRD) and increasing its main-sequence lifetime."}, {"front": "How does increasing helium abundance $Y$ (at fixed $Z$) affect a ZAMS star?", "back": "Higher $Y$ lowers opacity and raises the mean molecular weight $\\mu$ (with $L\\propto\\mu^7$ roughly), making the star brighter and hotter and shortening its main-sequence lifetime, hence lowering the turnoff mass at fixed population age."}, {"front": "What is the Helium Flash and why is it a runaway?", "back": "In a degenerate He core, pressure is independent of temperature, so there is no thermoregulating feedback; as the triple-alpha rate ($\\propto T^{25}$) rises with temperature, energy release keeps raising T further, producing a thermonuclear runaway that ignites core helium burning."}, {"front": "Why does the Helium Flash occur off-center, and why is there no visible brightening at the surface?", "back": "Neutrino cooling (plasma and photoneutrino processes) preferentially cools the innermost core, creating an off-center temperature maximum where the 3-alpha reaction ignites first. The enormous flash energy ($\\sim10^{11}\\,L_\\odot$) is entirely consumed lifting core degeneracy and never reaches the surface."}, {"front": "Why do essentially all stars below $2.2\\,M_\\odot$ ignite helium at the same core mass, and why does this matter?", "back": "The physics of the degenerate core sets ignition conditions independent of total stellar mass, so all such stars reach $M_c^{He}\\approx0.5\\,M_\\odot$ before the flash; combined with the tight core-mass-luminosity relation on the RGB, this gives all these stars the same maximum RGB luminosity, making the RGB Tip a standard candle ($M_I\\approx-4.0$)."}, {"front": "What determines whether a star's helium core ignites via a flash or ignites stably, and at what mass does the transition occur?", "back": "Stars below $M\\approx2.2\\,M_\\odot$ develop an electron-degenerate He core and ignite via the Helium Flash after a long RGB ascent; stars above $2.2\\,M_\\odot$ keep an ideal-gas He core and ignite helium stably without a flash, with a shorter, less-populated giant branch."}, {"front": "What is the Third Dredge-Up and how does it create carbon stars?", "back": "Intershell convection during a thermal pulse enriches the He-intershell region in C and O; the deepening envelope convection then contacts this enriched material and carries it to the surface. Repeated episodes can raise surface C/O above 1, producing a Carbon Star."}, {"front": "What are the two main neutron sources for the s-process in AGB stars, and what is the $^{14}$N poison problem?", "back": "$^{13}\\text{C}(\\alpha,n)^{16}\\text{O}$ operates at lower temperature ($\\sim9\\times10^7$K) in most AGB stars; $^{22}\\text{Ne}(\\alpha,n)^{25}\\text{Mg}$ requires higher temperature ($\\sim3.5\\times10^8$K, needs $M>3\\,M_\\odot$). $^{14}$N is a severe neutron poison ($^{14}\\text{N}+n\\to{}^{15}\\text{N}+\\gamma$), so efficient s-process requires environments where $^{14}$N has been converted away via He-capture to $^{22}$Ne."}, {"front": "What is the complete mass-dependent final-fate table for low- and intermediate-mass stellar remnants?", "back": "$0.08$-$0.5\\,M_\\odot$: He white dwarf. $0.5$-$2.2\\,M_\\odot$: CO white dwarf via Helium Flash. $2.2$-$8\\,M_\\odot$: CO white dwarf via stable He ignition. Above $8\\,M_\\odot$: Type II core-collapse supernova (neutron star or black hole)."}, {"front": "What is the First Dredge-Up and what causes the RGB Bump?", "back": "The First Dredge-Up is the convective envelope mixing CN-processed material (depleted $^{12}$C, enhanced $^{14}$N) to the surface as it deepens on the RGB, leaving a hydrogen-abundance discontinuity. The RGB Bump occurs later when the outward-moving H-burning shell crosses this discontinuity: luminosity briefly drops (since $L_H\\propto\\mu^7$) then resumes rising, producing a pile-up of stars in the luminosity function."}, {"front": "What is the $M^{up}=8\\,M_\\odot$ transition, and what does it separate?", "back": "It is the boundary between stars whose CO core becomes electron-degenerate after He-burning (below $8\\,M_\\odot$: AGB phase, planetary nebula, CO white dwarf) and stars whose CO core remains non-degenerate and ignites carbon (above $8\\,M_\\odot$: proceeds to Type II supernova)."}, {"front": "What is the Chandrasekhar mass, and what three fundamental constants combine to set its value?", "back": "$M_{Ch}\\approx1.44\\,M_\\odot$, the maximum mass a non-rotating electron-degenerate white dwarf can support. It emerges from the combination $\\hbar c/G$: $\\hbar$ (quantum degeneracy), $c$ (relativistic electrons), and $G$ (gravity)."}, {"front": "What is the non-relativistic white dwarf mass-radius relation, and why is it the opposite of normal stars?", "back": "$M^{1/3}R\\approx$ const, so $R\\propto M^{-1/3}$: more massive WDs are smaller. This is opposite to normal stars because higher mass raises density and hence degeneracy pressure per particle, favoring a more compact equilibrium rather than a larger one."}, {"front": "Why is the Chandrasekhar mass not exclusively a white-dwarf concept?", "back": "It applies to any stellar substructure supported purely by electron degeneracy pressure, including CO WDs, He WDs, and degenerate iron cores in massive stars just before collapse, since it depends only on the mass of the degenerate structure, not the progenitor's initial mass."}, {"front": "What is the layered internal structure of a typical white dwarf, and what causes about 80% to show pure-hydrogen (DA) spectra?", "back": "A dominant electron-degenerate CO core, a thin non-degenerate He layer ($\\sim10^{-2}M_{WD}$), and an even thinner H layer ($\\sim10^{-4}M_{WD}$). The enormous surface gravity ($\\log g\\approx8.4$) causes rapid gravitational settling of heavier elements below the lightest available element, leaving pure-H (DA) atmospheres in most WDs."}, {"front": "Why is the interior of a white dwarf essentially isothermal?", "back": "Electron degeneracy makes electron scattering highly Pauli-blocked (only electrons near the Fermi surface can scatter), giving very long mean free paths and hence extremely efficient thermal conduction, which flattens any temperature gradient across the degenerate core."}, {"front": "What is the Mestel cooling law for white dwarfs?", "back": "Derived by equating $L=cT_c^{7/2}$ (from the non-degenerate envelope) with $L=-B\\,dT_c/dt$ (from the ion thermal reservoir), giving $L(t)=L_0[1+\\tfrac{5}{2}t/\\tau_0]^{-7/5}$: luminosity declines nearly linearly at first, then as a power law $t^{-7/5}$."}, {"front": "Why do more massive white dwarfs appear more luminous than less massive ones at the same old age?", "back": "Cooling time scales as $t_{cool}\\propto M^{5/7}L^{-5/7}$, so massive WDs (larger thermal reservoir $U\\propto M/A$) cool more slowly; at a fixed age like 12 Gyr, a $1\\,M_\\odot$ WD is still brighter than a $0.5\\,M_\\odot$ WD that has already cooled further."}, {"front": "What causes the luminosity \"plateau\" seen in white dwarf cooling curves around $\\log(L/L_\\odot)\\approx-4$?", "back": "As the CO ions cool enough to form an ordered crystal lattice (crystallization), the reduction in ionic degrees of freedom releases latent heat, temporarily slowing the cooling rate before it resumes and accelerates."}, {"front": "What is the pressure-density relation for a non-relativistic degenerate electron gas, and why is it temperature-independent?", "back": "$P\\propto\\left[(Z/A)\\rho/m_H\\right]^{5/3}$ (polytropic index 5/3); it is temperature-independent because in full degeneracy nearly all electrons already occupy the lowest available momentum states set by the Pauli exclusion principle, so pressure depends only on density, not thermal motion."}, {"front": "What is the Period-Luminosity relation and why is it the first rung of the cosmic distance ladder?", "back": "$M_V=-2.8\\log P_{days}-1.43$ for classical Cepheids: more luminous Cepheids pulsate with longer periods. Measuring a Cepheid's period gives its absolute magnitude, and comparing to apparent magnitude yields the distance modulus, anchoring essentially all extragalactic distance measurements."}, {"front": "What physical relation underlies the Period-Luminosity relation?", "back": "The Period-Density relation, $\\Pi\\propto\\rho^{-1/2}$, derived from the acoustic (sound-crossing) time across the star: luminous giant and supergiant stars have very low mean density and hence long pulsation periods, so luminosity and period are correlated through density."}, {"front": "What drives sustained stellar pulsations (the $\\kappa$-mechanism), and which zone is the main \"piston\"?", "back": "In partially ionized zones, compression increases ionization (and opacity) rather than just temperature, trapping heat when hot and releasing it via recombination when cool, acting as a thermodynamic valve. The He II ionization zone ($T\\approx4\\times10^4$K) is the dominant driving piston; the H ionization zone mainly introduces the observed phase lag between minimum radius and maximum luminosity."}, {"front": "What physically sets the blue and red edges of the Instability Strip?", "back": "Blue edge: ionization zones lie too close to the surface, leaving too little overlying mass to drive appreciable pulsation. Red edge: surface convection becomes efficient and damps the coherent oscillation, short-circuiting the $\\kappa$-mechanism."}, {"front": "Why are RR Lyrae stars useful as standard candles?", "back": "They are core helium-burning Horizontal Branch stars crossing the instability strip, so nearly all have the same luminosity ($M_V\\approx+0.5$, $\\log L/L_\\odot\\approx1.5$-1.7) regardless of individual mass, allowing distance determination from apparent magnitude alone."}, {"front": "What is the \"onion-shell\" structure of a massive star just before core collapse, and why do burning-stage durations shrink so drastically toward the center?", "back": "Concentric shells of H, He, C, O, Ne, Si burning surround an inert Fe core; successive stages last dramatically less time (H: $10^7$ yr down to Si: about 1 week) because neutrino losses scale roughly as $T^9$, draining nuclear energy almost as fast as it is produced."}, {"front": "What distinguishes an electron-capture supernova from an O-Ne white dwarf outcome in $7$-$11\\,M_\\odot$ stars?", "back": "Both arise from a growing degenerate O-Ne-Mg core; if envelope mass loss removes the envelope before the core reaches $M_{Ch}$, an O-Ne WD ($\\sim1.0$-$1.2\\,M_\\odot$) results. If the core reaches $M_{Ch}$ first, electron capture on $^{24}$Mg and $^{20}$Ne triggers runaway collapse to a neutron star (EC-SN)."}, {"front": "Why does the prompt supernova shock stall, and how does the delayed neutrino-heating mechanism revive it?", "back": "The shock loses energy photodisintegrating infalling iron ($\\sim10^{51}$ erg per $0.1\\,M_\\odot$) and to neutrino cooling, stalling at roughly 100-200 km. Neutrinos diffusing out of the trapped proto-neutron star are partly absorbed in the \"gain region\" above the neutrinosphere, reheating and reviving the shock about 100-500 ms after bounce."}, {"front": "What are the three timescales governing stellar formation and evolution, and their approximate durations for a $1\\,M_\\odot$ star?", "back": "Dynamical (free-fall) timescale: minutes to $10^2$ yr. Thermodynamic (Kelvin-Helmholtz) timescale: $\\sim10^7$ yr. Thermonuclear timescale: $\\sim10^{10}$ yr; each transition is triggered by a new force balance (pressure vs. gravity, then fusion vs. gravity)."}, {"front": "What does the Virial Theorem imply about a contracting protostar's temperature and luminosity?", "back": "With $2K+\\Omega=0$, contraction ($d\\Omega<0$) causes exactly half the released gravitational energy to heat the gas ($dK>0$) and half to be radiated away ($dU<0$), the \"negative heat capacity\" of a self-gravitating system: losing energy makes it hotter."}, {"front": "What is the Roche lobe and what triggers Roche lobe overflow?", "back": "The Roche lobe is the largest closed equipotential surface around a star that passes through the inner Lagrangian point $L_1$; once a star expands to fill it (e.g. ascending the RGB or AGB), material at $L_1$ flows toward the companion, initiating mass transfer."}, {"front": "What is the distinction between \"contraction\" and \"collapse\" in stellar evolution terminology?", "back": "\"Contraction\" refers to a slow shrinkage occurring on the thermal (Kelvin-Helmholtz) timescale, while \"collapse\" refers to a rapid, near free-fall shrinkage occurring on the dynamical timescale; precise usage of the two terms is an explicit oral-exam expectation."}]
+};
+
+/* ── MathJax typeset helper ── */
+function typesetEl(el) {
+  if (!window.MathJax || !MathJax.typesetPromise) return;
+  MathJax.typesetClear([el]);
+  MathJax.typesetPromise([el]).catch(() => {});
+}
+
+/* ── State ── */
+const STATE = {};
+function getState(key) {
+  if (!STATE[key]) {
+    const deck = DECKS[key] || [];
+    STATE[key] = {
+      order:      deck.map((_, i) => i),
+      currentIdx: 0,
+      known:      new Set(),
+      missed:     new Set(),
+      filterMode: 'all',
+      isFlipped:  false,
+    };
+  }
+  return STATE[key];
+}
+
+/* ── HUD (progress bar + score chip) ── */
+function updateHUD(key) {
+  const s    = getState(key);
+  const deck = DECKS[key] || [];
+  const seen = s.known.size + s.missed.size;
+  const chip = document.querySelector(`.score-chip[data-project="${key}"]`);
+  if (chip) chip.textContent = `${s.known.size} / ${deck.length} known`;
+  const fill = document.querySelector(`.progress-fill[data-project="${key}"]`);
+  if (fill) fill.style.width = deck.length ? (seen / deck.length * 100) + '%' : '0%';
+}
+
+/* ── Render current card ── */
+function renderCard(key) {
+  const s    = getState(key);
+  const deck = DECKS[key] || [];
+  if (!deck.length || !s.order.length) return;
+
+  const cardIdx = s.order[s.currentIdx];
+  const card    = deck[cardIdx];
+  if (!card) return;
+
+  // Reset flip
+  const scene = document.getElementById('scene-' + key);
+  if (scene) { scene.classList.remove('is-flipped'); s.isFlipped = false; }
+
+  // Update text
+  const frontEl = document.getElementById('front-text-' + key);
+  const backEl  = document.getElementById('back-text-' + key);
+  if (frontEl) { frontEl.textContent = card.front; typesetEl(frontEl); }
+  if (backEl)  { backEl.textContent  = card.back;  typesetEl(backEl);  }
+
+  // Show hint, hide feedback
+  const hintEl = document.getElementById('flip-hint-' + key);
+  const feedEl = document.getElementById('feedback-' + key);
+  if (hintEl) hintEl.style.display = '';
+  if (feedEl) feedEl.classList.remove('show');
+
+  // Nav buttons
+  const wrap = document.querySelector('.deck-wrap[data-project="' + key + '"]');
+  if (wrap) {
+    const pb = wrap.querySelector('.prev-btn');
+    const nb = wrap.querySelector('.next-btn');
+    if (pb) pb.disabled = s.currentIdx === 0;
+    if (nb) nb.disabled = s.currentIdx >= s.order.length - 1;
+  }
+
+  // Position counter
+  const posEl = document.getElementById('card-pos-' + key);
+  if (posEl) posEl.textContent = (s.currentIdx + 1) + ' / ' + s.order.length;
+
+  // Sidebar highlight
+  document.querySelectorAll('.c-link[data-project="' + key + '"]').forEach(l => {
+    l.classList.toggle('is-current', parseInt(l.dataset.cardIdx, 10) === cardIdx);
+  });
+  // Scroll current card into sidebar view
+  const curLink = document.querySelector('.c-link[data-project="' + key + '"].is-current');
+  if (curLink) curLink.scrollIntoView({ block: 'nearest' });
+
+  // All-done banner
+  const allDone = document.getElementById('all-done-' + key);
+  if (allDone) {
+    const complete = deck.every((_, i) => s.known.has(i) || s.missed.has(i));
+    allDone.classList.toggle('show', complete && s.currentIdx === s.order.length - 1);
+  }
+}
+
+/* ── Flip card ── */
+function flipCard(key) {
+  const s    = getState(key);
+  const scene = document.getElementById('scene-' + key);
+  if (!scene) return;
+  s.isFlipped = !s.isFlipped;
+  scene.classList.toggle('is-flipped', s.isFlipped);
+  if (s.isFlipped) {
+    const hintEl = document.getElementById('flip-hint-' + key);
+    const feedEl = document.getElementById('feedback-' + key);
+    if (hintEl) hintEl.style.display = 'none';
+    if (feedEl) feedEl.classList.add('show');
+  }
+}
+
+/* ── Mark known / missed ── */
+function markCard(key, verdict) {
+  const s       = getState(key);
+  const cardIdx = s.order[s.currentIdx];
+  if (verdict === 'know') { s.known.add(cardIdx);  s.missed.delete(cardIdx); }
+  else                    { s.missed.add(cardIdx);  s.known.delete(cardIdx);  }
+  const link = document.querySelector('.c-link[data-project="' + key + '"][data-card-idx="' + cardIdx + '"]');
+  if (link) {
+    link.classList.remove('is-known', 'is-missed');
+    link.classList.add(verdict === 'know' ? 'is-known' : 'is-missed');
+  }
+  updateHUD(key);
+  if (s.currentIdx < s.order.length - 1) { s.currentIdx++; renderCard(key); }
+  else renderCard(key);
+}
+
+/* ── Navigation ── */
+function goIdx(key, idx) {
+  const s = getState(key);
+  if (idx < 0 || idx >= s.order.length) return;
+  s.currentIdx = idx;
+  renderCard(key);
+}
+
+/* ── Shuffle (Fisher-Yates) ── */
+function shuffleDeck(key) {
+  const s = getState(key);
+  const a = s.order;
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  s.currentIdx = 0;
+  renderCard(key);
+}
+
+/* ── Filter: Review Misses ── */
+function toggleFilter(key) {
+  const s    = getState(key);
+  const deck = DECKS[key] || [];
+  const btn  = document.querySelector('.filter-btn[data-project="' + key + '"]');
+  if (s.filterMode === 'all') {
+    if (!s.missed.size) return;
+    s.filterMode = 'missed';
+    s.order      = Array.from(s.missed);
+    if (btn) btn.classList.add('is-active');
+  } else {
+    s.filterMode = 'all';
+    s.order      = deck.map((_, i) => i);
+    if (btn) btn.classList.remove('is-active');
+  }
+  s.currentIdx = 0;
+  renderCard(key);
+}
+
+/* ── Reset ── */
+function resetDeck(key) {
+  const deck = DECKS[key] || [];
+  STATE[key] = {
+    order: deck.map((_, i) => i), currentIdx: 0,
+    known: new Set(), missed: new Set(),
+    filterMode: 'all', isFlipped: false,
+  };
+  document.querySelectorAll('.c-link[data-project="' + key + '"]').forEach(l => {
+    l.classList.remove('is-known', 'is-missed');
+  });
+  const btn = document.querySelector('.filter-btn[data-project="' + key + '"]');
+  if (btn) btn.classList.remove('is-active');
+  updateHUD(key);
+  renderCard(key);
+}
+
+/* ── Active project ── */
+let ACTIVE_PROJECT = null;
+
+/* ── Project activated callback (called by shared tab system) ── */
+function onProjectActivated(key) {
+  ACTIVE_PROJECT = key;
+  document.querySelectorAll('.deck-wrap[data-project]').forEach(w =>
+    w.classList.toggle('is-active', w.dataset.project === key));
+  document.querySelectorAll('.c-list[data-project]').forEach(n =>
+    { n.hidden = n.dataset.project !== key; });
+  document.querySelectorAll('.score-chip[data-project]').forEach(c =>
+    { c.hidden = c.dataset.project !== key; });
+  document.querySelectorAll('.progress-fill[data-project]').forEach(f =>
+    { f.hidden = f.dataset.project !== key; });
+  updateHUD(key);
+  renderCard(key);
+}
+
+/* ── Card scene click ── */
+document.querySelectorAll('.card-scene').forEach(scene => {
+  scene.addEventListener('click', () => flipCard(scene.dataset.project));
+});
+
+/* ── Know / Miss buttons ── */
+document.querySelectorAll('.fb-btn.know').forEach(b => b.addEventListener('click', () => markCard(b.dataset.project, 'know')));
+document.querySelectorAll('.fb-btn.miss').forEach(b => b.addEventListener('click', () => markCard(b.dataset.project, 'miss')));
+
+/* ── Nav buttons ── */
+document.querySelectorAll('.prev-btn').forEach(b => b.addEventListener('click', () => {
+  const s = getState(b.dataset.project); if (s.currentIdx > 0) { s.currentIdx--; renderCard(b.dataset.project); }
+}));
+document.querySelectorAll('.next-btn').forEach(b => b.addEventListener('click', () => {
+  const s = getState(b.dataset.project); if (s.currentIdx < s.order.length - 1) { s.currentIdx++; renderCard(b.dataset.project); }
+}));
+
+/* ── Deck control buttons ── */
+document.querySelectorAll('.shuffle-btn').forEach(b => b.addEventListener('click', () => shuffleDeck(b.dataset.project)));
+document.querySelectorAll('.filter-btn').forEach(b  => b.addEventListener('click', () => toggleFilter(b.dataset.project)));
+document.querySelectorAll('.reset-btn').forEach(b   => b.addEventListener('click', () => resetDeck(b.dataset.project)));
+
+/* ── Sidebar card links ── */
+document.querySelectorAll('.c-link[data-project]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const key = a.dataset.project;
+    const cidx = parseInt(a.dataset.cardIdx, 10);
+    const s = getState(key);
+    let pos = s.order.indexOf(cidx);
+    if (pos < 0 && s.filterMode !== 'all') {
+      toggleFilter(key);
+      pos = getState(key).order.indexOf(cidx);
+    }
+    if (pos >= 0) goIdx(key, pos);
+  });
+});
+
+/* ── Keyboard shortcuts ── */
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const key = ACTIVE_PROJECT;
+  if (!key) return;
+  const s = getState(key);
+  switch (e.key) {
+    case ' ': case 'Enter':
+      e.preventDefault(); flipCard(key); break;
+    case 'ArrowRight': case 'l':
+      e.preventDefault();
+      if (s.currentIdx < s.order.length - 1) { s.currentIdx++; renderCard(key); } break;
+    case 'ArrowLeft': case 'h':
+      e.preventDefault();
+      if (s.currentIdx > 0) { s.currentIdx--; renderCard(key); } break;
+    case 'k': case 'K':
+      if (s.isFlipped) { e.preventDefault(); markCard(key, 'know'); } break;
+    case 'm': case 'M':
+      if (s.isFlipped) { e.preventDefault(); markCard(key, 'miss'); } break;
+    case 's': case 'S':
+      e.preventDefault(); shuffleDeck(key); break;
+    case 'r': case 'R':
+      e.preventDefault(); resetDeck(key); break;
+  }
+});
+
+/* ── Mobile menu ── */
+(function () {
+  const btn     = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  if (!btn || !sidebar) return;
+  btn.addEventListener('click', () => sidebar.classList.toggle('is-open'));
+  document.addEventListener('click', e => {
+    if (!sidebar.contains(e.target) && !btn.contains(e.target)) sidebar.classList.remove('is-open');
+  });
+})();
+
+
+/* ── Session nav: sliding window tabs + dropdown ── */
+(function () {
+const PROJ_KEYS   = ["exam-weighted-review"];
+  const PROJ_LABELS = {"exam-weighted-review": "Exam-Weighted Review"};
+  const STORAGE_KEY = "gaia-metis-tab";
+  const SIDE_PREFIX = "METIS";
+
+  const total = PROJ_KEYS.length;
+  let currentIdx = 0;
+
+  function _esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function winStart(idx) {
+    return Math.max(0, Math.min(idx - 1, total - 3));
+  }
+
+  /* ── Render tab window ── */
+  function renderTabs(idx, direction) {
+    const tw = document.getElementById('tabWindow');
+    if (!tw) return;
+    const doRender = () => {
+      const ws    = winStart(idx);
+      const count = Math.min(3, total);
+      tw.innerHTML = Array.from({ length: count }, (_, i) => {
+        const pi    = ws + i;
+        const key   = PROJ_KEYS[pi];
+        const act   = pi === idx ? ' is-active' : '';
+        return `<a class="session-tab${act}" data-idx="${pi}" data-project="${_esc(key)}" href="#" role="tab" aria-selected="${pi === idx}">${_esc(PROJ_LABELS[key] || key)}</a>`;
+      }).join('');
+      tw.querySelectorAll('.session-tab').forEach(t =>
+        t.addEventListener('click', e => { e.preventDefault(); activateSession(parseInt(t.dataset.idx, 10)); })
+      );
+    };
+    if (!direction) { doRender(); return; }
+    const exitCls  = direction === 'right' ? 'exit-left'   : 'exit-right';
+    const enterCls = direction === 'right' ? 'enter-right' : 'enter-left';
+    tw.classList.remove('exit-left','exit-right','enter-left','enter-right');
+    tw.classList.add(exitCls);
+    tw.addEventListener('animationend', function onEnd() {
+      tw.removeEventListener('animationend', onEnd);
+      tw.classList.remove(exitCls);
+      doRender();
+      void tw.offsetWidth;
+      tw.classList.add(enterCls);
+      tw.addEventListener('animationend', () => tw.classList.remove(enterCls), { once: true });
+    }, { once: true });
+  }
+
+  /* ── Render dropdown ── */
+  function renderDropdown(idx) {
+    const list = document.getElementById('dropList');
+    if (!list) return;
+    list.innerHTML = PROJ_KEYS.map((key, i) =>
+      `<li><button class="drop-item-btn${i === idx ? ' is-active' : ''}" data-idx="${i}">`+
+      `<span class="drop-dot"></span>${_esc(PROJ_LABELS[key] || key)}</button></li>`
+    ).join('');
+    list.querySelectorAll('.drop-item-btn').forEach(b =>
+      b.addEventListener('click', () => { closeDropdown(); activateSession(parseInt(b.dataset.idx, 10)); })
+    );
+  }
+
+  function openDropdown() {
+    const t = document.getElementById('dropTrigger');
+    const l = document.getElementById('dropList');
+    if (t) { t.classList.add('is-open'); t.setAttribute('aria-expanded','true'); }
+    if (l) l.hidden = false;
+  }
+  function closeDropdown() {
+    const t = document.getElementById('dropTrigger');
+    const l = document.getElementById('dropList');
+    if (t) { t.classList.remove('is-open'); t.setAttribute('aria-expanded','false'); }
+    if (l) l.hidden = true;
+  }
+
+  /* ── Main activate ── */
+  function activateSession(newIdx) {
+    if (newIdx < 0 || newIdx >= total) return;
+    const prevWs = winStart(currentIdx);
+    const newWs  = winStart(newIdx);
+    const dir    = newWs > prevWs ? 'right' : newWs < prevWs ? 'left' : null;
+    currentIdx   = newIdx;
+    const key    = PROJ_KEYS[newIdx];
+
+    /* Side label */
+    const lbl = document.getElementById('sideLabel');
+    if (lbl) lbl.textContent = SIDE_PREFIX + ' · ' + (PROJ_LABELS[key] || key);
+
+    renderTabs(newIdx, dir);
+    renderDropdown(newIdx);
+    try { localStorage.setItem(STORAGE_KEY, key); } catch(e) {}
+    if (typeof onProjectActivated === 'function') onProjectActivated(key);
+  }
+
+  /* Dropdown toggle */
+  const dropTrigger = document.getElementById('dropTrigger');
+  if (dropTrigger) {
+    dropTrigger.addEventListener('click', e => {
+      e.stopPropagation();
+      const l = document.getElementById('dropList');
+      if (l && !l.hidden) closeDropdown(); else openDropdown();
+    });
+  }
+  document.addEventListener('click', e => {
+    const dd = document.getElementById('sessionDropdown');
+    if (dd && !dd.contains(e.target)) closeDropdown();
+  });
+
+  /* Init */
+  let savedKey = null;
+  try { savedKey = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+  const startIdx = savedKey && PROJ_KEYS.includes(savedKey) ? PROJ_KEYS.indexOf(savedKey) : 0;
+  renderDropdown(startIdx);
+  activateSession(startIdx);
+
+  /* Expose for search / external callers */
+  window._gaiaActivateSession = activateSession;
+  window._gaiaProjKeys = PROJ_KEYS;
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stellar Pulsations & Cepheid Variables - 30-Min Masterclass</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons for premium visual depth -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- MathJax Configuration and Script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    /* Premium Sepia Theme Styles */
+    .theme-sepia {
+      background-color: #fcf6e8;
+      color: #433422;
+    }
+    .theme-sepia .card-bg {
+      background-color: #f4ebd0;
+      border-color: #e6d3a8;
+    }
+    .theme-sepia .text-muted {
+      color: #705e47;
+    }
+    .theme-sepia .border-sepia-accent {
+      border-color: #d2b48c;
+    }
+
+    /* Progress Tracker Ring Styling */
+    .circle-bg {
+      fill: none;
+      stroke: #e2e8f0;
+    }
+    .circle-progress {
+      fill: none;
+      stroke: #a855f7;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    .dark .circle-bg {
+      stroke: #334155;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300 min-h-screen">
+
+  <!-- TOP HUD / PROGRESS BAR -->
+  <header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-purple-500/10 text-purple-500 rounded-lg">
+          <i data-lucide="activity" class="w-6 h-6 animate-pulse"></i>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-base font-bold tracking-tight text-slate-950 dark:text-white">Stellar Pulsations <span class="text-purple-500">Part VI</span></h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Masterclass (Prof. F. R. Ferraro)</p>
+        </div>
+      </div>
+      
+      <!-- Quick Actions / Theme / Timer HUD -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Text Size Buttons -->
+        <div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="changeFontSize('small')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A-</button>
+          <button onclick="changeFontSize('normal')" class="p-1.5 text-xs font-semibold rounded bg-white dark:bg-slate-700 shadow-sm">A</button>
+          <button onclick="changeFontSize('large')" class="p-1.5 text-xs font-semibold rounded hover:bg-white dark:hover:bg-slate-700">A+</button>
+        </div>
+
+        <!-- 3-Way Theme Switcher -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1 space-x-1">
+          <button onclick="setTheme('light')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Light Theme">
+            <i data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('dark')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Dark Theme">
+            <i data-lucide="moon" class="w-4 h-4"></i>
+          </button>
+          <button onclick="setTheme('sepia')" class="p-1.5 rounded hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300" title="Sepia Eye-Saver">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- 30min visual Study countdown -->
+        <div class="flex items-center space-x-2 bg-purple-500/10 text-purple-600 dark:text-purple-400 px-3 py-1.5 rounded-lg border border-purple-500/20 text-xs sm:text-sm font-semibold">
+          <i data-lucide="clock" class="w-4 h-4 animate-pulse"></i>
+          <span id="timer-display">30:00</span>
+          <button id="timer-toggle-btn" onclick="toggleTimer()" class="ml-1 hover:text-purple-800 dark:hover:text-purple-200">
+            <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Linear Reading Progress Bar -->
+    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1">
+      <div id="reading-progress-bar" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-1 w-0 transition-all duration-100"></div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Split Sidebar & Detailed Readout) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- LEFT COLUMN: SIDEBAR NAVIGATION -->
+      <aside class="lg:col-span-1 space-y-6 lg:sticky lg:top-24 h-fit">
+        <!-- Table of Contents -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg">
+          <h3 class="text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase mb-4">Study Navigation</h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#sec-1" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-purple-600 dark:text-purple-400 font-semibold bg-purple-50/50 dark:bg-purple-900/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-purple-500 text-white text-xs">1</span>
+              <span class="truncate">Classes of Variable Stars</span>
+            </a>
+            <a href="#sec-2" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">2</span>
+              <span class="truncate">Henrietta Leavitt's Discovery</span>
+            </a>
+            <a href="#sec-3" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">3</span>
+              <span class="truncate">Radial Pulsations & Phase Lag</span>
+            </a>
+            <a href="#sec-4" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">4</span>
+              <span class="truncate">The Instability Strip</span>
+            </a>
+            <a href="#sec-5" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">5</span>
+              <span class="truncate">Carnot Engine & Work Integrals</span>
+            </a>
+            <a href="#sec-6" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">6</span>
+              <span class="truncate">$\kappa$ and $\gamma$ Mechanisms</span>
+            </a>
+            <a href="#sec-7" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">7</span>
+              <span class="truncate">Acoustic Wave Derivation</span>
+            </a>
+            <a href="#sec-8" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">8</span>
+              <span class="truncate">One-Zone Toy Model</span>
+            </a>
+            <a href="#sec-9" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">9</span>
+              <span class="truncate">Deriving the PLC Relation</span>
+            </a>
+            <a href="#sec-10" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-slate-300 dark:bg-slate-700 text-xs">10</span>
+              <span class="truncate">RR Lyrae Metallicities</span>
+            </a>
+            <a href="#study-quiz" class="toc-link flex items-center space-x-3 p-2 rounded-lg text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/20">
+              <span class="w-5 h-5 flex items-center justify-center rounded-md bg-purple-500 text-white text-xs"><i data-lucide="award" class="w-3 h-3"></i></span>
+              <span class="truncate font-semibold">Active Recall Mastery Test</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Session Progress Card -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm card-bg flex items-center justify-between">
+          <div class="space-y-1">
+            <h4 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Session Progress</h4>
+            <p id="progress-reading-percent" class="text-2xl font-black text-slate-900 dark:text-white">0%</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">of document read</p>
+          </div>
+          <svg class="w-16 h-16">
+            <circle class="circle-bg" cx="32" cy="32" r="28" stroke-width="4"/>
+            <circle id="progress-circle" class="circle-progress" cx="32" cy="32" r="28" stroke-width="4" stroke-dasharray="175" stroke-dashoffset="175"/>
+          </svg>
+        </div>
+
+        <!-- Key Physics Cheat-Sheet -->
+        <div class="bg-gradient-to-br from-purple-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg space-y-4">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sparkles" class="w-5 h-5 text-purple-400"></i>
+            <h4 class="font-bold text-sm text-purple-200 uppercase tracking-wider">Pulsation Constants</h4>
+          </div>
+          <div class="text-xs space-y-2.5 font-mono text-slate-300">
+            <div class="flex justify-between border-b border-purple-900 pb-1.5">
+              <span>Standard P-L:</span>
+              <span class="text-purple-300">$M_V = -2.8 \log P_d - 1.43$</span>
+            </div>
+            <div class="flex justify-between border-b border-purple-900 pb-1.5">
+              <span>He II engine:</span>
+              <span class="text-purple-300">$T \approx 40,000 \text{ K}$</span>
+            </div>
+            <div class="flex justify-between border-b border-purple-900 pb-1.5">
+              <span>H lag zone:</span>
+              <span class="text-purple-300">$T \approx 15,000 \text{ K}$</span>
+            </div>
+            <div class="flex justify-between pb-0.5">
+              <span>Instability limits:</span>
+              <span class="text-purple-300">$6300\text{--}7100\text{ K}$</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: CORE DOCUMENT READOUT -->
+      <main id="study-content-container" class="lg:col-span-3 space-y-12 transition-all duration-200">
+        
+        <!-- TITLE CONTAINER -->
+        <div class="relative bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-sm card-bg overflow-hidden">
+          <div class="absolute top-0 right-0 p-8 text-slate-100 dark:text-slate-800 -z-0 opacity-10">
+            <i data-lucide="activity" class="w-64 h-64"></i>
+          </div>
+          <div class="relative z-10 space-y-4">
+            <div class="inline-flex items-center space-x-2 bg-purple-500/10 text-purple-500 px-3 py-1 rounded-full text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span>
+              <span>Advanced Stellar Astrophysics Core Course</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+              Stellar Pulsations, Driving Mechanisms, and Cosmological Scales
+            </h1>
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+              An exhaustive study companion covering slide lecture series "24.Stellar_pulsations.pdf" verbatim, detailing radial sound modes, Zhevakin ionization zones, work integrals, and the physical calibration of standard candles.
+            </p>
+          </div>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="sec-1" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">01</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Classes of Variable Stars & Structural Properties</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Stellar pulsations represent transient, non-hydrostatic phases in a star's evolutionary path where the star exhibits periodic changes in its external radius, effective surface temperature, and total integrated luminosity. The archetype variable star, $\delta$ Cephei, was discovered by John Goodricke in 1784, showing a rigorous periodic cycle of <strong>5 days, 8 hours, and 48 minutes</strong>.
+            </p>
+            
+            <p>
+              Pulsating variable stars are classified based on their spectral properties, evolutionary status, chemical composition (Population I vs. II), and structural oscillation profiles:
+            </p>
+
+            <div class="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-2xl my-6">
+              <table class="w-full text-sm text-left text-slate-600 dark:text-slate-300">
+                <thead class="text-xs uppercase bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-b border-slate-200 dark:border-slate-800">
+                  <tr>
+                    <th class="px-4 py-3">Variable Class</th>
+                    <th class="px-4 py-3">Period Range</th>
+                    <th class="px-4 py-3">Population Type</th>
+                    <th class="px-4 py-3">Oscillation Mode</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">Classical Cepheids</td>
+                    <td class="px-4 py-3">1 -- 50 days</td>
+                    <td class="px-4 py-3">Population I (Metal-Rich)</td>
+                    <td class="px-4 py-3">Radial (Fundamental)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">W Virginis Stars</td>
+                    <td class="px-4 py-3">2 -- 45 days</td>
+                    <td class="px-4 py-3">Population II (Metal-Poor)</td>
+                    <td class="px-4 py-3">Radial (Fundamental)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">RR Lyrae Stars</td>
+                    <td class="px-4 py-3">1.5 -- 24 hours</td>
+                    <td class="px-4 py-3">Population II (Old Systems)</td>
+                    <td class="px-4 py-3">Radial (Fund. & 1st Overtone)</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">$\delta$ Scuti Stars</td>
+                    <td class="px-4 py-3">1 -- 3 hours</td>
+                    <td class="px-4 py-3">Population I (Main Sequence)</td>
+                    <td class="px-4 py-3">Radial & Non-Radial</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">$\beta$ Cephei Stars</td>
+                    <td class="px-4 py-3">3 -- 7 hours</td>
+                    <td class="px-4 py-3">Population I (Blue Supergiants)</td>
+                    <td class="px-4 py-3">Radial & Non-Radial</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">ZZ Ceti Stars</td>
+                    <td class="px-4 py-3">100 -- 1000 seconds</td>
+                    <td class="px-4 py-3">Population I (White Dwarfs)</td>
+                    <td class="px-4 py-3">Non-Radial Gravitational</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-4 py-3 text-purple-600 dark:text-purple-400 font-bold">Long Period Variables (LPVs/Miras)</td>
+                    <td class="px-4 py-3">100 -- 700 days</td>
+                    <td class="px-4 py-3">Populations I & II (AGB Stars)</td>
+                    <td class="px-4 py-3">Radial (Complex Shells)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2 -->
+        <section id="sec-2" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">02</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Henrietta Leavitt's Discovery & Apparent-Absolute Scaling</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              The real historical turning point for variable star studies was conducted in the early 1900s by astronomer <strong>Henrietta Leavitt</strong>. Analyzing photographic plates taken at multiple epochs of the <strong>Small Magellanic Cloud (SMC)</strong>—an irregular dwarf satellite galaxy located at a distance of $d \approx 60\text{ kpc}$ from the Sun—she cataloged and derived period parameters for over 2,000 variable stars.
+            </p>
+
+            <div class="p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg my-6 space-y-3">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-purple-500 block">The Single-Distance Distance Disadvantage Lever</span>
+              <p class="text-sm">
+                Because the physical depth of the Small Magellanic Cloud is tiny compared to its massive cosmological distance from the Solar System, Leavitt realized that <strong>all variable stars in her sample were located at approximately the same distance from Earth</strong>.
+              </p>
+              <p class="text-sm font-semibold">
+                Therefore, any measured differences in apparent magnitude ($m_V$) mapped directly to differences in absolute magnitude ($M_V$). Since more luminous Cepheids consistently exhibited longer oscillation cycles, Leavitt discovered the fundamental <strong>Period-Luminosity (P-L) Relation</strong>:
+              </p>
+              <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl text-center font-mono text-base border border-slate-100 dark:border-slate-900 text-purple-600 dark:text-purple-400 font-extrabold">
+                $$M_V = -2.8 \log P_{\text{days}} - 1.43$$
+              </div>
+              <p class="text-xs text-slate-400 dark:text-slate-500">
+                (Empirically calibrated for Classical Cepheids by Sandage & Tammann, Ap. J., 151, 531, 1968)
+              </p>
+            </div>
+            
+            <p class="text-sm">
+              By measuring a simple temporal parameter—the period ($P$) in days—astrophysicists can solve for a star's intrinsic luminosity. This relationship is the critical first rung of the **Cosmic Distance Ladder**, allowing us to compute distances across local Group galaxies and map the expanding Universe.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 3 -->
+        <section id="sec-3" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">03</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Radial Pulsations, Driving Variables, & Phase Lag</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Harlow Shapley demonstrated in 1914 that variable star light curves are driven by physical **radial pulsations**—periodic expansions and contractions of the star's outer layers—rather than eclipsing binary stars.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Luminosity Driver: Effective Temperature vs. Radius</h3>
+            <p>
+              Stellar luminosity is parameterized by the Stefan-Boltzmann area-temperature relation:
+              $$L = 4\pi R^2 \sigma T_{\text{eff}}^4$$
+              During a typical Cepheid cycle, the radius variation ($\Delta R/R_0$) is modest, usually capped around **10%**. However, the effective surface temperature ($T_{\text{eff}}$) oscillates sharply by **1000--1500 K** (shifting spectral classifications between F5 and G2).
+            </p>
+            <p class="font-bold">
+              Because luminosity scales with the fourth power of temperature ($T^4$) but only the second power of radius ($R^2$), temperature changes dominate the luminosity variation.
+            </p>
+
+            <div class="p-6 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg my-6">
+              <span class="text-xs uppercase tracking-wider font-extrabold text-amber-500 block mb-2">The Phase Lag Phenomenon</span>
+              <p class="text-sm">
+                If the pulsation cycle were perfectly adiabatic, the maximum luminosity would coincide with the minimum radius ($R_{\text{min}}$) where density, pressure, and temperature peak. 
+              </p>
+              <p class="text-sm font-semibold mt-2">
+                However, observations show a distinct delay: the maximum luminosity occurs when the star is already expanding, shortly <em>after</em> it has passed $R_{\text{min}}$. This is known as the **Phase Lag**, and it is caused by the behavior of the stellar ionization zones as they store and release energy.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4 -->
+        <section id="sec-4" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">04</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The Instability Strip Boundaries</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Pulsating stars do not populate the entire H-R diagram. Instead, they are confined to a narrow, nearly vertical region known as the **Instability Strip** ($T_{\text{eff}} \approx 6000\text{--}7000\text{ K}$, width $\Delta T \approx 600\text{--}1000\text{ K}$).
+            </p>
+
+            <p>
+              The physical boundaries of this strip are determined by the location of the star's ionization zones:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <!-- Blue Edge -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-blue-500">The Blue Edge Boundary (Hot Limit)</span>
+                <p class="mt-2 text-sm">
+                  In hot stars ($T_{\text{eff}} > 7500\text{ K}$), the Helium II ionization zone lies too close to the surface:
+                </p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2.5 border border-slate-100 dark:border-slate-900 text-center text-blue-600 dark:text-blue-400 font-bold">
+                  $M_{\text{above, HeII}} \to 0$
+                </div>
+                <p class="text-sm text-slate-500">
+                  Because there is not enough mass in the overlying envelope to absorb and store the radiation, the ionization zone cannot drive global pulsations, setting a sharp hot limit.
+                </p>
+              </div>
+
+              <!-- Red Edge -->
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase tracking-wider font-extrabold text-rose-500">The Red Edge Boundary (Cool Limit)</span>
+                <p class="mt-2 text-sm">
+                  As the surface temperature drops below $6000\text{ K}$, the envelope becomes cool enough to trigger **convection**:
+                </p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg font-mono text-xs my-2.5 border border-slate-100 dark:border-slate-900 text-center text-rose-600 dark:text-rose-400 font-bold">
+                  $\nabla_{\text{rad}} > \nabla_{\text{ad}} \implies \text{Convection}$
+                </div>
+                <p class="text-sm text-slate-500">
+                  Because convective energy transport is highly turbulent, it efficiently disperses temperature and pressure variations, dampening the coherent waves needed to sustain pulsations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5 -->
+        <section id="sec-5" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">05</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Stellar Carnot Engines: Work Integrals & Thermodynamics</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              To sustain pulsations against dissipation, a layer of stellar gas must act as a **heat engine**, converting thermal energy into mechanical work over each cycle.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Carnot Work Equation Derivation</h3>
+            <p>
+              Consider a stellar layer of mass $\Delta m$ that undergoes a complete, reversible cycle. Over a closed path, the net change in internal energy ($U$) and entropy ($S$) must be zero:
+              $$\oint dU = 0 \quad \text{and} \quad \oint dS = 0$$
+            </p>
+            <p>
+              Applying the First Law of Thermodynamics ($dU = dQ - dW$, where $dW = P dV$ is the mechanical work performed on the surrounding layers):
+              $$\oint dU = \oint dQ - \oint dW = 0 \implies W = \oint dQ = \oint \left(\frac{dQ}{dt}\right) dt$$
+            </p>
+            <p>
+              We can model the instantaneous temperature of the layer as a small perturbation ($\delta T$) around its equilibrium value ($T_0$):
+              $$T(t) = T_0 + \delta T(t) \quad \text{where } \delta T \ll T_0$$
+            </p>
+            <p>
+              Using a binomial expansion for $1/T$:
+              $$\frac{1}{T(t)} = \frac{1}{T_0 + \delta T} = \frac{T_0 - \delta T}{T_0^2 - \delta T^2} \approx \frac{1}{T_0} \left(1 - \frac{\delta T}{T_0}\right)$$
+            </p>
+            <p>
+              Substituting this into the entropy equation ($\oint \frac{dQ}{T} = 0$):
+              $$0 = \oint \frac{1}{T} \left(\frac{dQ}{dt}\right) dt \approx \frac{1}{T_0} \oint \left(1 - \frac{\delta T}{T_0}\right) \frac{dQ}{dt} dt$$
+              $$\implies \frac{1}{T_0} \oint \left(\frac{dQ}{dt}\right) dt = \frac{1}{T_0^2} \oint \delta T \left(\frac{dQ}{dt}\right) dt$$
+            </p>
+            <p>
+              Multiplying both sides by $T_0$ yields the expression for the net work ($W$) performed by the layer:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-purple-600 dark:text-purple-400 font-extrabold my-4">
+              $$W = \oint \left(\frac{dQ}{dt}\right) dt = \frac{1}{T_0} \oint \left(\frac{dQ}{dt}\right) \delta T dt$$
+            </div>
+
+            <div class="bg-purple-500/5 border border-purple-500/20 rounded-2xl p-5 space-y-2">
+              <span class="text-xs uppercase font-extrabold text-purple-500">The Driving Condition</span>
+              <p class="text-sm">
+                For a stellar layer to do positive work ($W > 0$) and drive the pulsation, the integrand must be positive:
+                $$\delta T \left(\frac{dQ}{dt}\right) > 0$$
+              </p>
+              <p class="text-sm font-semibold">
+                This requires the layer to absorb heat ($\frac{dQ}{dt} > 0$) when it is hot ($\delta T > 0$, at maximum compression) and release heat ($\frac{dQ}{dt} < 0$) when it is cool ($\delta T < 0$, at maximum expansion).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6 -->
+        <section id="sec-6" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">06</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The physical Engine: The $\kappa$ and $\gamma$ Mechanisms</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In normal stellar layers, radiative energy transport acts as a dampener. Under standard conditions, opacity drops when the temperature rises:
+              $$\kappa_{\text{Kramer}} \propto \rho T^{-3.5}$$
+              During compression, the temperature increases, causing the opacity to drop. This allows radiative energy to escape easily, cooling the gas and dampening any oscillations.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Ionization Valve</h3>
+            <p>
+              This behavior shifts in regions of **partial ionization**. Under these conditions, the gas acts as a **thermal valve**:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase font-extrabold text-purple-500">The $\kappa$-Mechanism (Opacity Valve)</span>
+                <p class="mt-2 text-sm leading-relaxed">
+                  During compression, the temperature rise increases the ionization fraction of the gas rather than its thermal energy. This increased ionization raises the free-free and bound-free opacity ($\delta \kappa > 0$), trapping heat inside the layer.
+                </p>
+              </div>
+              <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 card-bg">
+                <span class="text-xs uppercase font-extrabold text-indigo-500">The $\gamma$-Mechanism (Heat Capacity)</span>
+                <p class="mt-2 text-sm leading-relaxed">
+                  Because some of the compression energy goes into ionizing atoms rather than increasing kinetic motion, the temperature rise ($\delta T$) is smaller than expected. This lower temperature creates a steep thermal gradient between the zone and the deeper, hotter layers, causing heat to flow *into* the layer and further drive the pulsation.
+                </p>
+              </div>
+            </div>
+
+            <h3 class="text-base font-bold text-slate-950 dark:text-white">The Ionization Engine Zones</h3>
+            <ul class="list-disc list-inside space-y-2 text-sm pl-2">
+              <li>
+                <strong>Hydrogen Ionization Zone ($HI \to HII$):</strong> Located near the surface where $T \approx 1.5 \times 10^4\text{ K}$. This zone behaves like a sponge, absorbing heat and delaying the escape of radiation to create the observed **Phase Lag**.
+              </li>
+              <li>
+                <strong>Helium II Ionization Zone ($HeII \to HeIII$):</strong> Located deeper in the envelope where $T \approx 4 \times 10^4\text{ K}$. This zone contains enough mass to act as the primary **engine** driving the pulsations.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 7 -->
+        <section id="sec-7" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">07</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Analytical Proof of the Period-Density Relation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              Because stellar pulsations behave like **standing sound waves** trapped within a resonant cavity, the oscillation period ($\Pi$) is proportional to the time required for a sound wave to travel across the star's diameter:
+              $$\Pi \approx 2 \int_{0}^{R} \frac{dr}{v_s}$$
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">1. Deriving Sound Velocity ($v_s$) from Adiabatic Gas Laws</h3>
+            <p>
+              The sound speed in a gas depends on its compressibility (the Bulk Modulus, $B$) and its inertia (density, $\rho$):
+              $$v_s = \sqrt{\frac{B}{\rho}} \quad \text{where } B = -V \left(\frac{\partial P}{\partial V}\right)_{\text{ad}}$$
+            </p>
+            <p>
+              For an adiabatic process ($dQ = 0$):
+              $$dU = -P dV$$
+              Since $U = c_v T$, the change in internal energy is $dU = c_v dT$. Substituting this into the first law yields:
+              $$c_v dT + P dV = 0 \quad \text{--- (Eq 2)}$$
+            </p>
+            <p>
+              From the perfect gas equation of state ($PV = n R T$), differentiating both sides gives:
+              $$P dV + V dP = n R dT \implies dT = \frac{P dV + V dP}{nR}$$
+            </p>
+            <p>
+              Substituting $dT$ back into Equation 2, and using the relations $nR = c_p - c_v$ and $\gamma = c_p/c_v$:
+              $$c_v \left(\frac{P dV + V dP}{c_p - c_v}\right) + P dV = 0 \implies c_v (P dV + V dP) + (c_p - c_v) P dV = 0$$
+              $$c_v V dP + c_p P dV = 0 \implies \frac{dP}{P} + \gamma \frac{dV}{V} = 0 \implies P V^\gamma = \text{const}$$
+            </p>
+            <p>
+              By differentiating $P = \text{const} \cdot V^{-\gamma}$:
+              $$\left(\frac{\partial P}{\partial V}\right)_{\text{ad}} = -\gamma \frac{P}{V} \implies B = -V \left(-\gamma \frac{P}{V}\right) = \gamma P$$
+            </p>
+            <p>
+              This yields the classic expression for the speed of sound:
+              $$v_s = \sqrt{\frac{\gamma P}{\rho}}$$
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">2. Integrating Across the Stellar Radius</h3>
+            <p>
+              To find the pressure profile, we integrate the equation of hydrostatic equilibrium assuming a uniform average density $\rho$:
+              $$\frac{dP}{dr} = -\frac{G M_r \rho}{r^2} = -\frac{G \left(\frac{4}{3}\pi r^3 \rho\right) \rho}{r^2} = -\frac{4}{3}\pi G \rho^2 r$$
+              Integrating from $r$ to the surface radius $R$ (where surface pressure $P(R) = 0$):
+              $$P(r) = \frac{2}{3} \pi G \rho^2 (R^2 - r^2)$$
+            </p>
+            <p>
+              Substituting this pressure profile into the sound speed equation:
+              $$v_s(r) = \sqrt{\frac{\gamma P}{\rho}} = \sqrt{\frac{2}{3}\pi \gamma G \rho (R^2 - r^2)}$$
+            </p>
+            <p>
+              Now, we substitute $v_s(r)$ back into our period integral:
+              $$\Pi \approx 2 \int_{0}^{R} \frac{dr}{\sqrt{\frac{2}{3}\pi \gamma G \rho R^2 \left(1 - \frac{r^2}{R^2}\right)}} = 2 \sqrt{\frac{3}{2\pi \gamma G \rho}} \frac{1}{R} \int_{0}^{R} \frac{dr}{\sqrt{1 - \left(\frac{r}{R}\right)^2}}$$
+            </p>
+            <p>
+              By substituting $x = r/R$ (where $dr = R dx$):
+              $$\Pi \approx 2 \sqrt{\frac{3}{2\pi \gamma G \rho}} \int_{0}^{1} \frac{dx}{\sqrt{1 - x^2}} = 2 \sqrt{\frac{3}{2\pi \gamma G \rho}} \left[\arcsin(x)\right]_{0}^{1}$$
+              Since $\arcsin(1) - \arcsin(0) = \pi/2$, we obtain:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-purple-500/30 text-purple-600 dark:text-purple-400 font-extrabold my-4">
+              $$\Pi \approx \sqrt{\frac{3\pi}{2 \gamma G \rho}} \propto \frac{1}{\sqrt{\bar{\rho}}}$$
+            </div>
+            <p class="text-sm">
+              This proves that the pulsation period is inversely proportional to the square root of the star's average density. The observed Period-Luminosity relation is simply the projection of this Period-Density relation onto the H-R diagram, where highly luminous giant stars have much lower densities and therefore exhibit longer pulsation periods.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECTION 8 -->
+        <section id="sec-8" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">08</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">The One-Zone Stellar Toy Model Proof</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              To confirm the Period-Density relation, we can model the star's envelope as a single, thin shell of mass $m$ at radius $R$, enclosing a central core of mass $M$ that exerts a pressure $P$.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">The Non-Equilibrium Equation of Motion</h3>
+            <p>
+              The movement of the outer shell is governed by the balance of gravity and pressure forces:
+              $$m \frac{d^2 R}{dt^2} = -\frac{G M m}{R^2} + 4\pi R^2 P \quad \text{--- (Eq 3)}$$
+            </p>
+            <p>At equilibrium ($R = R_0$, $P = P_0$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-3 rounded-lg text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{G M m}{R_0^2} = 4\pi R_0^2 P_0 \implies \frac{GM}{R_0^3} = \frac{4\pi P_0}{\rho_0} \quad (\text{since } m_s \text{ is massless})$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Linearization of the Equations</h3>
+            <p>We introduce small perturbations around the equilibrium state:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$R = R_0 + \delta R \quad \text{and} \quad P = P_0 + \delta P \quad \text{where } \delta R \ll R_0, \quad \delta P \ll P_0$$
+            </div>
+            <p>Substituting these back into Equation (3):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$m \frac{d^2}{dt^2}(R_0 + \delta R) = -G\frac{Mm}{(R_0 + \delta R)^2} + 4\pi (R_0 + \delta R)^2 (P_0 + \delta P)$$
+            </div>
+            <p>We simplify the gravity term using a binomial expansion, neglecting terms of order $(\delta R/R_0)^2$ and higher:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\frac{1}{(R_0 + \delta R)^2} = \frac{1}{R_0^2 \left(1 + \frac{\delta R}{R_0}\right)^2} \approx \frac{1}{R_0^2} \left(1 - 2\frac{\delta R}{R_0}\right)$$
+            </div>
+            <p>Similarly, expanding the pressure term and neglecting second-order perturbations like $\delta R \delta P$ and $\delta R^2$:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$(R_0 + \delta R)^2 (P_0 + \delta P) \approx R_0^2 P_0 + 2 R_0 P_0 \delta R + R_0^2 \delta P$$
+            </div>
+            <p>Substituting these approximations back into the equation of motion:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-blue-600 dark:text-blue-400">
+              $$m \frac{d^2(\delta R)}{dt^2} \approx -\frac{G M m}{R_0^2} + \frac{2 G M m}{R_0^3}\delta R + 4\pi R_0^2 P_0 + 8\pi R_0 P_0 \delta R + 4\pi R_0^2 \delta P$$
+            </div>
+            <p>Using the equilibrium relation, the zero-order terms cancel out. This simplifies the equation to:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-rose-500 font-bold">
+              $$m \frac{d^2(\delta R)}{dt^2} = 2 G \frac{Mm \delta R}{R_0^3} + 8\pi R_0 P_0 \delta R + 4\pi R_0^2 \delta P \quad \text{--- (Equation A)}$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Substituting the Adiabatic Index</h3>
+            <p>For an adiabatic process in a spherical volume ($V = \frac{4}{3}\pi R^3$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$P V^\gamma = \text{const} \implies P R^{3\gamma} = \text{const}$$
+            </div>
+            <p>Taking the logarithm and differentiating yields:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-indigo-500">
+              $$\frac{\delta P}{P_0} + 3\gamma \frac{\delta R}{R_0} = 0 \implies \delta P = -3\gamma \frac{P_0}{R_0} \delta R$$
+            </div>
+            <p>Substituting $\delta P$ into Equation (A) and using $G \frac{Mm}{R_0^3} = 4\pi R_0 P_0$:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$m \frac{d^2(\delta R)}{dt^2} = \left( 2 \frac{G M m}{R_0^3} + 2 \frac{G M m}{R_0^3} - 3\gamma \frac{G M m}{R_{0}^3} \right) \delta R$$
+            </div>
+            <p>Simplifying the equation allows us to cancel the shell mass $m$, leaving:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border border-slate-200 dark:border-slate-800 text-emerald-600 dark:text-emerald-400 font-bold my-4">
+              $$\frac{d^2(\delta R)}{dt^2} = -(3\gamma - 4) \frac{GM}{R_0^3} \delta R$$
+            </div>
+
+            <div class="p-6 bg-purple-500/5 border border-purple-500/20 rounded-2xl space-y-4">
+              <span class="text-xs uppercase font-extrabold text-purple-500 block">The Dynamic Stability Criterion</span>
+              <p class="text-sm">
+                This differential equation describes **simple harmonic motion** of the form $\ddot{X} = -\omega^2 X$, where:
+                $$\omega^2 = (3\gamma - 4)\frac{GM}{R_0^3}$$
+              </p>
+              <ul class="list-disc list-inside text-sm space-y-2 pl-2">
+                <li>
+                  <strong>Case I: $\gamma < 4/3$ ($\omega^2 < 0$):</strong> The solution has the form $\delta R(t) \propto e^{\omega t}$, which grows exponentially over time. This makes the star dynamically unstable, leading to collapse or disruption.
+                </li>
+                <li>
+                  <strong>Case II: $\gamma > 4/3$ ($\omega^2 > 0$):</strong> The solution is a stable, periodic oscillation: $\delta R(t) = A \sin(\omega t)$.
+                </li>
+              </ul>
+              <p class="text-sm font-semibold">
+                For a standard monoatomic gas ($\gamma = 5/3$), the system is highly stable against collapse, oscillating with a period of:
+                $$\Pi = \frac{2\pi}{\omega} = \frac{2\pi}{\sqrt{\frac{4}{3}\pi G \rho_0 (3\gamma - 4)}}$$
+              </p>
+            </div>
+
+            <div class="p-6 bg-amber-500/5 border-2 border-dashed border-amber-500/40 rounded-2xl space-y-3">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+                <span class="text-xs uppercase font-extrabold text-amber-500">Exam Trap: $\Gamma_1 = 4/3$ Is Not Just a Toy-Model Curiosity</span>
+              </div>
+              <p class="text-sm">
+                Do not file the $\gamma > 4/3$ result away as a one-zone-model footnote. The <strong>same threshold governs real dynamical stability</strong> whenever the average adiabatic index $\Gamma_1$ of a star's envelope is pushed toward $4/3$ by physical processes other than a simple monoatomic ideal gas:
+              </p>
+              <ul class="list-disc list-inside text-sm space-y-2 pl-2">
+                <li>
+                  <strong>Radiation-pressure-dominated massive stars:</strong> as $\beta = P_{\text{gas}}/P_{\text{total}} \to 0$, the effective $\Gamma_1 \to 4/3$ from above, so extremely luminous stars sit close to the stability boundary "for free" — this is why very massive stars are pulsationally and dynamically marginal even without invoking partial ionization.
+                </li>
+                <li>
+                  <strong>Pair-instability in very massive cores:</strong> at $T \sim 10^9\,\text{K}$, photon pair production ($\gamma\gamma \to e^+e^-$) silently converts thermal/radiation energy into rest mass, softening the equation of state so that $\Gamma_1$ drops <em>below</em> $4/3$. The star then sits in Case I above ($\omega^2 < 0$): $\delta R(t) \propto e^{\omega t}$ growth — i.e. catastrophic dynamical collapse, governed by the exact same mathematics as this one-zone model, not a separate mechanism.
+                </li>
+              </ul>
+              <p class="text-sm font-semibold">
+                Exam-trap wording to remember: <strong>"$\Gamma_1 > 4/3$ everywhere in the star"</strong> is the general dynamical-stability requirement — the one-zone $\gamma = 5/3$ monoatomic case is just the safest possible example of it, not the definition of it.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 9 -->
+        <section id="sec-9" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">09</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Derivation of the Period-Luminosity-Color (PLC) Relation</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              To find the absolute magnitude ($M_V$) of a pulsating star, we must convert the Period-Density relation ($\Pi \propto \rho^{-1/2}$) into observable quantities.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">1. Expressing Density via Luminosity and Temperature</h3>
+            <p>Starting with the definition of average density ($\rho \propto M R^{-3}$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\log P = -\frac{1}{2} \log \rho + C = -\frac{1}{2}\log M + \frac{3}{2}\log R + C$$
+            </div>
+            <p>Using the Stefan-Boltzmann equation ($L \propto R^2 T^4 \implies R \propto L^{1/2} T^{-2}$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-purple-600 dark:text-purple-400 font-bold">
+              $$\log P = -\frac{1}{2} \log M + \frac{3}{2}\left(\frac{1}{2}\log L - 2 \log T_{\text{eff}}\right) + C$$
+              $$\log P = -\frac{1}{2} \log M + \frac{3}{4}\log L - 3 \log T_{\text{eff}} + C$$
+            </div>
+            <p>Expressing this relation in solar units yields:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-xs border border-slate-200 dark:border-slate-800">
+              $$\log P = -\frac{1}{2} \log\left(\frac{M}{M_\odot}\right) - 3\log\left(\frac{T_{\text{eff}}}{T_{\odot}}\right) - 0.3 \left(M_{\text{bol}} - M_{\text{bol}}^\odot\right) - 1.294$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">2. Removing Stellar Mass using ZAMS Scaling</h3>
+            <p>
+              Stellar masses cannot be measured directly for individual distant stars. However, we can use mass-luminosity scaling relations from the ZAMS:
+              $$M_{\text{bol}} = 3.96 - 8.22 \log\left(\frac{M}{M_\odot}\right)$$
+              Because massive stars ($5\text{--}10 M_\odot$) cross the instability strip during Helium core burning at luminosities roughly **1 magnitude brighter** than their ZAMS values, we can write:
+              $$M_{\text{bol}}^{\text{He-C}} \approx 2.96 - 8.22 \log\left(\frac{M}{M_\odot}\right) \implies -\frac{1}{2}\log\left(\frac{M}{M_\odot}\right) \approx 0.06 \left(M_{\text{bol}} - 3\right)$$
+            </p>
+            <p>Substituting this mass relation back into the period equation (with $M_{\text{bol}}^\odot = 4.75$):</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800">
+              $$\log P = -3 \log\left(\frac{T_{\text{eff}}}{T_{\odot}}\right) - 0.24 M_{\text{bol}} - 0.049$$
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">3. Converting to Observable Magnitudes and Colors</h3>
+            <p>We use standard calibrations to convert bolometric magnitude and effective temperature to the observable $V$-band magnitude and $(B-V)$ color index:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl space-y-2 border border-slate-200 dark:border-slate-800 text-sm font-mono">
+              <div class="text-center">$$M_{\text{bol}} = M_V + 0.145 - 0.322(B-V)$$</div>
+              <div class="text-center">$$\log T_{\text{eff}} = 3.886 - 0.175(B-V)$$</div>
+            </div>
+            <p>Substituting these relations into the period equation yields the **Period-Luminosity-Color (PLC)** relation:</p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-5 rounded-2xl text-center font-mono text-base border-2 border-dashed border-indigo-500/30 text-indigo-600 dark:text-indigo-400 font-extrabold my-4">
+              $$M_V = -3.53 \log P_{\text{days}} - 2.13 + 2.13(B-V)$$
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 10 -->
+        <section id="sec-10" class="study-section scroll-mt-24 space-y-4">
+          <div class="flex items-center space-x-3 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <span class="text-xs font-bold px-2.5 py-1 bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 rounded-md">10</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">RR Lyrae Subtypes & Metallicity Dependencies</h2>
+          </div>
+          <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+            <p>
+              In old stellar populations (globular clusters and galactic halos), low-mass helium-burning stars populate the Horizontal Branch. Those crossing the instability strip are observed as <strong>RR Lyrae stars</strong>.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-4">Pulsational Subtypes: RRab vs. RRc</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2">
+                <span class="text-xs uppercase font-extrabold text-purple-500 font-mono">RRab Variables (Fundamental Mode)</span>
+                <p class="text-sm">
+                  These cooler stars oscillate in the fundamental radial mode. They are characterized by larger pulsation amplitudes (**0.8--1.6 mag**) and longer periods:
+                </p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-2.5 rounded text-center font-mono text-xs text-purple-600 dark:text-purple-400 font-bold">
+                  $$P \approx 0.4\text{ to }0.8\text{ days}$$
+                </div>
+              </div>
+              <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-2">
+                <span class="text-xs uppercase font-extrabold text-indigo-500 font-mono">RRc Variables (First Overtone)</span>
+                <p class="text-sm">
+                  These hotter stars oscillate in the first overtone radial mode. They exhibit smaller amplitudes (**0.5--0.8 mag**) and shorter periods:
+                </p>
+                <div class="bg-slate-50 dark:bg-slate-950 p-2.5 rounded text-center font-mono text-xs text-indigo-600 dark:text-indigo-400 font-bold">
+                  $$P \approx 0.25\text{ to }0.4\text{ days}$$
+                </div>
+              </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-6">The Metallicity-Luminosity Scaling Relation</h3>
+            <p>
+              Because RR Lyrae stars are old stars with similar core masses ($\approx 0.5 M_\odot$), their absolute magnitude is relatively constant, making them excellent standard candles. However, their luminosity depends on metallicity ($Z$), which affects envelope opacity:
+            </p>
+            <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl text-center font-mono text-sm border border-slate-200 dark:border-slate-800 text-purple-600 dark:text-purple-400 font-bold">
+              $$M_V = 0.32 [Fe/H] + 1.06$$
+            </div>
+            <p class="text-sm">
+              Metal-rich stars start their evolution from the ZAMS with larger masses. Because they reach the Horizontal Branch with a thicker envelope (lower fractional core mass $q = M_c/M_E$), they populate the cooler, redder side of the instability strip, often bypassing the variable region entirely.
+            </p>
+
+            <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl card-bg space-y-3 mt-6">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="layers" class="w-5 h-5 text-purple-500"></i>
+                <span class="text-xs uppercase font-extrabold text-purple-500">The "Second Parameter" Problem</span>
+              </div>
+              <p class="text-sm">
+                Metallicity alone does not fully determine whether a cluster hosts RR Lyrae. Two globular clusters with <strong>nearly identical $[Fe/H]$</strong> can show dramatically different Horizontal Branch morphologies — one entirely blue, one entirely red, one crossing the strip and rich in RR Lyrae. Since $[Fe/H]$ is fixed between the two, something else — a <strong>"second parameter"</strong> — must be shaping the HB.
+              </p>
+              <p class="text-sm">
+                Candidate second parameters debated in the literature include:
+              </p>
+              <ul class="list-disc list-inside text-sm space-y-1.5 pl-2">
+                <li><strong>Cluster age:</strong> older clusters have lower-mass stars leaving the Main Sequence, which land on a bluer part of the HB.</li>
+                <li><strong>Helium abundance ($Y$):</strong> higher He content lowers the envelope mass at the He-flash, again pushing stars blueward.</li>
+                <li><strong>Mass loss on the RGB:</strong> more efficient mass loss thins the envelope further, shifting the HB blue independent of composition.</li>
+              </ul>
+              <p class="text-sm font-semibold">
+                This is a purely <strong>evolutionary/compositional</strong> effect — it governs <em>where on the HB</em> a star lands, not the pulsation driving mechanism itself. Whether that star then happens to fall inside the instability strip (and is observed as an RR Lyrae) is a downstream consequence of this "second parameter," not a separate physical process.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ACTIVE RECALL MASTERCLASS QUIZ -->
+        <section id="study-quiz" class="scroll-mt-24 space-y-6 pt-6 border-t border-slate-200 dark:border-slate-800 pb-12">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-purple-500/10 text-purple-500 rounded-xl">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Active Recall & Focus Quiz</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Validate your retention of key physics concepts from the slides.</p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm card-bg space-y-8">
+            
+            <!-- Question 1 -->
+            <div class="space-y-3">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 1</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which stellar variable class is characterized as a low-mass, metal-poor (Population II) Horizontal Branch star pulsating in either the fundamental or first overtone mode?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(1, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) RR Lyrae Stars.
+                </button>
+                <button onclick="checkQuiz(1, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Classical Cepheids.
+                </button>
+              </div>
+              <p id="q1-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! RR Lyrae are standard Horizontal Branch pulsators belonging to Population II, common in globular clusters.
+              </p>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 2</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does Henrietta Leavitt's study of variables in the Small Magellanic Cloud (SMC) sidestep the distance degeneracy problem?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(2, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The SMC is perfectly transparent with zero dust extinction.
+                </button>
+                <button onclick="checkQuiz(2, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) All stars are at approximately the same distance, meaning apparent magnitude variations reflect real absolute magnitude differences.
+                </button>
+              </div>
+              <p id="q2-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Since the stars share a common distance, their apparent brightness directly scales with their intrinsic luminosity.
+              </p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 3</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which stellar property is the dominant driver of a star's luminosity variation during a pulsation cycle?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(3, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Effective surface temperature ($T_{\text{eff}}$), due to its fourth-power scaling ($L \propto R^2 T^4$).
+                </button>
+                <button onclick="checkQuiz(3, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Envelope radius ($R$), due to the large physical expansion of the photosphere.
+                </button>
+              </div>
+              <p id="q3-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Effective temperature changes (1000--1500 K) dominate over the modest 10% radius variations.
+              </p>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 4</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What thermodynamic criterion is required for a stellar layer to perform positive work ($W > 0$) on its surroundings over a cycle?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(4, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) It must absorb heat when it is hot (compression) and release heat when it is cold (expansion).
+                </button>
+                <button onclick="checkQuiz(4, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) It must release heat when it is hot and absorb heat when it is cold.
+                </button>
+              </div>
+              <p id="q4-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! This is the standard driving heat engine condition: $dQ/dt > 0$ when $\delta T > 0$.
+              </p>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 5</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Why are standard fully ionized layers in stellar interiors dissipative (damping) rather than driving?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(5, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) Opacity drops upon compression ($\kappa \propto \rho T^{-3.5}$), allowing trapped heat to escape.
+                </button>
+                <button onclick="checkQuiz(5, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Fully ionized zones are completely isothermal, preventing any thermodynamic cycle.
+                </button>
+              </div>
+              <p id="q5-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Kramer's opacity law causes opacity to drop as temperature rises, which cools the compressed gas and dampens oscillations.
+              </p>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 6</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Which physical layer inside a star acts as the primary piston that drives global pulsations?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(6, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The outer convective boundary.
+                </button>
+                <button onclick="checkQuiz(6, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) The Helium II partial ionization zone ($T \approx 40,000 \text{ K}$).
+                </button>
+              </div>
+              <p id="q6-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The He II partial ionization zone contains enough mass at depth to act as the primary engine.
+              </p>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 7</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What physical mechanism causes the observed Phase Lag between the minimum radius and maximum luminosity?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(7, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The outer Hydrogen ionization zone absorbs heat during compression and releases it during expansion.
+                </button>
+                <button onclick="checkQuiz(7, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) Dynamic friction between the helium core and convective envelope slows down photon transport.
+                </button>
+              </div>
+              <p id="q7-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! The shallow H-ionization zone ($1.5 \times 10^4\text{ K}$) absorbs energy, delaying the peak luminosity until the star begins expanding.
+              </p>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 8</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What physical condition defines the cool (Red) edge of the instability strip in the Hertzsprung-Russell Diagram?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(8, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) The onset of convective energy transport, which dampens coherent sound waves.
+                </button>
+                <button onclick="checkQuiz(8, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) The complete recombination of hydrogen at cool temperatures, which shuts down the H-ionization engine.
+                </button>
+              </div>
+              <p id="q8-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Convective dispersion dampens the organized pulsations at cooler temperatures ($T_{\text{eff}} < 6000\text{ K}$).
+              </p>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 9</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">What is the physical adiabatic stability limit ($\gamma$) for the sound speed perturbation of a monoatomic gas?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(9, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) $\gamma$ must be exactly equal to $4/3$ for static equilibrium.
+                </button>
+                <button onclick="checkQuiz(9, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) $\gamma > 4/3$ is required for stable, harmonic oscillations ($\omega^2 > 0$).
+                </button>
+              </div>
+              <p id="q9-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! If $\gamma < 4/3$, the system becomes dynamically unstable, leading to collapse or explosion.
+              </p>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-xs uppercase font-extrabold text-purple-500">Question 10</span>
+              <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">How does increased metallicity ($[Fe/H]$) affect Horizontal Branch (HB) stars of the same age?</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <button onclick="checkQuiz(10, true, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  A) They reach the HB with larger envelopes, shifting them to the red (cooler) side of the instability strip.
+                </button>
+                <button onclick="checkQuiz(10, false, this)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+                  B) They reach the HB with smaller envelopes, shifting them to the blue (hotter) side of the instability strip.
+                </button>
+              </div>
+              <p id="q10-feedback" class="hidden text-xs text-emerald-600 dark:text-emerald-400 font-medium pt-1">
+                Correct! Higher metallicity increases envelope opacity, keeping the envelope expanded and shifting the HB population to cooler, redder temperatures.
+              </p>
+            </div>
+
+            <!-- Quiz score HUD -->
+            <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-800 pt-4 text-sm font-semibold">
+              <span class="text-slate-500">Your Active Recall Mastery Score:</span>
+              <span id="quiz-score" class="text-purple-500 font-bold">0 / 10 Correct</span>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT HANDLERS -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Font Sizing Control
+    function changeFontSize(size) {
+      const container = document.getElementById('study-content-container');
+      container.classList.remove('text-xs', 'text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (size === 'small') {
+        container.classList.add('text-sm');
+      } else if (size === 'large') {
+        container.classList.add('text-lg');
+      } else {
+        container.classList.add('text-base');
+      }
+    }
+
+    // Theme Switcher Control (Supports Light, Dark, Sepia)
+    function setTheme(theme) {
+      document.body.classList.remove('dark', 'theme-sepia');
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+      } else if (theme === 'sepia') {
+        document.body.classList.add('theme-sepia');
+      }
+    }
+
+    // 30-Minute Focus Study Timer Logic
+    let timeLeft = 1800; // 30 minutes in seconds
+    let timerId = null;
+    let timerRunning = false;
+
+    function toggleTimer() {
+      const btn = document.getElementById('timer-toggle-btn');
+      if (timerRunning) {
+        clearInterval(timerId);
+        btn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = false;
+      } else {
+        timerId = setInterval(updateTimer, 1000);
+        btn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
+        timerRunning = true;
+      }
+      lucide.createIcons();
+    }
+
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerId);
+        document.getElementById('timer-display').innerText = "00:00 - End";
+        return;
+      }
+      timeLeft--;
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      document.getElementById('timer-display').innerText = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Reading & Scroll Progress Logic
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      
+      // Update reading progress bar
+      document.getElementById('reading-progress-bar').style.width = scrolled + '%';
+      
+      // Update circular indicator in Sidebar
+      const dashOffset = 175 - (175 * scrolled) / 100;
+      document.getElementById('progress-circle').style.strokeDashoffset = Math.max(0, dashOffset);
+      document.getElementById('progress-reading-percent').innerText = Math.round(scrolled) + '%';
+
+      // Highlight Table of Contents item based on viewport section
+      const sections = document.querySelectorAll('.study-section');
+      const links = document.querySelectorAll('.toc-link');
+      let currentSectionId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (winScroll >= top) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      links.forEach(link => {
+        link.classList.remove('bg-purple-50/50', 'dark:bg-purple-900/20', 'text-purple-600', 'dark:text-purple-400', 'font-semibold');
+        link.classList.add('text-slate-600', 'dark:text-slate-400');
+        if (link.getAttribute('href') === `#${currentSectionId}`) {
+          link.classList.add('bg-purple-50/50', 'dark:bg-purple-900/20', 'text-purple-600', 'dark:text-purple-400', 'font-semibold');
+          link.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+    });
+
+    // Interactive Quiz Logic
+    let score = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0};
+    function checkQuiz(qNum, isCorrect, element) {
+      const parent = element.parentElement;
+      Array.from(parent.children).forEach(btn => {
+        btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition";
+      });
+
+      const feedback = document.getElementById(`q${qNum}-feedback`);
+
+      if (isCorrect) {
+        element.className = "w-full text-left p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold transition";
+        score[qNum] = 1;
+        if (feedback) feedback.classList.remove('hidden');
+      } else {
+        element.className = "w-full text-left p-3 rounded-xl border border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold transition";
+        score[qNum] = 0;
+        if (feedback) feedback.classList.add('hidden');
+      }
+      
+      const totalScore = Object.values(score).reduce((a, b) => a + b, 0);
+      document.getElementById('quiz-score').innerText = `${totalScore} / 10 Correct`;
+    }
+  </script>
+</body>
+</html>
